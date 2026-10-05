@@ -1,0 +1,10 @@
+{
+  "name": "netsujo-enamoral-lyric-mv",
+  "private": true,
+  "description": "Fan-made lyric video for 熱情エナモラル — deterministic Canvas renderer captured with headless Chromium",
+  "scripts": {
+    "stills": "node render/stills.cjs out/stills 12.5 50 90 170 230",
+    "render": "node render/render.cjs out/netsujo_enamoral_lyric_mv.mp4 --workers 4 --crf 20"
+  },
+  "dependencies": { "playwright": "^1.56.1" }
+}
