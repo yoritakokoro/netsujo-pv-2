@@ -300,7 +300,7 @@ const sun = {
     L(g, t, 16, { to: 6, x: 960, y: 170, align: 'center', size: 150, kana: 0.48, fill: '#fff6e6', glow: 'rgba(255,120,60,0.7)', accent: { from: 3, to: 5, fill: { grad: ['#fffaf0', '#ffe2b0', '#f2b866'] } } });
     L(g, t, 16, { from: 7, x: 960, y: 310, align: 'center', size: 96, kana: 0.62, fill: '#fff6e6', glow: 'rgba(255,120,60,0.6)' });
   },
-  cam: [[52.0, { y: 860, z: 1.14 }, 'o4'], [53.1, { y: 560, z: 1.0 }, 'io'], [55.7, { y: 540, z: 1.05 }]], hh: 0.6, pulse: 1.3,
+  cam: [[52.0, { y: 640, z: 1.1 }, 'o4'], [53.0, { y: 560, z: 1.0 }, 'io'], [55.7, { y: 540, z: 1.05 }]], hh: 0.6, pulse: 1.3,
 };
 const NEONC = ['#ff3a5c', '#ffc94a', '#ff6fc0'];
 const neonFans = {
