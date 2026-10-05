@@ -15,8 +15,6 @@ SRC = {  # key: (path, max side, canny lo/hi, min component px, inner line weigh
     'iron_466304': ('mv/assets/met/iron_466304.png', 1000, 60, 160, 60, 1),
     'jewel_206840': ('mv/assets/met/jewel_206840.png', 900, 60, 160, 30, 1),
     'watch_207363': ('mv/assets/met/watch_207363.png', 900, 60, 160, 30, 1),
-    'rose': ('mv/assets/v3/obj_d_rose.png', 900, 40, 120, 40, 1),
-    'rose3': ('mv/assets/v3/obj_fi_r3.png', 900, 40, 120, 40, 1),
 }
 OUT = 'mv/assets/neon'
 os.makedirs(OUT, exist_ok=True)
