@@ -408,23 +408,27 @@ function summerYoshino(ctx, t, s) {
 function tomoeKiss(ctx, t, s) {
   layer(ctx, 0.4, g => { bgGrad(g, [[0, '#2a1030'], [0.6, '#6a2a50'], [1, '#2a0c20']]); bokeh(g, t, 18, 61, ['#ffb0c8', '#ffd0a0', '#e8a0ff'], 1, 1.1); });
   const u = uOf(t, s);
-  layer(ctx, 1, g => figure(g, 'to_white', lerpFr(framing('to_white', 'bust', 0.4), framing('to_white', 'face', 0.42), E.inOutSine(u)), { rim: '#ffd0e0', glow: '#ffb0c8', glowA: 0.3 }));
+  layer(ctx, 1, g => figure(g, 'to_cos', lerpFr(framing('to_cos', 'bust', 0.4), framing('to_cos', 'face', 0.42), E.inOutSine(u)), { rim: '#ffd0e0', glow: '#ffb0c8', glowA: 0.3 }));
   layer(ctx, 1.5, g => fgBlur(g, IMG.obj_fi_r3, 1600, 820, 720, lerp(4, 16, u), 0.95, 0.2));
   petals(ctx, t, 12, 63, { a: 0.9, speed: 45, wind: 25, size: 0.9 });
 }
-function shinAway(ctx, t, s) { // 「連れ去って」: dolly down an Alhambra corridor
-  const u = uOf(t, s);
-  layer(ctx, 0, g => cover(g, duo(M('alhambra_263839'), '#140818', '#e8c0e8'), OS, lerp(1.05, 1.9, E.inQuad(u)), 0.5, 0.52));
+function shinAway(ctx, t, s) { // 「連れ去って」: dolly-zoom — the corridor rushes away behind her while she stays
+  const u = uOf(t, s), hold = smooth(Ls(28) + 1.9, Ls(28) + 2.6, t);   // 引き止めた: the pull stops
+  const z = lerp(1.05, 1.75, E.inOutSine(u) * (1 - hold * 0.35));
+  layer(ctx, 0, g => cover(g, duo(M('alhambra_263839'), '#140818', '#e8c0e8'), OS, z, 0.5, 0.52));
   layer(ctx, 0.2, g => glow(g, 960, 560, 300 + u * 300, '#ffe0c8', 0.6));
-  layer(ctx, 1, g => figure(g, 'shi_swim', framing('shi_swim', 'knee', 0.76), { rim: MEM.shi.light, rimSide: -1, glow: MEM.shi.ink, glowA: 0.25 }));
+  const fr = lerpFr(framing('shi_cos', 'bust', 0.7), framing('shi_cos', 'face', 0.7), E.inOutSine(u) * 0.5);
+  layer(ctx, 1, g => figure(g, 'shi_cos', fr, { rim: '#ffd8f0', rimSide: -1, glow: MEM.shi.ink, glowA: 0.22, grade: '#4a2a60', gradeA: 0.15 }));
 }
-
-/* ------------------------------------------------------------ PRE-CHORUS 2 */
-function riamuBells(ctx, t, s) { // wide: bell tower silhouette, camera tilts down
+function riamuBells(ctx, t, s) { // the bell tower behind her; every toll washes over her as a ring of light
   layer(ctx, 0.3, g => { bgGrad(g, [[0, '#1a1036'], [0.7, '#3a2050'], [1, '#160c24']]); stars(g, t, 60, 71, [0, -200, W, 600], 0.6); });
   const hits = []; for (let k = Math.ceil(beatF(s.a) / 2) * 2; beatT(k) < 106.3; k += 2) hits.push(beatT(k));
-  layer(ctx, 0.6, g => { hits.forEach(h => { const v = (t - h) / 2.4; if (v > 0 && v < 1) rings(g, 470, 520, [E.outCubic(v) * 1300], GOLD, 2 * (1 - v) + 0.5, 1 - v); }); place(g, tinted(IMG.obj_p2_bells, '#0c0818'), 470, 760, 700, {}); });
-  layer(ctx, 1, g => figure(g, 'ri_cos', framing('ri_cos', 'knee', 0.72), { rim: MEM.ri.light, rimSide: -1, grade: '#4a3080', gradeA: 0.2 }));
+  let toll = 0; hits.forEach(h => { if (t >= h) toll = Math.max(toll, Math.exp(-(t - h) * 5)); });
+  layer(ctx, 0.5, g => { place(g, tinted(IMG.obj_p2_bells, '#0c0818'), 520, 700, 820, {}); glow(g, 520, 380, 260, '#ffd8a0', 0.25 + toll * 0.4); });
+  layer(ctx, 0.7, g => hits.forEach(h => { const v = (t - h) / 2.4; if (v > 0 && v < 1) rings(g, 520, 380, [E.outCubic(v) * 1600], GOLD, 2 * (1 - v) + 0.5, 1 - v); }));
+  const u = uOf(t, s);
+  const fr = lerpFr(framing('ri_cos', 'bust', 0.68), framing('ri_cos', 'face', 0.68), E.inOutSine(u));
+  layer(ctx, 1, g => figure(g, 'ri_cos', fr, { rim: '#f0dcff', rimA: 0.5 + toll * 0.4, rimSide: -1, grade: '#4a3080', gradeA: 0.2 }));
 }
 function silence(ctx, t, s) {
   photoBG(ctx, 'alhambra_288043', '#06040c', '#4a3a6a', { z: 1.2, depth: 0.4 });
@@ -698,7 +702,7 @@ export function build() {
   add(87.5, summerYoshino, { z: [1.04, 1.1], x: [-40, 40] }, 'sheet', 0.4);
   add(94.37, tomoeKiss, { z: [1.02, 1.08] }, 'dissolve', 0.6);
   add(98.3, shinAway, { z: [1.02, 1.06] }, 'dissolve', 0.5);
-  add(102.62, riamuBells, { y: [-120, 40], z: [1.1, 1.06] }, 'lace', 0.5);
+  add(102.62, riamuBells, { y: [-60, 20], z: [1.06, 1.1] }, 'lace', 0.5);
   add(106.25, silence, { z: [1.04, 1.18] }, 'dissolve', 0.6);
   add(112.33, morningStar, { z: [1.08, 1.02] }, 'flash', 0.5, { tro: { color: '#f0e0ff' } });
   add(Ls(33) - 0.1, moonPavilion, { y: [-60, 40] }, 'dissolve', 0.4);
