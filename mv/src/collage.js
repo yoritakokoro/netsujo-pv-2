@@ -6,9 +6,8 @@ import { font, F } from './text.js';
 
 // stop-motion: animate on twos (15 fps) and add a tiny per-step "boil"
 export const step = t => Math.floor(t * 15) / 15;
-export function boil(t, seed, amt = 1) {
-  const k = Math.floor(t * 7.5);
-  return [(hash(k, seed) - 0.5) * 2.2 * amt, (hash(k, seed + 1) - 0.5) * 2.2 * amt, (hash(k, seed + 2) - 0.5) * 0.006 * amt];
+export function boil(t, seed, amt = 1) { // v5: no jitter, just a slow paper "breathing" drift
+  return [Math.sin(t * 0.45 + seed * 1.7) * 2.5 * amt, Math.cos(t * 0.38 + seed * 2.3) * 2 * amt, 0];
 }
 export function paper(ctx, key = 'paper_cream', a = 1) {
   const img = IMG[key]; if (!img) return;
@@ -58,10 +57,10 @@ export function sticker(ctx, img, cx, cy, h, o = {}) {
   ctx.drawImage(img, -w / 2, -h / 2, w, h);
   ctx.restore();
 }
-// "slap" entrance: from big & tilted to rest, on twos
-export function slap(t, t0, dur = 0.35) {
-  const u = clamp((step(t) - t0) / dur);
-  return { a: u > 0 ? 1 : 0, s: 1 + (1 - E.outBack(u)) * 0.25, r: (1 - E.outCubic(u)) * 0.18, u };
+// entrance of a collage piece: v5 = a calm "laid down" — fades in while settling from slightly above/larger
+export function slap(t, t0, dur = 0.6) {
+  const u = clamp((t - t0) / dur), e = E.outCubic(u);
+  return { a: u > 0 ? E.inOutSine(clamp(u * 1.4)) : 0, s: 1 + (1 - e) * 0.04, r: (1 - e) * 0.02, u };
 }
 export function tape(ctx, x, y, w, rot, color = 'rgba(248,236,200,0.78)', a = 1) {
   if (a <= 0.003) return;

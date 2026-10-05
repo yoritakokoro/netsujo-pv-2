@@ -190,11 +190,11 @@ function drawStrip(ctx, t, l, c, who, fs, size, pa) {
   const align = c.align || 'start';
   const cx = vertical ? c.x : align === 'center' ? c.x : align === 'end' ? c.x - w / 2 : c.x + w / 2;
   const cy = vertical ? c.y + h / 2 : c.y;
-  const inP = E.outBack(clamp((t - c.appear) / 0.35)), outP = E.inCubic(clamp((t - c.exit) / 0.35));
+  const inP = E.outCubic(clamp((t - c.appear) / 0.5)), outP = E.inOutSine(clamp((t - c.exit) / 0.45));
   if (inP <= 0 || outP >= 1) return;
   ctx.save();
-  ctx.translate(cx + outP * (align === 'end' ? 400 : -400), cy); ctx.rotate(c.rot || 0); ctx.scale(lerp(0.85, 1, inP), lerp(0.85, 1, inP));
-  ctx.globalAlpha = clamp(inP * 2) * (1 - outP);
+  ctx.translate(cx, cy - (1 - inP) * 10); ctx.rotate(c.rot || 0); ctx.scale(lerp(0.97, 1, inP), lerp(0.97, 1, inP));
+  ctx.globalAlpha = inP * (1 - outP);
   piece(ctx, 0, 0, w, h, { color: '#f6efe0', seed: l.start * 10 | 0, fringe: 3, shadow: 0.4 });
   ctx.fillStyle = '#9a1028'; // paper tab
   if (vertical) ctx.fillRect(-w / 2, -h / 2 - 4, w, 10); else ctx.fillRect(-w / 2 - 4, -h / 2, 10, h);
@@ -203,7 +203,7 @@ function drawStrip(ctx, t, l, c, who, fs, size, pa) {
     hl: { times: c.hl, dim: 0.35, dimFill: '#1f1514' }, exit: 1e9 });
   ctx.restore();
   const pr = vertical ? [c.x + w / 2 + 8, c.y - 18, 'left'] : align === 'end' ? [c.x, cy - h / 2 - 22, 'right'] : [c.x, cy - h / 2 - 22, 'left'];
-  plate(ctx, who, pr[0], pr[1], clamp(inP * 2) * (1 - outP), pr[2], 0.9);
+  plate(ctx, who, pr[0], pr[1], inP * (1 - outP), pr[2], 0.9);
 }
 
 function heroLine(ctx, t, l, c) {

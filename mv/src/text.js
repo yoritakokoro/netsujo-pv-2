@@ -126,7 +126,7 @@ export function drawText(ctx, t, text, o) {
       case 'drop': a = clamp(p * 3); py -= (1 - e) * size * 1.2; r += (1 - e) * (hash(j, seed) - 0.5) * 1.2; break;
       case 'ink': a = 1; clipP = E.inOutCubic(p); break;
       case 'wave': a = ec; blurMix = 1 - e; py += Math.sin(t * 2.4 + j * 0.55) * size * 0.07; px += Math.sin(t * 1.7 + j * 0.4) * size * 0.05; break;
-      case 'zoom': a = ec; s = 0.4 + 0.6 * E.outBack(p); break;
+      case 'zoom': a = ec; s = 0.78 + 0.22 * ec; blurMix = (1 - e) * 0.6; break;
       case 'slide': a = ec; px += (1 - e) * size * 1.6 * (vertical ? 0 : 1); py += vertical ? (1 - e) * size * 1.6 : 0; blurMix = (1 - e); break;
       default: a = ec;
     }

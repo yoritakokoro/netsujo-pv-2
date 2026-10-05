@@ -15,22 +15,24 @@ export const ORDER = ['yo', 'na', 'shi', 'to', 'ri'];
 export const GOLD = '#f2d9a6', IV = '#fbf4e8';
 
 /* ---------------------------------------------------------------- camera */
-// shot camera: s.cam = { z:[a,b], x:[a,b], y:[a,b], r:[a,b], ease, shake } ; layers have a depth factor.
-let CAM = { z: 1, x: 0, y: 0, r: 0 };
+// v5: the camera is a locked-off tripod with, at most, a slow uniform push (Ken Burns) shared by every
+// layer. No parallax, no roll, no shake: a 2D illustration that slides against its background reads as
+// paper cut-outs wobbling, not as a camera move. s.cam = { z:[a,b], x:[a,b], y:[a,b] } (all optional).
+let CAM = { z: 1, x: 0, y: 0 };
 export function setCam(s, t) {
   const c = s.cam || {};
-  const u = (c.ease || E.inOutSine)(clamp((t - s.a) / Math.max(0.01, (c.dur ?? (s.b - s.a)))));
+  const u = E.inOutSine(clamp((t - s.a) / Math.max(0.01, s.b - s.a)));
   const g = (k, d) => (c[k] ? lerp(c[k][0], c[k][1], u) : d);
-  CAM = { z: g('z', 1.04), x: g('x', 0), y: g('y', 0), r: g('r', 0) };
-  if (c.shake) { CAM.x += noise1(t * 1.7, 11) * c.shake * 10; CAM.y += noise1(t * 1.5, 12) * c.shake * 7; CAM.r += noise1(t * 1.3, 13) * c.shake * 0.004; }
+  CAM = { z: g('z', 1), x: g('x', 0), y: g('y', 0) };
   return CAM;
 }
+// d === 0: locked to the screen (frame ornaments); anything else follows the (uniform) camera
+let nest = 0; // nested layers share the outer transform (never applied twice)
 export function layer(ctx, d, fn) {
-  const z = 1 + (CAM.z - 1) * d;
-  ctx.save();
-  ctx.translate(W / 2, H / 2); ctx.scale(z, z); ctx.rotate(CAM.r * d); ctx.translate(-W / 2 + CAM.x * d, -H / 2 + CAM.y * d);
-  fn(ctx);
-  ctx.restore();
+  if (d === 0 || nest > 0) { fn(ctx); return; }
+  ctx.save(); nest++;
+  ctx.translate(W / 2, H / 2); ctx.scale(CAM.z, CAM.z); ctx.translate(-W / 2 + CAM.x, -H / 2 + CAM.y);
+  try { fn(ctx); } finally { nest--; ctx.restore(); }
 }
 // fill helpers that over-scan, safe under camera moves
 export const OS = [-260, -200, W + 520, H + 400];

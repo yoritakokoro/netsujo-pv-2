@@ -9,13 +9,18 @@ illustrations supplied for this song. All other imagery is CC BY 2.0 photography
 Dataset, filtered by its human-verified labels to exclude any image containing people, then hand-picked,
 upscaled and graded — see [CREDITS.md](CREDITS.md).
 
-## Art direction (v4)
+## Art direction (v5 — the calm cut)
 
-A flamenco night told in **shot sizes and camera moves**: wide establishing shots, two-shots,
-close-ups and object inserts, with a parallax camera (push-ins, pull-backs, pans, tilts, dutch angles).
+A flamenco night, edited the way an MV holds a song: **one shot per phrase or longer**, framings that
+stay put, and a tripod camera — at most a slow uniform push-in shared by every layer (no parallax, roll,
+shake, whip pans or dolly zooms). Shots change with dissolves; hard cuts only where the music hits (chorus
+entries, the bridge). Motion lives inside the picture: candle light warming a room, a moon setting, fans
+opened by hand, smoke, petals, polaroids developing, the bell's rings of light.
 The standing art is used at the size each shot needs — full figure only where it means something
-(the dance-break shadow play, the bell tower), otherwise framed on the face.
+(the dance-break shadow play, the white dress in the mist), otherwise framed on the face.
 
+* **Bookends**: the chants light the five Moorish arches one singer at a time (¡Olé! lights them all);
+  the final chorus returns to the same arches, all lit at dawn.
 * **Outfits come in sets**: stage costumes with stage costumes (chants, choruses, call-and-response
   splits, roll call, line-up), private clothes with private clothes (verse 2 polaroids, B2, bridge, credits).
 * **Official colours**: 依田芳乃 #C4BCB7 · 久川凪 #F8A4BD · 佐藤心 #F04E98 · 村上巴 #AB192C · 夢見りあむ #E89CDC.
@@ -26,7 +31,7 @@ The standing art is used at the size each shot needs — full figure only where 
   and a painted sky ceiling. A fringe valance and lace borders frame the stage.
 * **Collage / polaroids** for memory: the title, the B1 vanity, the guitar table (interlude), verse 2
   summer polaroids that develop, the final "Lleno de amor" polaroid and the credits wall.
-* Chibis where the mood is playful: interlude table, beach strip, dance-break stage, end card.
+* Chibis only as still stickers on the collage pages (interlude table, beach polaroids, credits) and the end card.
 
 ## Reproduce
 
