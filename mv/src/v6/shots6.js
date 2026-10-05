@@ -69,6 +69,8 @@ function litLevel(t, w) {
     v = Math.max(v, smooth(t0, t0 + 0.35, t) * (1 - 0.82 * later)); });
   return v;
 }
+// the face anchors of the costume arts sit off the visual centre of some faces: centre each face in its arch
+const ARCH_DX = { yo: 0.1, na: 0.13, shi: 0.25, to: 0, ri: -0.34 };
 function archWall(g, t, o = {}) {
   fillBig(g, o.base || '#0c0405'); tiles(g, M('tile_187938'), 220, o.tileA ?? 0.17);
   radialW(g, 960, 600, 1300, [[0, o.glowC || 'rgba(130,16,30,0.35)'], [1, 'rgba(0,0,0,0)']]);
@@ -79,7 +81,7 @@ function archWall(g, t, o = {}) {
       kaleido(h, M(o.kale || 'tile_187924'), { n: 8, rot: t * 0.05 + k, R: 620, cx: x, cy: 560, zoom: 1 });
       h.save(); h.globalCompositeOperation = 'multiply'; h.globalAlpha = 0.55; h.fillStyle = MEM[w].deep; h.fillRect(x - 200, 150, 400, 900); h.restore();
       if (o.warm) { h.save(); h.globalCompositeOperation = 'soft-light'; h.globalAlpha = o.warm; h.fillStyle = '#ffb070'; h.fillRect(x - 200, 150, 400, 900); h.restore(); }
-      const fr = framing(COS[w], 'face', (k + 0.5) / 5, { k: 0.7, y: 470 });
+      const fr0 = framing(COS[w], 'face', (k + 0.5) / 5, { k: 0.64, y: 480 }), fr = { ...fr0, x: fr0.x + ARCH_DX[w] * fr0.fh };
       figure(h, COS[w], fr, { rim: MEM[w].light, shadow: false });
       if (l > 0.3) face(h, COS[w], fr);
       if (l < 1) { h.fillStyle = `rgba(8,2,4,${0.9 * (1 - l)})`; h.fillRect(x - 200, 150, 400, 900); }
@@ -212,7 +214,7 @@ const vanity = {
     doodle(g, 'heart', 380, 870, 2.0, clamp((t - Ls(8) - 0.6) / 0.8), MEM.shi.ink, 5);
     scribble(g, t, Ls(9) - 0.1, 'à la madame…', 200, 120, 54, '#7a1f3a', -0.05, 1.2);
   },
-  over(g, t) { stripText(g, t, 8, 120, 900, -0.025, { exit: 31.75 }); stripText(g, t, 9, 120, 900, 0.015, { exit: 34.6 }); },
+  over(g, t) { stripText(g, t, 8, 120, 900, -0.025, { exit: 31.75 }); stripText(g, t, 9, 120, 900, 0.015, { exit: 34.6 }); echo(g, t, 9, 1460, 900, -0.08); },
   cam: [[30.3, { x: 760, y: 560, z: 1.08 }, 'l'], [34.75, { x: 1250, y: 540, z: 1.0 }]], hh: 0.5, pulse: 0.6,
 };
 const mantle = {
@@ -227,13 +229,17 @@ const mantle = {
       b.globalCompositeOperation = 'destination-in'; const gr = b.createLinearGradient(0, dh * 0.55, 0, dh); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); b.fillStyle = gr; b.fillRect(0, 0, dw, dh);
       const sway = Math.sin((t - Ls(11)) * 1.7) * 0.04 * n;
       g.save(); g.translate(40 + dw / 2, -160); g.transform(1, 0, sway, 1, 0, 0); g.shadowColor = 'rgba(8,0,2,0.6)'; g.shadowBlur = 40; g.shadowOffsetY = 24; g.drawImage(c, -dw / 2, 0); g.restore(); }
+    // Yoshino in her stage costume in front of the mantón; the light on her turns from crimson to night lavender
+    const fr = lerpFr(framing('yo_cos', 'bust', 0.4), framing('yo_cos', 'face', 0.42), 0.35);
+    figure(g, 'yo_cos', fr, { rim: n > 0.5 ? '#d8d0ff' : '#ffb0a0', rimA: 0.65, grade: n > 0.5 ? '#3a3080' : '#a01828', gradeA: 0.16, gradeOp: 'soft-light' }); face(g, 'yo_cos', fr);
+    if (n > 0 && n < 1) { g.save(); g.globalAlpha = n; figure(g, 'yo_cos', fr, { shadow: false, rim: '#d8d0ff', rimA: 0.65, grade: '#3a3080', gradeA: 0.16, gradeOp: 'soft-light' }); g.restore(); }
   },
   over(g, t, s) {
     const roll = 1 - 0.55 * smooth(Ls(11) - 0.3, Ls(11) + 0.3, t);
     L(g, t, 10, { x: 1600, y: 180, vertical: true, size: 180, kana: 0.46, fill: '#fbf0e6', glow: 'rgba(255,60,70,0.55)', alpha: roll, exit: s.b + 0.2, drift: [0, 20] });
     L(g, t, 11, { x: 1400, y: 300, vertical: true, size: 100, kana: 0.56, fill: '#ece6ff', glow: 'rgba(170,160,255,0.55)', exit: s.b + 0.2, drift: [0, 16] });
   },
-  cam: [[34.75, { y: 380, z: 1.12 }, 'o'], [38.45, { y: 600, z: 1.0 }]], hh: 0.5, pulse: 0.7,
+  cam: [[34.75, { x: 900, y: 600, z: 1.0 }, 'o'], [38.45, { x: 940, y: 520, z: 1.1 }]], hh: 0.5, pulse: 0.7,
 };
 
 /* ================================================================ PRE-CHORUS */
@@ -249,7 +255,7 @@ const mirror = {
     const fr = lerpFr(framing('na_cos', 'knee', 0.76), framing('na_cos', 'bust', 0.74), 0.5);
     figure(g, 'na_cos', fr, { rim: '#ffd0a0', rimSide: -1, glow: '#ffb040', glowA: 0.2 }); face(g, 'na_cos', fr);
   },
-  over(g, t) { L(g, t, 12, { x: 150, y: 950, size: 74, kana: 0.62, fill: '#fff4e6', glow: 'rgba(255,190,110,0.45)', drift: [24, 0] }); },
+  over(g, t) { L(g, t, 12, { x: 150, y: 950, size: 74, kana: 0.62, fill: '#fff4e6', glow: 'rgba(255,190,110,0.45)', drift: [24, 0] }); echo(g, t, 11, 1480, 760, 0.06); },
   cam: [[38.45, { x: 640, y: 540, z: 1.2 }, 'io'], [42.3, { x: 1150, y: 540, z: 1.04 }]], hh: 0.5, pulse: 0.7,
 };
 const fans5 = {
@@ -378,12 +384,415 @@ const table = {
     ['c_yo', 'c_na', 'c_shi', 'c_to', 'c_ri'].forEach((k, j) => { const p = pop(t, 69.95 + j * T.bar * 0.75);
       sticker(g, IMG[k], 300 + j * 760, 260 - hop(bp, j * 0.5, 22) + (j % 2) * 520, 330 * p.s, { a: p.a, rot: (j % 2 ? 0.1 : -0.08) + p.r }); });
     polaroid(g, IMG.cover, 2250, 760, 420, { rot: -0.08, z: 1.1, caption: '¡olé!', capColor: '#7a1f2a' });
-    earrings(g, M('jewel_141739'), 3000, 900, 260, t, 1); tape(g, 2250, 520, 160, 0.2); tape(g, 3300, 280, 180, -0.2);
+    earrings(g, M('jewel_141739'), 3000, 900, 260, t, 1); tape(g, 2250, 520, 160, 0.2); tape(g, 3610, 300, 170, 0.45);
     scribble(g, t, 70.6, 'esta noche ♪', 1160, 160, 70, '#7a1f2a', -0.08, 1.0); doodle(g, 'swoosh', 1300, 230, 4, clamp((t - 71.3) / 0.7), '#7a1f2a', 5);
   },
   cam: [[69.75, { x: 960, y: 540, z: 1.06 }, 'io'], [79.43, { x: 2860, y: 540, z: 1.0 }]], hh: 0.6, pulse: 0.8,
 };
-const black = { plate(g) { fillBig(g, '#000'); }, mblur: false };
+/* ================================================================ shared: echo words, low lines, colour split */
+// the whispered answer that follows a line (くらり / 誘う / ゆらり / 試す)
+function echo(g, t, i, x, y, rot = 0) {
+  const l = T.lines[i]; if (!l.echo) return;
+  const ts = l.end - 0.05, a = smooth(ts, ts + 0.3, t) * (1 - smooth(ts + 1.5, ts + 2.0, t)); if (a <= 0.01) return;
+  g.save(); g.translate(x, y - (t - ts) * 10); g.rotate(rot);
+  drawText(g, t, '（' + l.echo + '）', { x: 0, y: 0, size: 46, fontStr: font(F.yusei, 46, 400), fill: '#fbe6c8', glow: 'rgba(255,170,90,0.8)', glowBlur: 16, start: ts, stagger: 0.08, anim: 'blur', track: 0.2, alpha: a });
+  g.restore();
+}
+const low = (g, t, i, side, y = 950, o = {}) => L(g, t, i, { x: side === 'R' ? 1780 : 140, y, align: side === 'R' ? 'end' : 'start', size: 68, kana: 0.64, drift: [side === 'R' ? -18 : 18, 0], ...o });
+function colourSplit(g, t, L0, R0, tR, o = {}) {
+  const side = (who, key, flip, xFace, kale) => h => {
+    const m = MEM[who], fr = framing(key, 'bust', xFace, { k: 1.25 });
+    kaleW(h, t, kale, { tint: m.deep, tintA: 0.4, spin: flip ? -0.03 : 0.03, cx: xFace * W, R: 1500 });
+    if (o.warm) washW(h, '#ffb080', 0.18, 'soft-light');
+    figure(h, key, fr, { flip: !!flip, rim: m.light, rimSide: flip ? -1 : 1, grade: o.grade, gradeA: o.gradeA, gradeOp: o.gradeOp }); face(h, key, fr);
+  };
+  side(L0.who, L0.key, false, 0.27, L0.kale)(g);
+  const k = E.outExpo(clamp((t - (tR - 0.12)) / 0.4)), cut = lerp(W + 300, W * 0.52, k), sk = 150;
+  if (k > 0) { withMask(g, rectPath(cut, BIG[1], W * 3, BIG[3], -sk * 3), side(R0.who, R0.key, true, 0.75, R0.kale));
+    g.save(); g.strokeStyle = GOLD; g.lineWidth = 4; g.shadowColor = '#ffe0a0'; g.shadowBlur = 20; g.beginPath(); g.moveTo(cut + sk, -400); g.lineTo(cut - sk, H + 400); g.stroke(); g.restore(); }
+}
+const splitText = (g, t, i) => { L(g, t, i, { to: 4, x: 140, y: 880, size: 76, kana: 0.7 }); L(g, t, i, { from: 5, x: 1780, y: 960, align: 'end', size: 76, kana: 0.7 }); };
+
+/* ================================================================ VERSE 2: summer polaroids (private clothes) */
+const summerNagi = {
+  plate(g, t, s) {
+    fillBig(g, '#efe4d0'); const p = IMG.paper_cream; if (p) g.drawImage(p, -600, -400, W + 1600, H + 800);
+    let f = fly(t, s.a + 0.1, [-0.4, -1], 900, -0.4); if (f.a) { g.save(); g.translate(f.dx, f.dy);
+      polaroid(g, IMG.photo_v2_moonbeach, 520, 430, 560, { rot: -0.08 + f.r, z: 1.3, fx: 0.55, caption: 'summer night', filter: `${develop((t - s.a) / 2.4)} brightness(1.6)` }); tape(g, 520, 130, 170, 0.05); g.restore(); }
+    f = fly(t, s.a + 0.1 + 2 * T.beat, [0.5, -1], 900, 0.35); if (f.a) { g.save(); g.translate(f.dx, f.dy);
+      polaroid(g, null, 1250, 470, 640, { rot: 0.05 + f.r, caption: 'nagi', capColor: '#8a3a58',
+        draw: (h, px, py, pw, ph) => { h.fillStyle = MEM.na.light; h.fillRect(px, py, pw, ph); h.filter = develop((t - s.a - 0.9) / 2.4); const fr = { x: px + pw * 0.5, y: py + ph * 0.42, fh: ph * 0.36 }; figure(h, 'na_casual', fr, { shadow: false, floor: py + ph + 4 }); face(h, 'na_casual', fr); h.filter = 'none'; } });
+      tape(g, 1250, 120, 170, -0.1, 'rgba(255,200,215,0.7)'); g.restore(); }
+    f = fly(t, Ls(24) - 0.3, [1, 0], 1200, 0.1); if (f.a) { g.save(); g.translate(f.dx, f.dy); piece(g, 1600, 960, 1000, 180, { img: IMG.photo_fi_sail, z: 1.6, fx: 0.5, fy: 0.62, rot: -0.02, seed: 55 }); g.restore(); }
+    const bp = beatF(t);
+    ['c_shi_swim', 'c_to_white', 'c_ri_resort'].forEach((k, j) => { const q = pop(t, Ls(24) - 0.05 + j * 0.15); sticker(g, IMG[k], 1400 + j * 170, 950 - hop(bp, j * 0.33, 14), 150 * q.s, { a: q.a, rot: (j - 1) * 0.08 + q.r, shadow: 0.25, lift: 0.5 }); });
+    scribble(g, t, Ls(24) + 0.8, 'ha ha ♪', 1820, 830, 46, '#3a5aa0', -0.05, 0.8);
+  },
+  over(g, t) { stripText(g, t, 23, 110, 860, -0.02, { exit: 87.2 }); stripText(g, t, 24, 110, 960, 0.015, { exit: 87.3 }); },
+  cam: [[79.43, { x: 840, y: 540, z: 1.07 }, 'l'], [87.5, { x: 1140, y: 540, z: 1.0 }]], hh: 0.5, pulse: 0.5,
+};
+const summerYoshino = {
+  plate(g, t, s) {
+    fillBig(g, '#f2dccf'); const p = IMG.paper_peach; if (p) g.drawImage(p, -600, -400, W + 1600, H + 800);
+    let f = fly(t, s.a + 0.05, [-1, -0.3], 1000, -0.3); if (f.a) { g.save(); g.translate(f.dx, f.dy);
+      polaroid(g, null, 610, 432, 590, { rot: -0.05 + f.r, caption: 'yoshino', capColor: '#7a5a50',
+        draw: (h, px, py, pw, ph) => { h.fillStyle = MEM.yo.light; h.fillRect(px, py, pw, ph); h.filter = develop((t - s.a) / 2.4); const fr = { x: px + pw * 0.42, y: py + ph * 0.4, fh: ph * 0.36 }; figure(h, 'yo_swim', fr, { shadow: false, floor: py + ph + 4 }); face(h, 'yo_swim', fr); h.filter = 'none'; } }); g.restore(); }
+    f = fly(t, s.a + 0.05 + 2 * T.beat, [1, -0.5], 1000, 0.4); if (f.a) { g.save(); g.translate(f.dx, f.dy);
+      polaroid(g, IMG.photo_br_palms, 1380, 360, 480, { rot: 0.07 + f.r, z: 1.2, caption: 'la playa', filter: develop((t - s.a - 1) / 2.2) }); g.restore(); }
+    earrings(g, M('jewel_206850'), 1040, 300 - (1 - E.outExpo(clamp((t - Ls(25) - 0.4) / 0.6))) * 600, 300, t, clamp((t - Ls(25) - 0.4) * 5));
+    const q = pop(t, Ls(26) - 0.2), bp = beatF(t);
+    if (q.a) { sticker(g, IMG.c_yo_swim, 1520, 900 - hop(bp, 0, 26), 250 * q.s, { a: q.a, rot: -0.12 + Math.sin(t * 6) * 0.06 + q.r });
+      sticker(g, IMG.c_na_casual, 1700, 910 - hop(bp, 0.5, 26), 250 * q.s, { a: q.a, rot: 0.12 - Math.sin(t * 6) * 0.06 - q.r }); }
+    doodle(g, 'heart', 1610, 740, 1.5, clamp((t - Ls(26) - 0.2) / 0.6), MEM.na.ink, 4);
+  },
+  over(g, t) { stripText(g, t, 25, 110, 905, 0.015, { exit: 94.2 }); stripText(g, t, 26, 110, 995, -0.012, { exit: 94.25 }); },
+  cam: [[87.5, { x: 830, y: 540, z: 1.06 }, 'l'], [94.37, { x: 1090, y: 540, z: 1.0 }]], hh: 0.5, pulse: 0.5,
+};
+
+/* ================================================================ B2 / PRE 2 */
+const roseKiss = {
+  plate(g, t) {
+    fillBig(g, '#f2dccf'); const p = IMG.paper_peach; if (p) g.drawImage(p, -600, -400, W + 1200, H + 800);
+    const im = M('rose_334302'); if (im) { const h = 930, w = im.width * h / im.height;
+      g.save(); g.translate(760, 545); g.rotate(-0.025); g.shadowColor = 'rgba(60,20,30,0.35)'; g.shadowBlur = 30; g.shadowOffsetY = 14; g.fillStyle = '#fffaf4'; g.fillRect(-w / 2 - 22, -h / 2 - 22, w + 44, h + 44); g.restore();
+      g.save(); g.translate(760, 545); g.rotate(-0.025); g.drawImage(im, -w / 2, -h / 2, w, h); g.restore(); tape(g, 760, 82, 200, 0.04, 'rgba(255,214,226,0.75)'); }
+    bokeh(g, t, 14, 61, ['#ffd0dc', '#fff0e0', '#f0c8ff'], 0.55, 1.0);
+    petals(g, t, 12, 63, { a: 0.8, speed: 35, wind: 20, size: 0.9, rect: [-300, -300, W + 600, H + 600] });
+  },
+  over(g, t) { const st = { fill: '#3a1420', glow: 'rgba(255,255,255,0.75)', glowBlur: 14, shadow: null, hot: '#b01e3c', size: 118, kana: 0.5, vertical: true };
+    L(g, t, 27, { ...st, to: 10, x: 1720, y: 150, drift: [0, 14] }); L(g, t, 27, { ...st, from: 10, x: 1560, y: 330, drift: [0, 14], accent: { from: 3, to: 7, fill: '#b01e3c' } }); },
+  cam: [[94.37, { x: 880, y: 560, z: 1.12 }, 'io'], [98.3, { x: 980, y: 530, z: 1.0 }]], hh: 0.5, pulse: 0.6,
+};
+const shinAway = {
+  plate(g, t) {
+    fillBig(g, '#140818'); const im = M('alhambra_263839'); if (im) cover(g, duo(im, '#140818', '#e8c0e8'), [-500, -400, W + 1000, H + 800], 1.15, 0.5, 0.52);
+    glow(g, 960, 560, 520, '#ffe0c8', 0.55);
+    const fr = lerpFr(framing('shi_cos', 'bust', 0.7), framing('shi_cos', 'face', 0.7), 0.3);
+    figure(g, 'shi_cos', fr, { rim: '#ffd8f0', rimSide: -1, glow: MEM.shi.ink, glowA: 0.22, grade: '#4a2a60', gradeA: 0.15 }); face(g, 'shi_cos', fr);
+  },
+  over(g, t) { const st = { fill: '#fbeefa', glow: 'rgba(255,170,230,0.5)', size: 82, kana: 0.6, vertical: true };
+    L(g, t, 28, { ...st, to: 8, x: 340, y: 150, drift: [0, 14] }); L(g, t, 28, { ...st, from: 8, x: 210, y: 230, drift: [0, 14] }); echo(g, t, 27, 760, 560, -0.05); },
+  cam: [[98.3, { x: 1080, y: 560, z: 1.0 }, 'io'], [102.62, { x: 1180, y: 520, z: 1.14 }]], hh: 0.6, pulse: 0.7,
+};
+const bellHits = s => { const h = []; for (let k = Math.ceil(beatF(s.a) / 4) * 4; beatT(k) < 106.3; k += 4) h.push(beatT(k)); return h; };
+const riamuBells = {
+  plate(g, t, s) {
+    gradBig(g, [[0, '#120a28'], [0.6, '#3a2050'], [1, '#160c24']]); stars(g, t, 80, 71, [-300, -400, W + 600, 900], 0.6);
+    const hits = bellHits(s); let toll = 0; hits.forEach(h => { if (t >= h) toll = Math.max(toll, Math.exp(-(t - h) * 3)); });
+    place(g, tinted(IMG.obj_p2_bells, '#0c0818'), 520, 700, 820, {}); glow(g, 520, 380, 280, '#ffd8a0', 0.25 + toll * 0.35);
+    hits.forEach(h => { const v = (t - h) / 3.2; if (v > 0 && v < 1) rings(g, 520, 380, [E.outCubic(v) * 1700], GOLD, 2 * (1 - v) + 0.5, 0.75 * (1 - v)); });
+    const fr = lerpFr(framing('ri_cos', 'bust', 0.68), framing('ri_cos', 'face', 0.68), 0.5);
+    figure(g, 'ri_cos', fr, { rim: '#f0dcff', rimA: 0.5 + toll * 0.3, rimSide: -1, grade: '#4a3080', gradeA: 0.2 }); face(g, 'ri_cos', fr);
+  },
+  over(g, t) { low(g, t, 29, 'L', 950, { fill: '#f6eeff', glow: 'rgba(200,170,255,0.5)' }); echo(g, t, 28, 900, 230, 0.05); },
+  cam: [[102.62, { x: 900, y: 640, z: 1.1 }, 'o'], [106.25, { x: 980, y: 540, z: 1.0 }]], hh: 0.6, pulse: 0.8,
+};
+const silence = {
+  plate(g, t, s) {
+    fillBig(g, '#06040c'); const im = M('alhambra_288043'); if (im) cover(g, duo(im, '#06040c', '#4a3a6a'), [-500, -400, W + 1000, H + 800], 1.1);
+    stars(g, t, 80, 81, [-300, -300, W + 600, 800], 0.4 * (1 - smooth(110, 112, t)));
+    const q = E.inOutSine(inv(s.a + 0.4, 110.4, t));
+    for (const sd of [-1, 1]) { glow(g, 960 + sd * lerp(440, 30, q), 520, 130, sd < 0 ? '#ffd0a0' : '#ffb0d0', 0.9); sparkle(g, 960 + sd * lerp(440, 30, q), 520, 0.9, 1); }
+    if (q > 0.96) glow(g, 960, 520, 400 + (t - 110.4) * 300, '#fff0f8', Math.min(1, (q - 0.96) * 25));
+  },
+  over(g, t) { L(g, t, 30, { x: 960, y: 760, align: 'center', size: 80, kana: 0.62, fill: '#f8f0ff', glow: 'rgba(220,190,255,0.6)', exit: 111.9 }); },
+  cam: [[106.25, { z: 1.0 }, 'iq'], [112.33, { z: 1.22 }]], hh: 0.4, pulse: 0.6,
+};
+
+/* ================================================================ CHORUS 2 (midnight) */
+const morningStar = {
+  plate(g, t) {
+    fillBig(g, '#0c0818'); cover(g, IMG.card_na, [-300, -200, W + 600, H + 400], 1.2, 0.42, 0.45);
+    radialW(g, 960, 540, 1300, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(20,6,30,0.55)']]);
+    sparkle(g, 1660, 140, 2.8 + pulse(t, 4) * 0.4, 1); glow(g, 1660, 140, 300, '#e8d8ff', 0.6);
+    petals(g, t, 16, 21, { a: 0.9, speed: 90, wind: 80, rect: [-300, -300, W + 600, H + 600] });
+    addFace(g, 960 + (CF.cardNa.na[0] - 0.42) * 0, 520, 300);
+  },
+  over(g, t) { slam(g, t, 'Enamorar!!', T.lines[31].chars.concat([112.85, 112.9]), { x: 960, y: 190, size: 150, exit: 113.7, gloss: '恋　に　落　ち　て' }); low(g, t, 32, 'L', 950); },
+  cam: [[112.33, { z: 1.35 }, 'ox'], [113.5, { z: 1.0 }, 'io'], [115.4, { z: 1.05 }]], hh: 0.6, pulse: 1.4,
+};
+const moonSet = {
+  plate(g, t, s) {
+    const u = clamp((t - s.a) / (s.b - s.a));
+    gradBig(g, [[0, '#04030c'], [0.65, '#141038'], [1, '#2a1838']], -500, 1200); stars(g, t, 160, 93, [-300, -500, W + 600, 1400], 0.7);
+    const my = lerp(250, 520, E.inOutSine(u)); obj(g, IMG.obj_c2_moon, 1320, my, 460, { shadow: false }); glow(g, 1320, my, 540, '#ffd8a0', 0.32);
+    const im = M('alhambra_263835'); if (im) { const [c, b] = buf('moon6', W + 800, 900); cover(b, duo(im, '#06040e', '#7a6aa8'), [0, 0, W + 800, 900], 1.0, 0.5, 0.78);
+      b.globalCompositeOperation = 'destination-in'; const gr = b.createLinearGradient(0, 0, 0, 320); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,1)'); b.fillStyle = gr; b.fillRect(0, 0, W + 800, 900); g.drawImage(c, -400, 300); }
+  },
+  over(g, t) { low(g, t, 33, 'R', 950, { fill: '#f0eaff', glow: 'rgba(200,190,255,0.5)' }); },
+  cam: [[115.4, { y: 420, z: 1.06 }, 'io'], [119.45, { y: 580, z: 1.0 }]], hh: 0.5, pulse: 1.0,
+};
+const watchDial = {
+  plate(g, t) {
+    kaleW(g, t, 'tile_187912', { tint: '#0a0818', tintA: 0.65, spin: 0.01 });
+    const k = Math.floor(beatF(t)), fr = E.outCubic(clamp((beatF(t) - k) * 4)), rot = (k + fr) * (TAU / 60);
+    ['watch_207363', 'watch_195645', 'watch_187195', 'watch_194040', 'watch_194033'].forEach((w, j) => { const a = (j / 5) * TAU - Math.PI / 2 + 0.3 + t * 0.06; obj(g, M(w), 960 + Math.cos(a) * 600, 540 + Math.sin(a) * 340, 250, { rot: Math.sin(t * 0.8 + j) * 0.05 }); });
+    withMask(g, circlePath(960, 540, 240), h => { fillBig(h, '#0a0814'); obj(h, M('watch_194208'), 960, 590, 560, { shadow: false, a: 0.28 }); radialW(h, 960, 540, 260, [[0, 'rgba(10,8,20,0.2)'], [1, 'rgba(10,8,20,0.85)']]); });
+    rings(g, 960, 540, [246, 262], GOLD, 2, 0.9);
+    for (let j = 0; j < 60; j++) { const a = (j / 60) * TAU - Math.PI / 2; g.save(); g.strokeStyle = GOLD; g.globalAlpha = 0.6; g.lineWidth = j % 5 ? 1 : 3; g.beginPath(); g.moveTo(960 + Math.cos(a) * 280, 540 + Math.sin(a) * 280); g.lineTo(960 + Math.cos(a) * (j % 5 ? 296 : 312), 540 + Math.sin(a) * (j % 5 ? 296 : 312)); g.stroke(); g.restore(); }
+    const ha = rot - Math.PI / 2; g.save(); g.strokeStyle = GOLD; g.lineWidth = 3; g.beginPath(); g.moveTo(960 + Math.cos(ha) * 262, 540 + Math.sin(ha) * 262); g.lineTo(960 + Math.cos(ha) * 318, 540 + Math.sin(ha) * 318); g.stroke(); g.restore();
+  },
+  over(g, t, s, c) {
+    slam(g, t, 'Enamorar!!', T.lines[34].chars.concat([120.45, 120.5]), { x: 960, y: 150, size: 140, exit: 120.4, gloss: '' });
+    const [cx, cy] = [W / 2 + (960 - c.x) * c.z, H / 2 + (540 - c.y) * c.z];
+    L(g, t, 35, { to: 6, x: cx, y: cy - 50 * c.z, align: 'center', size: 96 * c.z, kana: 0.5, fill: '#e8e4f4', glow: 'rgba(170,170,255,0.4)', exit: 123.25 });
+    L(g, t, 35, { from: 7, x: cx, y: cy + 85 * c.z, align: 'center', size: 120 * c.z, kana: 0.55, fill: { grad: ['#fffaf0', '#f2d9a6', '#c8a05a'] }, exit: 123.25 });
+  },
+  cam: [[119.45, { z: 1.3 }, 'ox'], [120.4, { z: 1.0 }, 'io'], [123.2, { z: 1.07 }]], hh: 0.5, pulse: 1.3,
+};
+const split3 = { plate(g, t) { monoSplit(g, t, { who: 'shi', key: 'shi_cos' }, { who: 'to', key: 'to_cos' }, T.lines[36].chars[5], ['dish_471762', 'iron_466304']); },
+  over(g, t) { splitText(g, t, 36); }, cam: [[123.2, { z: 1.0 }, 'l'], [125.35, { z: 1.05 }]], hh: 0.6, pulse: 1.3 };
+const split4 = { plate(g, t) { monoSplit(g, t, { who: 'na', key: 'na_cos' }, { who: 'ri', key: 'ri_cos' }, T.lines[37].chars[5], ['iron_466304', 'dish_468516']); },
+  over(g, t) { splitText(g, t, 37); }, cam: [[125.35, { z: 1.0 }, 'l'], [127.55, { z: 1.05 }]], hh: 0.6, pulse: 1.3 };
+function blurInto(g, px, draw) {
+  if (px < 0.6) { draw(g); return; }
+  const m = g.getTransform(); const [c, b] = buf('rack6', W / 2, H / 2);
+  b.filter = `blur(${px / 2}px)`; b.save(); b.setTransform(m.a / 2, m.b / 2, m.c / 2, m.d / 2, m.e / 2, m.f / 2); draw(b); b.restore(); b.filter = 'none';
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(c, 0, 0, W, H); g.restore();
+}
+const bubbles = {
+  plate(g, t, s) {
+    const u = clamp((t - s.a) / (s.b - s.a)), rack = E.inOutSine(clamp((u - 0.25) / 0.45)), f = CF.cardYo.yo;
+    fillBig(g, '#120608');
+    blurInto(g, lerp(22, 0, rack), b => cover(b, IMG.card_yo, [-200, -150, W + 400, H + 300], 2.0, f[0] + 0.03, f[1] - 0.01));
+    if (rack > 0.5) addFace(g, 960, 470, 420);
+    washW(g, '#3a1020', lerp(0.35, 0.12, rack), 'multiply');
+    g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = lerp(0.95, 0.6, rack);
+    blurInto(g, lerp(0, 26, rack), b => { b.filter = 'contrast(1.5) brightness(0.85) saturate(0.7) sepia(0.35)'; cover(b, IMG.photo_c2_fizz, [-200, -150, W + 400, H + 300], 2.1, 0.6, lerp(0.62, 0.4, u)); b.filter = 'none'; });
+    g.restore();
+    for (let i = 0; i < 9; i++) { const a = smooth(0.5 + i * 0.04, 0.65 + i * 0.04, u) * (0.6 + 0.4 * Math.sin(t * 3 + i)); sparkle(g, 300 + hash(i, 41) * 1300, lerp(900, 120, (u * 0.7 + hash(i, 42)) % 1), 0.5 + hash(i, 43) * 0.5, a, '#fff0f4'); }
+  },
+  over(g, t) { low(g, t, 38, 'R', 950, { fill: '#fff0f4', glow: 'rgba(255,190,210,0.55)' }); },
+  cam: [[127.55, { z: 1.0 }, 'l'], [130.55, { z: 1.1 }]], hh: 0.4, pulse: 0.8,
+};
+const guitarMacro = {
+  plate(g, t) { fillBig(g, '#0c0604'); glow(g, 900, 560, 900, '#ffb060', 0.3); obj(g, M('guitar_503932'), 1050, 560, 1700, { rot: -1.25, shadow: false }); embers(g, t, 40, 101, { a: 0.7, speed: 50, rect: [-300, -300, W + 600, H + 600] }); },
+  over(g, t) { const l = T.lines[39];
+    drawText(g, t, l.text, { x: 960, y: 520, align: 'center', size: 150, fontStr: font(F.script, 150, 400), fill: { grad: ['#fff6e0', '#f6d58e', '#d9a548'] }, glow: 'rgba(255,190,120,0.6)', glowBlur: 24, start: l.start - 0.15, stagger: 0.06, dur: 0.8, anim: 'blur', exit: 133.7, exitAnim: 'up', exitDur: 0.5 }); },
+  cam: [[130.55, { x: 760, z: 1.08 }, 'io'], [133.62, { x: 1180, z: 1.0 }]], hh: 0.5, pulse: 0.9,
+};
+
+/* ================================================================ DANCE BREAK */
+const danceWall = {
+  plate(g, t) {
+    fillBig(g, '#080304'); kaleido(g, M('tile_187924'), { n: 8, rot: t * 0.03, R: 1900, cy: 620, zoom: 1.2 }); washW(g, '#ff8a40', 0.35, 'soft-light');
+    radialW(g, 960, 1150, 1400, [[0, 'rgba(0,0,0,0)'], [0.55, 'rgba(0,0,0,0.35)'], [1, 'rgba(0,0,0,0.92)']]);
+    const sway = Math.sin((t - 133.62) * Math.PI / T.beat / 4) * 0.03, fl = 0.8 + 0.2 * noise1(t * 3, 9) + 0.15 * pulse(t);
+    g.save(); g.filter = 'blur(14px)'; g.globalAlpha = 0.7 * fl; place(g, tinted(IMG.na_cos, '#0a0204'), 1260, 470, 1650, { rot: sway }); g.restore();
+    ink(g, IMG.ink_c1_blaze, '#ff7a2a', [-200, 600, W + 400, 520], 1.05, 0.5, 0.7, 0.85, 'screen');
+    const fr = framing('na_cos', 'wide', 0.45, { h: 1000 }); figure(g, 'na_cos', fr, { glow: '#ff7a3c', glowA: 0.45, rim: '#ffb070' }); face(g, 'na_cos', fr);
+    embers(g, t, 50, 41, { a: 0.9, speed: 100, rect: [-300, -300, W + 600, H + 600] });
+  },
+  cam: [[133.62, { y: 600, z: 1.16 }, 'o'], [141.36, { y: 540, z: 1.0 }]], hh: 0.7, pulse: 1.2,
+};
+const NDISH = { yo: 'iron_466304', na: 'dish_471762', shi: 'dish_468516', to: 'iron_466304', ri: 'dish_471762' };
+const rollCall = (who, size, k = 1) => ({
+  plate(g, t) {
+    const m = MEM[who], fr = framing(COS[who], size, 0.66, { k });
+    fillBig(g, '#06030a'); radialW(g, fr.x, 520, 1300, [[0, rgba(m.deep, 1)], [0.6, rgba(m.deep, 0.4)], [1, 'rgba(0,0,0,0)']]);
+    neonStroke(g, m.ink, 3, q => { for (let j = -2; j < 9; j++) horseshoe(q, 120 + j * 290, H + 60, 220, 820); }, 0.75 + 0.25 * pulse(t));
+    neon(g, NDISH[who], fr.x, fr.y, fr.fh * 2.6, m.ink, { a: 0.75, rot: t * 0.06 });
+    figure(g, COS[who], fr, { rim: m.light, rimSide: -1 }); face(g, COS[who], fr);
+  },
+  over(g, t, s) {
+    const m = MEM[who], p = E.outExpo(clamp((t - s.a - 0.1) / 0.6));
+    g.save(); g.globalAlpha = 0.3 * p; g.font = font(F.anton, 420, 400); g.textBaseline = 'middle'; g.textAlign = 'center'; g.strokeStyle = m.light; g.lineWidth = 3; g.strokeText(m.name, 640 - (1 - p) * 200 + (t - s.a) * 12, 560); g.restore();
+    label(g, m.name, 150 - (1 - p) * 80, 780, { fam: F.anton, size: 110, color: IV, track: 0.06, alpha: p });
+    g.save(); g.globalAlpha = p; g.fillStyle = m.ink; g.fillRect(156, 812, 260 * p, 6); g.restore();
+    label(g, `${m.jp}　CV.${m.cv}`, 156, 870, { size: 28, weight: 700, color: IV, track: 0.12, alpha: smooth(s.a + 0.35, s.a + 0.9, t) });
+  },
+  cam: [[0, { x: 1010, z: 1.08 }, 'l'], [1, { x: 930, z: 1.0 }]], hh: 0.6, pulse: 1.0,
+});
+const jewels = {
+  plate(g, t, s) {
+    const p = inv(s.a, 166.53, t);
+    kaleW(g, t, 'tile_187933', { tint: '#4a0610', tintA: 0.5, spin: 0.03 + 0.1 * p });
+    lightRays(g, 960, 540, 1700, t * 0.06, 30, '#ffd08a', 0.15 + 0.5 * smooth(163.5, 166.3, t));
+    const xs = ORDER.map((w, k) => 960 + (k - 2) * 340), y = k => 540 + Math.abs(k - 2) * 26;
+    const chain = smooth(s.a, s.a + 1.2, t);
+    g.save(); g.strokeStyle = GOLD; g.globalAlpha = 0.8 * chain; g.lineWidth = 2; g.setLineDash([2, 8]); g.beginPath(); g.moveTo(-400, 470); xs.forEach((x, k) => g.lineTo(x, y(k) - 150)); g.lineTo(W + 400, 470); g.stroke(); g.restore();
+    ORDER.forEach((w, k) => { const a = smooth(s.a + 0.3 + k * T.bar * 0.5, s.a + 0.7 + k * T.bar * 0.5, t); if (a <= 0) return;
+      const sc = 1 + 0.25 * (1 - E.outExpo(clamp((t - s.a - 0.3 - k * T.bar * 0.5) / 0.5)));
+      g.save(); g.globalAlpha = a; g.translate(xs[k], y(k)); g.scale(sc, sc); g.translate(-xs[k], -y(k));
+      glow(g, xs[k], y(k), 230, MEM[w].ink, 0.45 + 0.3 * pulse(t));
+      withMask(g, circlePath(xs[k], y(k), 142), h => cover(h, IMG.cover, [xs[k] - 142, y(k) - 142, 284, 284], 4.2, CF.cover[w][0], CF.cover[w][1]));
+      rings(g, xs[k], y(k), [146], GOLD, 4, 1); rings(g, xs[k], y(k), [156], MEM[w].ink, 3, 0.9); g.restore(); });
+    embers(g, t, Math.round(24 + 50 * p), 77, { a: 0.85, speed: 90 + 80 * p, rect: [-300, -300, W + 600, H + 600] });
+    washW(g, '#fff3e0', Math.pow(smooth(165.4, 166.53, t), 2) * 0.9, 'screen');
+  },
+  cam: [[160.71, { z: 1.0 }, 'iq'], [166.53, { z: 1.3 }]], hh: 0.6, pulse: 1.4,
+};
+
+/* ================================================================ BRIDGE (dawn) */
+function dawnSkyW(g, t, p = 0, sx = 960) {
+  const c = (a, b) => { const q = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)], x = q(a), y = q(b); return `rgb(${lerp(x[0], y[0], p) | 0},${lerp(x[1], y[1], p) | 0},${lerp(x[2], y[2], p) | 0})`; };
+  gradBig(g, [[0, c('#4a3a7a', '#7a5a9a')], [0.45, c('#e08a8a', '#f4a88a')], [0.62, c('#ffd0a0', '#ffe2b8')], [0.63, '#f2b89a'], [1, '#5a3048']], -200, 1280);
+  const sy = lerp(700, 600, p); glow(g, sx, sy, 1000, '#fff0d0', 0.7); g.fillStyle = '#fffaf0'; g.beginPath(); g.arc(sx, sy, 80, 0, TAU); g.fill();
+  g.save(); g.globalCompositeOperation = 'screen'; for (let k = 0; k < 44; k++) { const y = 690 + Math.pow(k / 44, 1.6) * 600, w = 30 + k * 22; g.globalAlpha = 0.25 * (0.6 + 0.4 * Math.sin(t * 1.5 + k)); g.fillStyle = '#fff2d8'; g.fillRect(sx - w / 2 + Math.sin(t * 0.7 + k) * 14, y, w, 2 + k * 0.08); } g.restore();
+}
+const nagiDawn = {
+  plate(g, t) { dawnSkyW(g, t, inv(166.5, 191, t), 560); const fr = lerpFr(framing('na_cos', 'knee', 0.68), framing('na_cos', 'bust', 0.67), 0.6);
+    figure(g, 'na_cos', fr, { rim: '#fff0c8', rimA: 0.75, rimSide: -1, glow: '#ffd8a0', glowA: 0.28, grade: '#ffb080', gradeA: 0.18, gradeOp: 'soft-light' }); face(g, 'na_cos', fr); },
+  over(g, t) { low(g, t, 40, 'L', 860, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)' }); low(g, t, 41, 'L', 955, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)' }); },
+  cam: [[166.53, { y: 680, z: 1.1 }, 'io'], [174.35, { y: 520, z: 1.0 }]], hh: 0.5, pulse: 0.9,
+};
+const dawnJewel = {
+  plate(g, t) { dawnSkyW(g, t, inv(166.5, 191, t), 1320); obj(g, M('jewel_206840'), 1320, 500, 560, { rot: 0.06, shadowA: 0.3 });
+    sparkle(g, 1262, 446, 1.4 + 0.3 * Math.sin(t * 2.4) + 0.4 * pulse(t), 0.9, '#fffaf0'); sparkle(g, 1385, 610, 0.9 + 0.2 * Math.sin(t * 3.1 + 1), 0.8, '#fffaf0'); },
+  over(g, t) { const st = { fill: '#fffaf2', glow: 'rgba(255,170,120,0.6)', shadow: 'rgba(90,30,40,0.45)' };
+    L(g, t, 42, { ...st, to: 2, x: 200, y: 420, size: 120, kana: 0.62, drift: [16, 0] }); L(g, t, 42, { ...st, from: 3, x: 200, y: 590, size: 150, kana: 0.72, drift: [16, 0], accent: { from: 4, to: 7, fill: '#fff4d8', glow: 'rgba(255,190,90,0.8)' } }); },
+  cam: [[174.35, { x: 1210, y: 520, z: 1.0 }, 'io'], [178.5, { x: 1260, y: 510, z: 1.14 }]], hh: 0.5, pulse: 0.9,
+};
+const hands = {
+  plate(g, t) { fillBig(g, '#3a1a20'); cover(g, IMG.card_yo, [-300, -200, W + 600, H + 400], 2.5, CF.cardYo.hands[0], CF.cardYo.hands[1]); washW(g, '#ffb080', 0.25, 'soft-light'); washW(g, '#fff0e0', 0.12, 'screen');
+    sparkle(g, 900, 640, 1.3 + 0.3 * Math.sin(t * 3) + 0.4 * pulse(t), 0.9); },
+  over(g, t) { low(g, t, 43, 'R', 955, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)' }); },
+  cam: [[178.5, { z: 1.0, x: 980 }, 'l'], [180.85, { z: 1.12, x: 940 }]], hh: 0.5, pulse: 0.9,
+};
+const mist = {
+  plate(g, t) { gradBig(g, [[0, '#cbb8e0'], [0.6, '#f0d0d8'], [1, '#f8e0d0']]); for (let k = 0; k < 8; k++) glow(g, ((k * 400 + t * 30) % 3200) - 640, 600 + Math.sin(k) * 220, 520, '#ffffff', 0.25);
+    const fr = lerpFr(framing('to_white', 'knee', 0.46), framing('to_white', 'bust', 0.45), 0.5); figure(g, 'to_white', fr, { rim: '#ffffff', glow: '#ffffff', glowA: 0.35 }); face(g, 'to_white', fr);
+    for (let k = 0; k < 5; k++) glow(g, ((k * 640 - t * 46) % 3200 + 3200) % 3200 - 640, 900, 620, '#ffffff', 0.3); },
+  over(g, t) { const st = { fill: '#4a2a4a', glow: 'rgba(255,255,255,0.8)', glowBlur: 16, shadow: null, hot: '#c060a0', size: 80, kana: 0.6, vertical: true };
+    L(g, t, 44, { ...st, to: 3, x: 1730, y: 170, drift: [0, 12] }); L(g, t, 44, { ...st, from: 4, x: 1600, y: 260, drift: [0, 12] }); },
+  cam: [[180.85, { x: 860, z: 1.04 }, 'l'], [185.8, { x: 1030, z: 1.0 }]], hh: 0.5, pulse: 0.9,
+};
+const embrace = {
+  plate(g, t) { dawnSkyW(g, t, inv(166.5, 191, t)); const hug = smooth(Ls(46) - 0.2, Ls(46) + 1.0, t);
+    const fr = lerpFr(framing('shi_swim', 'bust', 0.5), framing('shi_swim', 'face', 0.5), 0.45);
+    figure(g, 'shi_swim', fr, { glow: '#ffd0a0', glowA: 0.3 + hug * 0.5, rim: '#ffe0c0' }); face(g, 'shi_swim', fr);
+    rings(g, 960, 520, [lerp(900, 430, hug), lerp(940, 460, hug)], '#fff0d8', 2, hug * 0.8); glow(g, 960, 520, 600 + hug * 300, '#fff4e0', hug * 0.5); },
+  over(g, t) { low(g, t, 45, 'L', 860, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)' }); low(g, t, 46, 'L', 955, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.6)', size: 80 }); },
+  cam: [[185.8, { z: 1.0 }, 'io'], [191.3, { z: 1.13 }]], hh: 0.5, pulse: 0.9,
+};
+
+/* ================================================================ ESPECIAL */
+const ESP = [[191.3, 'card_yo', CF.cardYo.yo, 'yo'], [198.7, 'card_na', CF.cardNa.na, 'na'], [202.2, 'cover', CF.cover.shi, 'shi']];
+const especial = {
+  plate(g, t) {
+    let cur = ESP[0], prev = null; for (const e of ESP) if (t >= e[0]) { prev = cur === e ? prev : cur; cur = e; }
+    const [t0, img, f, who] = cur, m = MEM[who], a = E.outExpo(clamp((t - t0) / 0.5));
+    fillBig(g, '#3a0610'); const tx = M('textile_222561'); if (tx) cover(g, tx, [-600, -500, W + 1200, H + 1000], 1.0); washW(g, '#1a0206', 0.35, 'multiply');
+    obj(g, M('shawl_157896'), 330, 230, 640, { rot: -0.1, a: 0.95 });
+    g.save(); g.font = font(F.anton, 300, 400); g.textBaseline = 'middle'; g.fillStyle = rgba('#f2d9a6', 0.85); g.translate(110, 560); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('ESPECIAL', 0, 0); g.restore();
+    const fx = 1110, fy = 120, fw = 620, fh = 820;
+    g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 40; g.fillStyle = '#f6efe0'; g.fillRect(fx - 26, fy - 26, fw + 52, fh + 110); g.restore();
+    if (prev && a < 1) cover(g, IMG[prev[1]], [fx, fy, fw, fh], prev[1] === 'cover' ? 2.4 : 2.1, prev[2][0], prev[2][1]);
+    g.save(); g.beginPath(); g.rect(fx + (prev ? (1 - a) * fw : 0), fy, fw, fh); g.clip(); cover(g, IMG[img], [fx, fy, fw, fh], img === 'cover' ? 2.4 : 2.1, f[0], f[1]); g.restore();
+    addFace(g, fx + fw / 2, fy + fh * 0.42, 360);
+    label(g, m.name, fx + fw, fy + fh + 48, { fam: F.anton, size: 32, color: '#2a1414', track: 0.2, align: 'right' }); g.fillStyle = m.ink; g.fillRect(fx, fy + fh + 34, 90, 8);
+    earrings(g, M('jewel_206840'), fx - 60, fy + 120, 240, t, 1);
+  },
+  over(g, t) {
+    slam(g, t, 'Especial!!', T.lines[47].chars.concat([192.3, 192.35]), { x: 600, y: 300, size: 150, exit: 192.9, gloss: 'と　く　べ　つ' });
+    slam(g, t, 'Especial!!', T.lines[50].chars.concat([200.0, 200.05]), { x: 600, y: 300, size: 150, exit: 200.6, gloss: 'と　く　べ　つ' });
+    if (t > 194.8 && t < 199.2) { const p = smooth(194.8, 195.4, t) * (1 - smooth(198.4, 198.9, t));
+      drawText(g, t, '熱情', { x: 640, y: 110, vertical: true, size: 380, fontStr: font(F.dela, 380, 400), fill: '#f6efe0', glow: 'rgba(255,40,60,0.45)', glowBlur: 36, anim: 'zoom', start: 195.0, stagger: 0.2, dur: 0.5, alpha: p }); }
+    low(g, t, 48, 'L', 860); low(g, t, 49, 'L', 955); low(g, t, 51, 'L', 860); low(g, t, 52, 'L', 955);
+  },
+  cam: [[191.3, { x: 1000, z: 1.08 }, 'io'], [199.0, { x: 960, z: 1.0 }, 'io'], [209.11, { x: 940, z: 1.1 }]], hh: 0.5, pulse: 1.0,
+};
+
+/* ================================================================ FINAL CHORUS (dawn) */
+const amanecer = {
+  plate(g, t) { fillBig(g, '#c08060'); cover(g, M('ceiling_386262'), [-500, -700, W + 1000, H + 1400], 1.0, 0.5, 0.5); washW(g, '#ffb070', 0.2, 'soft-light');
+    lightRays(g, 960, 560, 1700, t * 0.05, 30, '#fff0c8', 0.45); medallion(g, t, 960, 560, 330, 'dish_468513');
+    petals(g, t, 18, 19, { a: 1, speed: 100, rect: [-300, -300, W + 600, H + 600] }); },
+  over(g, t) { slam(g, t, 'Amanecer!!', T.lines[53].chars.concat([209.6, 209.65]), { x: 960, y: 130, size: 130, exit: 210.6, gloss: '' }); low(g, t, 54, 'L', 955); },
+  cam: [[209.11, { z: 1.7 }, 'ox'], [210.3, { z: 1.0 }, 'io'], [212.35, { z: 1.05 }]], hh: 0.6, pulse: 1.4,
+};
+const dawnArches = {
+  plate(g, t, s) { archWall(g, t, { base: '#3a1408', tileA: 0.6, glowC: 'rgba(255,190,120,0.3)', warm: 0.25, lit: (tt, w) => smooth(s.a + ORDER.indexOf(w) * 0.12, s.a + 0.5 + ORDER.indexOf(w) * 0.12, tt) }); },
+  over(g, t) { low(g, t, 55, 'R', 955, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.6)' }); },
+  cam: [[212.35, { x: 560, y: 560, z: 1.3 }, 'l'], [216.25, { x: 1360, y: 540, z: 1.3 }]], hh: 0.5, pulse: 1.3,
+};
+const bloom = {
+  plate(g, t, s) {
+    fillBig(g, '#f2dccf'); const p = IMG.paper_peach; if (p) g.drawImage(p, -500, -400, W + 1000, H + 800); const rb = M('rose_337713'); if (rb) cover(g, rb, [-500, -400, W + 1000, H + 800], 1.0, 0.5, 0.5, 0.5);
+    const f = fly(t, s.a + 0.05, [0, 1], 900, 0.2); if (f.a) { g.save(); g.translate(f.dx, f.dy); piece(g, 960, 540, 620, 620, { img: IMG.cover, z: 1.25, fx: 0.48, fy: 0.38, rot: -0.03 + f.r, seed: 77 }); g.restore(); }
+    const roses = [IMG.obj_d_rose, IMG.obj_fi_r3, IMG.obj_fi_r7];
+    for (let i = 0; i < 18; i++) { const at = s.a + 0.2 + (i / 18) * 2.4, q = E.outBack(clamp((t - at) / 0.5)); if (q <= 0) continue; const a = (i / 18) * TAU + 0.3, r = 480 + (i % 3) * 110;
+      obj(g, roses[i % 3], 960 + Math.cos(a) * r * 1.45, 540 + Math.sin(a) * r * 0.85, (150 + (i % 4) * 40) * q, { rot: a + t * 0.2 }); }
+    petals(g, t, 26, 17, { a: 1, speed: 110, wind: 60, rect: [-300, -300, W + 600, H + 600] });
+  },
+  over(g, t) { slam(g, t, 'Enamorar!!', T.lines[56].chars.concat([217.25, 217.3]), { x: 960, y: 120, size: 120, exit: 217.9, gloss: '' }); low(g, t, 57, 'L', 955, { fill: '#3a1420', glow: 'rgba(255,255,255,0.8)', shadow: null, hot: '#b01e3c' }); },
+  cam: [[216.25, { z: 1.2 }, 'ox'], [217.2, { z: 1.0 }, 'io'], [220.0, { z: 1.06 }]], hh: 0.6, pulse: 1.4,
+};
+const split5 = { plate(g, t) { colourSplit(g, t, { who: 'to', key: 'to_cos', kale: 'tile_187927' }, { who: 'ri', key: 'ri_cos', kale: 'tile_187929' }, T.lines[58].chars[5], { warm: true }); },
+  over(g, t) { splitText(g, t, 58); splitText(g, t, 59); }, cam: [[220.0, { z: 1.0 }, 'l'], [224.1, { z: 1.07 }]], hh: 0.6, pulse: 1.3 };
+const nagiKiss = {
+  plate(g, t) { fillBig(g, '#2a1020'); cover(g, IMG.card_na, [-300, -200, W + 600, H + 400], 1.7, CF.cardNa.na[0] + 0.02, CF.cardNa.na[1] - 0.06); radialW(g, 960, 540, 1300, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(30,6,8,0.5)']]);
+    addFace(g, 960, 470, 520); petals(g, t, 20, 21, { a: 1, speed: 100, wind: 90, rect: [-300, -300, W + 600, H + 600] }); },
+  over(g, t) { low(g, t, 60, 'L', 955); },
+  cam: [[224.1, { x: 900, z: 1.0 }, 'io'], [228.1, { x: 960, z: 1.12 }]], hh: 0.6, pulse: 1.2,
+};
+const duoGroups = {
+  plate(g, t) {
+    const k = E.outExpo(clamp((t - (T.lines[61].chars[5] - 0.15)) / 0.45));
+    fillBig(g, '#1a0508');
+    const panel = (keys, x0, w0) => h => { kaleido(h, M('tile_187927'), { n: 10, rot: t * 0.05, R: 1200, cx: x0 + w0 / 2, cy: 540 }); washW(h, '#3a0610', 0.45, 'multiply');
+      keys.forEach((key, j) => { const fr = framing(key, 'bust', (x0 + w0 * (j + 0.5) / keys.length) / W, { k: 0.85 }); figure(h, key, fr, { shadow: false, rim: IV, rimA: 0.4 }); face(h, key, fr); }); };
+    withMask(g, rectPath(-600, -400, W * 0.42 + 600, H + 800, 80), panel(['to_cos', 'ri_cos'], 0, W * 0.42));
+    if (k > 0) { const x0 = W * 0.42 + (1 - k) * W * 0.65; withMask(g, rectPath(x0, -400, W + 800, H + 800, 80), panel(['yo_cos', 'na_cos', 'shi_cos'], W * 0.42, W * 0.58));
+      g.save(); g.strokeStyle = GOLD; g.lineWidth = 4; g.beginPath(); g.moveTo(x0 + 80, -400); g.lineTo(x0 - 80 * 0, H + 400); g.stroke(); g.restore(); }
+  },
+  over(g, t) { L(g, t, 61, { to: 4, x: 140, y: 960, size: 70, kana: 0.7 }); L(g, t, 61, { from: 5, x: 1780, y: 960, align: 'end', size: 70, kana: 0.7 });
+    L(g, t, 62, { to: 4, x: 140, y: 960, size: 70, kana: 0.7 }); L(g, t, 62, { from: 5, x: 1780, y: 960, align: 'end', size: 70, kana: 0.7 }); },
+  cam: [[228.1, { z: 1.0 }, 'l'], [231.95, { z: 1.06 }]], hh: 0.6, pulse: 1.3,
+};
+const candleOut = {
+  plate(g, t) {
+    const out = smooth(233.3, 233.75, t);
+    gradBig(g, [[0, '#2a2038'], [1, '#4a3048']]); g.save(); g.globalAlpha = 0.3 * (1 - out * 0.5); cover(g, IMG.cover, [-400, -300, W + 800, H + 600], 1.2, 0.5, 0.36); g.restore(); washW(g, '#2a2040', 0.35, 'multiply');
+    obj(g, IMG.obj_fi_candle, 960, 820, 520, { filter: `brightness(${1 - out * 0.45})` }); glow(g, 958, 640, 300, '#ffb060', 0.8 * (1 - out));
+    if (out > 0) { g.save(); g.translate(962, 640); g.scale(0.45, 1); const fl = g.createRadialGradient(0, 0, 0, 0, 0, 120); fl.addColorStop(0, `rgba(40,30,44,${out})`); fl.addColorStop(0.6, `rgba(40,30,44,${0.85 * out})`); fl.addColorStop(1, 'rgba(40,30,44,0)'); g.globalCompositeOperation = 'multiply'; g.fillStyle = fl; g.fillRect(-140, -140, 280, 280); g.restore(); }
+    const u = t - 233.45; if (u > 0) { g.save(); g.globalCompositeOperation = 'screen'; for (let i = 0; i < 60; i++) { const age = u - i * 0.05; if (age <= 0 || age > 3) continue; const y = 650 - age * 150, x = 958 + noise1(age * 0.9 + i * 0.1, 7) * age * 60, r = 6 + age * 30; g.globalAlpha = 0.18 * (1 - age / 3); g.drawImage(softDot('#e8e0f0', 64), x - r, y - r, r * 2, r * 2); } g.restore(); }
+    washW(g, '#c8b8e8', out * 0.25, 'screen');
+  },
+  over(g, t) { L(g, t, 63, { x: 960, y: 520, align: 'center', size: 76, kana: 0.62, fill: '#f8f0ff', glow: 'rgba(220,190,255,0.6)', exit: 235.1 }); },
+  cam: [[231.95, { y: 600, z: 1.0 }, 'iq'], [235.32, { y: 640, z: 1.2 }]], hh: 0.4, pulse: 0.6,
+};
+const finalPale = {
+  plate(g, t, s) { fillBig(g, '#f2dccf'); const p = IMG.paper_peach; if (p) g.drawImage(p, -500, -400, W + 1000, H + 800); const m = IMG.m_lace_223050_mask; if (m) cover(g, tinted(m, '#fffaf2'), [-500, -400, W + 1000, H + 800], 1.0, 0.5, 0.5, 0.75);
+    washW(g, '#f6d8e8', 0.25, 'screen'); fanOpen(g, M('fan_209646'), 260, 1000, 420, 1, { rot: -0.3 }); obj(g, IMG.obj_d_rose, 1780, 930, 300, { rot: 0.4 }); earrings(g, M('jewel_206855'), 900, 300, 260, t, 1);
+    polaroid(g, IMG.cover, 1360, 500, 600, { rot: 0.05, z: 1.05, fx: 0.5, fy: 0.45, caption: 'Lleno de amor', capColor: '#7a1f2a', filter: develop((t - s.a) / 2.6) }); tape(g, 1360, 140, 200, 0.06); washW(g, '#fff4e8', 0.12, 'screen'); },
+  over(g, t) { const l = T.lines[64];
+    drawText(g, t, l.text, { x: 600, y: 560, align: 'center', size: 150, fontStr: font(F.script, 150, 400), fill: { grad: ['#b8283e', '#8a1428', '#5a0a1a'] }, glow: 'rgba(255,240,230,0.8)', glowBlur: 24, start: l.start - 0.15, stagger: 0.06, dur: 0.8, anim: 'blur', exit: 238.4, exitAnim: 'up', exitDur: 0.6 }); },
+  cam: [[235.32, { z: 1.12 }, 'o'], [238.14, { z: 1.0 }]], hh: 0.4, pulse: 0.6,
+};
+
+/* ================================================================ OUTRO */
+const PRIV = { yo: 'yo_swim', na: 'na_casual', shi: 'shi_swim', to: 'to_white', ri: 'ri_resort' };
+const credits = {
+  plate(g, t, s) {
+    fillBig(g, '#efe4d0'); const p = IMG.paper_cream; if (p) g.drawImage(p, -600, -400, W + 1600, H + 800);
+    scribble(g, t, s.a + 0.5, 'después de la noche…', 120, 110, 60, '#7a1f2a', -0.03, 1.4); doodle(g, 'swoosh', 330, 165, 4.2, clamp((t - s.a - 1.8) / 0.8), '#7a1f2a', 4);
+    const per = (249.75 - 238.14) / 5;
+    ORDER.forEach((w, k) => { const t0 = s.a + k * per, f = fly(t, t0 + 0.1, [0, -1], 800, (k % 2 ? 0.3 : -0.3)); if (!f.a) return;
+      const x = 250 + k * 355, y = 450 + (k % 2) * 50; g.save(); g.translate(f.dx, f.dy);
+      polaroid(g, null, x, y, 340, { rot: (k % 2 ? 0.05 : -0.05) + f.r, caption: ['buenos días', 'see you ♪', 'sweet ♡', 'gracias', 'yay!'][k], capColor: MEM[w].deep,
+        draw: (h, px, py, pw, ph) => { h.fillStyle = MEM[w].light; h.fillRect(px, py, pw, ph); h.filter = develop((t - t0) / 2); figure(h, PRIV[w], { x: px + pw * 0.5, y: py + ph * 0.42, fh: ph * 0.36 }, { shadow: false, floor: py + ph + 4 }); h.filter = 'none'; } });
+      tape(g, x, y - 210, 120, (k % 2 ? 0.2 : -0.2)); g.restore();
+      const q = pop(t, t0 + 0.6); sticker(g, IMG[{ yo: 'c_yo_swim', na: 'c_na_casual', shi: 'c_shi_swim', to: 'c_to_white', ri: 'c_ri_resort' }[w]], x + 125, y + 250 - hop(beatF(t), k * 0.3, 8), 180 * q.s, { a: q.a, rot: 0.1 + q.r });
+      label(g, MEM[w].jp, x - 145, y + 240, { size: 26, weight: 700, color: '#2a1a1a', alpha: smooth(t0 + 0.3, t0 + 0.8, t) });
+      label(g, 'CV.' + MEM[w].cv, x - 145, y + 274, { fam: F.klee, size: 20, color: MEM[w].deep, alpha: smooth(t0 + 0.4, t0 + 0.9, t) }); });
+    laceBorder(g, 'm_lace_220632_mask', H + 6, 100, '#fbf4e8', 0.85, true, 0);
+  },
+  cam: [[238.14, { x: 880, z: 1.06 }, 'l'], [249.75, { x: 1060, z: 1.0 }]], hh: 0.4, pulse: 0.5,
+};
+const endCard = {
+  plate(g, t) { fillBig(g, '#3a0610'); const tx = M('textile_222561'); if (tx) cover(g, tx, [-500, -400, W + 1000, H + 800], 1.0); washW(g, '#1a0206', 0.5, 'multiply');
+    fanOpen(g, M('fan_170045'), 960, 760, 520, E.inOutCubic(inv(250.0, 251.4, t)), { a: 0.9 });
+    ORDER.forEach((w, k) => { const img = IMG['c_' + w + '_plain'], q = pop(t, 250.6 + k * 0.2); if (img && q.a) place(g, img, 560 + k * 200, 840, 250 * q.s, { a: q.a, rot: q.r }); }); },
+  over(g, t) {
+    drawText(g, t, '熱情エナモラル', { x: 960, y: 300, align: 'center', size: 96, fontStr: font(F.mincho, 96, 800), fill: IV, glow: 'rgba(255,170,90,0.35)', glowBlur: 20, track: 0.08, anim: 'blur', start: 250.2, stagger: 0.08, dur: 0.9 });
+    drawText(g, t, 'Fin', { x: 960, y: 430, align: 'center', size: 110, fontStr: font(F.script, 110, 400), fill: GOLD, glow: 'rgba(255,170,90,0.5)', glowBlur: 22, anim: 'ink', start: 251.3, stagger: 0.15, dur: 0.6 });
+    label(g, 'THE IDOLM@STER CINDERELLA MASTER  Passion jewelries! 004', 960, 990, { fam: F.cinzel, size: 15, weight: 600, color: IV, track: 0.3, align: 'center', alpha: smooth(252, 252.8, t) * 0.85 });
+    label(g, 'fan-made lyric video  ·  decorative art: The Metropolitan Museum of Art (Open Access, CC0)  ·  photos: Open Images (CC BY 2.0) — see CREDITS', 960, 1030, { fam: F.corm, size: 18, italic: true, color: GOLD, align: 'center', alpha: smooth(253, 253.8, t) * 0.75 });
+  },
+  cam: [[249.75, { z: 1.08 }, 'o'], [266, { z: 1.0 }]], hh: 0.3, pulse: 0.4,
+};
+
 
 /* ================================================================ timeline */
 export const SHOTS6 = [];
@@ -397,7 +806,7 @@ export function build6() {
   S(23.45, frost, 'bloom', { tint: '#d8e8ff', color: '#eef4ff' });
   S(27.4, riamu, 'flash', { color: '#ffd8a0', tint: '#ffb070' });
   S(30.3, vanity, 'silk');
-  S(34.75, mantle, 'whip', { dir: [1, 0] });
+  S(34.75, mantle, 'bloom', { tint: '#ff9a90' });
   S(38.45, mirror, 'iris', { x: 700, y: 520 });
   S(42.3, fans5, 'bloom', { tint: '#ffc080' });
   S(48.2, chorus1, 'zoom', { x: 960, y: 540 });
@@ -408,7 +817,40 @@ export function build6() {
   S(63.5, fire, 'flash', { color: '#ffd0a0', tint: '#ff9050' });
   S(66.9, lleno, 'fan');
   S(69.75, table, 'ruffle');
-  S(79.43, black, 'dip');
+  S(79.43, summerNagi, 'bloom', { tint: '#fff0e0' });
+  S(87.5, summerYoshino, 'bloom', { tint: '#ffe8d8' });
+  S(94.37, roseKiss, 'bloom', { tint: '#ffd0dc' });
+  S(98.3, shinAway, 'whip', { dir: [-1, 0] });
+  S(102.62, riamuBells, 'iris', { x: 520, y: 420 });
+  S(106.25, silence, 'bloom', { tint: '#d0c0ff' });
+  S(112.33, morningStar, 'flash', { color: '#f4eaff' });
+  S(115.4, moonSet, 'iris', { x: 1660, y: 140 });
+  S(119.45, watchDial, 'iris', { x: 1320, y: 460 });
+  S(123.2, split3, 'panels');
+  S(125.35, split4, 'whip', { dir: [1, 0] });
+  S(127.55, bubbles, 'bloom', { tint: '#ffd0e0' });
+  S(130.55, guitarMacro, 'zoom', { x: 960, y: 540 });
+  S(133.62, danceWall, 'invert');
+  const RC = [['yo', 'bust', 1.3], ['na', 'bust', 1.3], ['shi', 'knee', 1.25], ['to', 'bust', 1.45], ['ri', 'bust', 1.3]];
+  const RT = [['fan', {}], ['whip', { dir: [1, 0] }], ['fan', { from: 0, dirn: -1 }], ['whip', { dir: [-1, 0] }], ['fan', {}]];
+  RC.forEach(([w, sz, k], j) => { const a = barT(73 + 2 * j), b = barT(75 + 2 * j); S(a, { ...rollCall(w, sz, k), cam: [[a, { x: 1010, z: 1.08 }, 'l'], [b, { x: 930, z: 1.0 }]] }, RT[j][0], RT[j][1]); });
+  S(barT(83), jewels, 'zoom', { x: 960, y: 540 });
+  S(166.53, nagiDawn, 'flash', { color: '#fff4e0' });
+  S(174.35, dawnJewel, 'bloom', { tint: '#ffe0c0' });
+  S(178.5, hands, 'zoom', { x: 900, y: 640 });
+  S(180.85, mist, 'bloom', { tint: '#ffffff', color: '#ffffff' });
+  S(185.8, embrace, 'iris', { x: 960, y: 520 });
+  S(191.3, especial, 'invert');
+  S(209.11, amanecer, 'flash', { color: '#fff0d8' });
+  S(212.35, dawnArches, 'iris', { x: 960, y: 560 });
+  S(216.25, bloom, 'fan');
+  S(220.0, split5, 'panels');
+  S(224.1, nagiKiss, 'bloom', { tint: '#ffd0dc' });
+  S(228.1, duoGroups, 'whip', { dir: [1, 0] });
+  S(231.95, candleOut, 'bloom', { tint: '#d8c8ff' });
+  S(235.32, finalPale, 'cut');
+  S(238.14, credits, 'bloom', { tint: '#fff0e0' });
+  S(249.75, endCard, 'fan');
   SHOTS6.forEach((s, i) => (s.b = SHOTS6[i + 1] ? SHOTS6[i + 1].a : 999));
   return SHOTS6;
 }

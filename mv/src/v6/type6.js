@@ -18,6 +18,11 @@ export function addFace(g, x, y, fh) {
   const sx = m.a * x + m.c * y + m.e, sy = m.b * x + m.d * y + m.f, r = fh * 0.55 * s;
   FACES.push([sx - r * 1.05, sy - r * 1.15, r * 2.1, r * 2.45]);
 }
+// a local box under the current transform of g -> its screen-space bounding box
+function toScreenBox(g, [x, y, w, h]) {
+  const m = g.getTransform(), P = [[x, y], [x + w, y], [x, y + h], [x + w, y + h]].map(([u, v]) => [m.a * u + m.c * v + m.e, m.b * u + m.d * v + m.f]);
+  const xs = P.map(p => p[0]), ys = P.map(p => p[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)];
+}
 const hit = (a, b) => a[0] < b[0] + b[2] && b[0] < a[0] + a[2] && a[1] < b[1] + b[3] && b[1] < a[1] + a[3];
 
 /* ---------------------------------------------------------------- layout */
@@ -50,7 +55,7 @@ export function sing(g, t, text, times, o = {}) {
   const L = layoutLine(text, o), S = L.S, off = o.align === 'center' ? -L.len / 2 : o.align === 'end' ? -L.len : 0;
   const life = clamp((t - t0) / Math.max(0.5, exit - t0)), dr = o.drift || [0, 0];
   const x = o.x + dr[0] * life, y = o.y + dr[1] * life;
-  if (o.avoid !== false && FACES.length) { const box = lineBox(text, { ...o, x, y }); if (FACES.some(f => hit(box, f))) console.log(`[face] ${o.tag || text} @${t.toFixed(2)}`); }
+  if (o.avoid !== false && FACES.length) { const box = toScreenBox(g, lineBox(text, { ...o, x, y })); if (FACES.some(f => hit(box, f))) console.log(`[face] ${o.tag || text} @${t.toFixed(2)}`); }
   const pop = o.pop ?? 0.55, fill = o.fill || '#fbf4e8', glow = o.glow ?? 'rgba(255,214,170,0.35)', hot = o.hot || '#ffffff';
   g.save(); g.translate(x, y);
   L.items.forEach((it, j) => {
@@ -86,7 +91,7 @@ export function slam(g, t, text, times, o = {}) {
   const S = o.size || 210, fs = font(o.fam || F.dmserif, S, 400, o.italic !== false);
   const chars = [...text]; let len = 0; const adv = chars.map(ch => { const w = measure(fs, ch) + S * (o.track ?? 0.01); len += w; return w; });
   const out = E.inCubic(clamp((t - exit) / 0.55)), X = o.x ?? W / 2, Y = o.y ?? H / 2;
-  if (FACES.length && out < 1) { const box = [X - len / 2, Y - S * 0.62, len, S * 1.24]; if (FACES.some(f => hit(box, f))) console.log(`[face] ${o.tag || text} @${t.toFixed(2)}`); }
+  if (FACES.length && out < 1) { const box = toScreenBox(g, [X - len / 2, Y - S * 0.62, len, S * 1.24]); if (FACES.some(f => hit(box, f))) console.log(`[face] ${o.tag || text} @${t.toFixed(2)}`); }
   g.save(); g.translate(X, Y); g.scale(1 + (o.breathe || 0), 1 + (o.breathe || 0));
   let cx = -len / 2;
   chars.forEach((ch, k) => {

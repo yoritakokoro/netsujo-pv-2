@@ -12,8 +12,9 @@ const SHUTTER = 1 / 40;
 export function camOf(s, t) {
   let c = typeof s.cam === 'function' ? s.cam(t, s) : s.cam ? keyed(t, s.cam) : { ...C0 };
   c = handheld(c, t, s.hh ?? 0.7, s.seed ?? s.a);
-  const en = energy(t), pa = (s.pulse ?? 1) * en * en;
-  c.z *= 1 + 0.014 * pa * pulse(t, 1, 10) + 0.018 * pa * pulse(t, 4, 6);
+  // a gentle bump once per bar, only where the song is at full power (no per-beat "heartbeat")
+  const en = energy(t), pa = (s.pulse ?? 1) * clamp((en - 0.75) / 0.25);
+  if (pa > 0) c.z *= 1 + 0.006 * Math.min(1, pa) * pulse(t, 4, 5);
   return c;
 }
 function drawPlate(s, t, g, c) {
