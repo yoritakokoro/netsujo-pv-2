@@ -62,6 +62,13 @@ export function slap(t, t0, dur = 0.6) {
   const u = clamp((t - t0) / dur), e = E.outCubic(u);
   return { a: u > 0 ? E.inOutSine(clamp(u * 1.4)) : 0, s: 1 + (1 - e) * 0.04, r: (1 - e) * 0.02, u };
 }
+// a chibi popping onto the page (bouncy, but evaluated every frame — no stop-motion stepping)
+export function pop(t, t0, dur = 0.4) {
+  const u = clamp((t - t0) / dur);
+  return { a: u > 0 ? clamp(u * 3) : 0, s: 1 + (1 - E.outBack(u)) * 0.25, r: (1 - E.outCubic(u)) * 0.18, u };
+}
+// hop on the beat (smooth |sin|), phase in beats
+export const hop = (beatPos, phase, amp) => Math.abs(Math.sin((beatPos + phase) * Math.PI)) * amp;
 export function tape(ctx, x, y, w, rot, color = 'rgba(248,236,200,0.78)', a = 1) {
   if (a <= 0.003) return;
   const h = w * 0.28;

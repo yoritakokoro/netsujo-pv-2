@@ -25,7 +25,7 @@ set([15, 18, 54, 57], { slot: 'low', side: 'L' }); set([16, 55], { slot: 'low', 
 set([19, 20, 36, 37, 58, 59, 61, 62], { slot: 'split' });
 set([21, 38], { slot: 'low', side: 'R' });
 set([23, 24], { slot: 'strip', x: 120, rot: -0.02 }); L[23].y = 840; L[23].until = 87.45; L[24].y = 930; L[24].rot = 0.015; L[24].until = 87.5;
-set([25, 26], { slot: 'strip', x: 1800, align: 'end', rot: 0.02 }); L[25].y = 840; L[25].until = 94.3; L[26].y = 930; L[26].rot = -0.012; L[26].until = 94.35;
+set([25, 26], { slot: 'strip', x: 120, rot: 0.015 }); L[25].y = 905; L[25].until = 94.3; L[26].y = 992; L[26].rot = -0.012; L[26].until = 94.35;
 set([27], { slot: 'col', x: 1700, y: 160, maxPer: 10, echo: [700, 560, -0.05] });
 set([28], { slot: 'col', x: 330, y: 160, maxPer: 10, until: 102.5, echo: [880, 220, 0.05] });
 set([29], { slot: 'low', side: 'L' }); set([30], { slot: 'center', y: 560, size: 72 });

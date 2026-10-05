@@ -7,7 +7,7 @@ import { W, H, TAU, clamp, lerp, inv, smooth, E, hash, noise1, makeCanvas } from
 import { T, barT, beatT, beatF, barF, pulse } from './timing.js';
 import { IMG, buf, cover, place, tinted, duo, rgba, withMask, archPath, circlePath, rectPath, rings, lattice, dots, ink, glow, sparkle,
   stars, embers, petals, bokeh, softDot } from './gfx.js';
-import { piece, sticker, slap, tape, polaroid, scribble, doodle, step, boil } from './collage.js';
+import { piece, sticker, slap, pop, hop, tape, polaroid, scribble, doodle, boil } from './collage.js';
 import { F, font, drawText, label } from './text.js';
 import { chant } from './lyrics4.js';
 import { MEM, ORDER, GOLD, IV, setCam, layer, OS, bg, bgGrad, wash, radial, FACE, framing, figure, lerpFr, CF, kaleido, tileWall,
@@ -351,23 +351,27 @@ function coverWide(ctx, t, s, o = {}) { // the whole jacket in a gilded frame on
   frameDeco(ctx, t, { fh: 130, lace: 'm_lace_220632_mask', lh: 110 });
 }
 
-/* ------------------------------------------------------------ INTERLUDE: a still life on the dressing table */
+/* ------------------------------------------------------------ INTERLUDE: the collage table; the five pop in and hop */
 function guitarTable(ctx, t, s) {
-  const b = sd => boil(t, sd);
   layer(ctx, 1, g => {
-    const kraft = IMG.paper_kraft; if (kraft) g.drawImage(kraft, ...OS);
-    radial(g, 760, 520, 1300, [[0, 'rgba(255,190,120,0.18)'], [1, 'rgba(40,10,4,0.35)']]);
-    obj(g, M('dish_468516'), 1150, 820, 330, { rot: 0.25, a: slap(t, s.a + 0.2).a });
-    obj(g, M('guitar_503385'), 600, 560, 960, { rot: -0.95 });
-    const p2 = slap(t, 70.8), p3 = slap(t, 71.8), p5 = slap(t, 73.6);
-    polaroid(g, IMG.cover, 1440 + b(2)[0], 470 + b(2)[1], 470 * p2.s, { a: p2.a, rot: -0.06 + p2.r, z: 1.1, caption: '¡olé!', capColor: '#7a1f2a' });
-    tape(g, 1440, 200, 170, 0.12, undefined, p2.a);
-    earrings(g, M('jewel_141739'), 1040, 300, 250, t, p3.a);
-    fanOpen(g, M('fan_120766'), 1790, 1080, 400, opens(t, 72.7, 1.1), { rot: -0.35 });
-    scribble(g, t, 73.0, 'esta noche ♪', 860, 150, 66, '#7a1f2a', -0.06, 1.2);
-    doodle(g, 'swoosh', 990, 210, 3.4, clamp((t - 74.0) / 0.9), '#7a1f2a', 5);
-    // the five, in costume, sitting at the foot of the photograph (still stickers)
-    ['c_yo', 'c_na', 'c_shi', 'c_to', 'c_ri'].forEach((k, j) => { const p = slap(t, 75.0 + j * T.beat); sticker(g, IMG[k], 1250 + j * 92, 860 + (j % 2) * 14 + b(9 + j)[1], 175 * p.s, { a: p.a, rot: (j - 2) * 0.05, shadow: 0.3, lift: 0.6 }); });
+    g.save(); g.translate(-lerp(0, 1900, E.inOutSine(uOf(t, s))), 0);
+    const kraft = IMG.paper_kraft; if (kraft) { g.drawImage(kraft, -300, -200, 2400, 1480); g.drawImage(kraft, 2100, -200, 2400, 1480); }
+    obj(g, M('guitar_503385'), 820, 600, 900, { rot: -0.9 });
+    obj(g, M('guitar_505283'), 2600, 560, 780, { rot: 0.35 });
+    fanOpen(g, M('fan_120766'), 1480, 1060, 420, 1, { rot: 0.1 });
+    obj(g, M('dish_468516'), 1900, 300, 380, { rot: t * 0.05 });
+    piece(g, 3300, 520, 700, 460, { img: M('tile_187894'), z: 1.1, rot: 0.04, seed: 61 });
+    const bp = beatF(t);
+    ['c_yo', 'c_na', 'c_shi', 'c_to', 'c_ri'].forEach((k, j) => {
+      const p = pop(t, 69.95 + j * T.bar * 0.75);
+      sticker(g, IMG[k], 300 + j * 760, 260 - hop(bp, j * 0.5, 22) + (j % 2) * 520, 330 * p.s, { a: p.a, rot: (j % 2 ? 0.1 : -0.08) + p.r });
+    });
+    polaroid(g, IMG.cover, 2250, 760, 420, { rot: -0.08, z: 1.1, caption: '¡olé!', capColor: '#7a1f2a' });
+    earrings(g, M('jewel_141739'), 3000, 900, 260, t, 1);
+    tape(g, 2250, 520, 160, 0.2); tape(g, 3300, 280, 180, -0.2);
+    scribble(g, t, 70.6, 'esta noche ♪', 1160, 160, 70, '#7a1f2a', -0.08, 1.0);
+    doodle(g, 'swoosh', 1300, 230, 4, clamp((t - 71.3) / 0.7), '#7a1f2a', 5);
+    g.restore();
   });
   frameDeco(ctx, t, { fh: 120 });
 }
@@ -383,7 +387,8 @@ function summerNagi(ctx, t, s) {
       draw: (h, px, py, pw, ph) => { h.fillStyle = MEM.na.light; h.fillRect(px, py, pw, ph); h.filter = develop((t - s.a - 0.7) / 2.4); figure(h, 'na_casual', { x: px + pw * 0.5, y: py + ph * 0.42, fh: ph * 0.36 }, { shadow: false, floor: py + ph + 4 }); h.filter = 'none'; } });
     tape(g, 520, 130, 170, 0.05, undefined, p1.a); tape(g, 1250, 120, 170, -0.1, 'rgba(255,200,215,0.7)', p2.a);
     piece(g, 1500, 960, 900 * p3.s, 180 * p3.s, { img: IMG.photo_fi_sail, z: 1.6, fx: 0.5, fy: 0.62, rot: -0.02, seed: 55, a: p3.a });
-    ['c_shi_swim', 'c_to_white', 'c_ri_resort'].forEach((k, j) => sticker(g, IMG[k], 1320 + j * 160, 950, 150, { a: slap(t, Ls(24) + 0.3 + j * T.beat).a, rot: (j - 1) * 0.08, shadow: 0.25, lift: 0.5 }));
+    const bp = beatF(t);
+    ['c_shi_swim', 'c_to_white', 'c_ri_resort'].forEach((k, j) => { const q = pop(t, Ls(24) - 0.1 + j * 0.15); sticker(g, IMG[k], 1320 + j * 160, 950 - hop(bp, j * 0.33, 12), 150 * q.s, { a: q.a, rot: (j - 1) * 0.08 + q.r, shadow: 0.25, lift: 0.5 }); });
     scribble(g, t, Ls(24) + 0.8, 'ha ha ♪', 1700, 830, 46, '#3a5aa0', -0.05, 0.8);
   });
 }
@@ -392,13 +397,16 @@ function summerYoshino(ctx, t, s) {
   layer(ctx, 1, g => paperBG(g, 'paper_peach'));
   layer(ctx, 1, g => {
     const p1 = slap(t, s.a + 0.1), p2 = slap(t, s.a + 0.6), p3 = slap(t, Ls(26) - 0.3);
-    polaroid(g, null, 600 + b(1)[0], 480 + b(1)[1], 640 * p1.s, { a: p1.a, rot: -0.05 + p1.r, caption: 'yoshino', capColor: '#7a5a50',
+    polaroid(g, null, 610 + b(1)[0], 432 + b(1)[1], 590 * p1.s, { a: p1.a, rot: -0.05 + p1.r, caption: 'yoshino', capColor: '#7a5a50',
       draw: (h, px, py, pw, ph) => { h.fillStyle = MEM.yo.light; h.fillRect(px, py, pw, ph); h.filter = develop((t - s.a) / 2.4); figure(h, 'yo_swim', { x: px + pw * 0.42, y: py + ph * 0.4, fh: ph * 0.36 }, { shadow: false, floor: py + ph + 4 }); h.filter = 'none'; } });
     polaroid(g, IMG.photo_br_palms, 1380 + b(2)[0], 360 + b(2)[1], 480 * p2.s, { a: p2.a, rot: 0.07 + p2.r, z: 1.2, caption: 'la playa', filter: develop((t - s.a - 0.6) / 2.2) });
     earrings(g, M('jewel_206850'), 1040, 300, 300, t, p2.a);   // 揃いのピアス
-    sticker(g, IMG.c_yo_swim, 1530, 900, 250 * p3.s, { a: p3.a, rot: -0.08 });
-    sticker(g, IMG.c_na_casual, 1700, 910, 250 * p3.s, { a: slap(t, Ls(26)).a, rot: 0.08 });
-    doodle(g, 'heart', 1615, 740, 1.5, clamp((t - Ls(26) - 0.3) / 0.7), MEM.na.ink, 4);
+    const q = pop(t, Ls(26) - 0.2), bp = beatF(t);   // 甘えたようにじゃれる: the two play together
+    if (q.a) {
+      sticker(g, IMG.c_yo_swim, 1520, 900 - hop(bp, 0, 26), 250 * q.s, { a: q.a, rot: -0.12 + Math.sin(t * 6) * 0.06 + q.r });
+      sticker(g, IMG.c_na_casual, 1700, 910 - hop(bp, 0.5, 26), 250 * q.s, { a: q.a, rot: 0.12 - Math.sin(t * 6) * 0.06 - q.r });
+    }
+    doodle(g, 'heart', 1610, 740, 1.5, clamp((t - Ls(26) - 0.2) / 0.6), MEM.na.ink, 4);
   });
 }
 
@@ -528,20 +536,18 @@ function jewels(ctx, t, s) { // Passion jewelries: the five gather as jewels on 
 }
 
 /* ------------------------------------------------------------ BRIDGE (dawn, private clothes) */
-function dawnSky(ctx, t, p = 0) {
+function dawnSky(ctx, t, p = 0, sx = 960) {
   layer(ctx, 1, g => {
     const c = (a, b) => { const q = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)], x = q(a), y = q(b); return `rgb(${lerp(x[0], y[0], p) | 0},${lerp(x[1], y[1], p) | 0},${lerp(x[2], y[2], p) | 0})`; };
     bgGrad(g, [[0, c('#4a3a7a', '#7a5a9a')], [0.45, c('#e08a8a', '#f4a88a')], [0.62, c('#ffd0a0', '#ffe2b8')], [0.63, '#f2b89a'], [1, '#5a3048']]);
-    glow(g, 960, lerp(700, 600, p), 900, '#fff0d0', 0.7); g.fillStyle = '#fffaf0'; g.beginPath(); g.arc(960, lerp(700, 600, p), 80, 0, TAU); g.fill();
-    g.save(); g.globalCompositeOperation = 'screen'; for (let k = 0; k < 40; k++) { const y = 690 + Math.pow(k / 40, 1.6) * 390, w = 30 + k * 18; g.globalAlpha = 0.25 * (0.6 + 0.4 * Math.sin(t * 1.5 + k)); g.fillStyle = '#fff2d8'; g.fillRect(960 - w / 2 + Math.sin(t * 0.7 + k) * 14, y, w, 2 + k * 0.08); } g.restore();
+    glow(g, sx, lerp(700, 600, p), 900, '#fff0d0', 0.7); g.fillStyle = '#fffaf0'; g.beginPath(); g.arc(sx, lerp(700, 600, p), 80, 0, TAU); g.fill();
+    g.save(); g.globalCompositeOperation = 'screen'; for (let k = 0; k < 40; k++) { const y = 690 + Math.pow(k / 40, 1.6) * 390, w = 30 + k * 18; g.globalAlpha = 0.25 * (0.6 + 0.4 * Math.sin(t * 1.5 + k)); g.fillStyle = '#fff2d8'; g.fillRect(sx - w / 2 + Math.sin(t * 0.7 + k) * 14, y, w, 2 + k * 0.08); } g.restore();
   });
 }
-function profiles(ctx, t, s) { // ふたりの横顔: two-shot, private clothes
-  dawnSky(ctx, t, inv(166.5, 191, t));
-  layer(ctx, 1, g => {
-    figure(g, 'na_casual', framing('na_casual', 'bust', 0.3, { k: 0.85 }), { rim: '#ffe0b0', grade: '#ffb080', gradeA: 0.16, gradeOp: 'soft-light', a: smooth(s.a + 0.2, s.a + 1.2, t) });
-    figure(g, 'yo_swim', framing('yo_swim', 'bust', 0.72, { k: 0.85 }), { flip: true, rim: '#ffe0b0', rimSide: -1, grade: '#ffb080', gradeA: 0.16, gradeOp: 'soft-light', a: smooth(Ls(41) - 0.4, Ls(41) + 0.6, t) });
-  });
+function profiles(ctx, t, s) { // 朝日が照らした ふたりの横顔を: Nagi alone, stage costume, lit by the rising sun
+  dawnSky(ctx, t, inv(166.5, 191, t), 560);
+  layer(ctx, 1, g => figure(g, 'na_cos', lerpFr(framing('na_cos', 'knee', 0.68), framing('na_cos', 'bust', 0.67), 0.6),
+    { rim: '#fff0c8', rimA: 0.75, rimSide: -1, glow: '#ffd8a0', glowA: 0.28, grade: '#ffb080', gradeA: 0.18, gradeOp: 'soft-light' }));
 }
 function cufflinkFace(ctx, t, s) { // ああ あなたのカフスを: her face, held
   layer(ctx, 1, g => cover(g, IMG.card_yo, OS, 2.2, CF.cardYo.yo[0] - 0.03, CF.cardYo.yo[1]));
@@ -695,7 +701,7 @@ export function build() {
   add(63.4, shinFire, PUSH, 'dissolve', 0.3);
   add(66.9, coverWide, PULL, 'dissolve', 0.6);
   // interlude
-  add(69.75, guitarTable, PUSHL, 'dissolve', 0.8);
+  add(69.75, guitarTable, STILL, 'dissolve', 0.8);
   // verse 2 — summer memories
   add(79.43, summerNagi, PUSH, 'dissolve', 0.8);
   add(87.5, summerYoshino, PUSH, 'dissolve', 0.6);

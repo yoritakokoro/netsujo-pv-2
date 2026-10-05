@@ -107,7 +107,7 @@ export function render(t) {
   drawLyrics(ctx, t);
   eyelids(t);
   ctx.save(); ctx.globalAlpha = col ? 0.35 : 0.55; ctx.drawImage(fx.vignette(0.75), 0, 0); ctx.restore();
-  fx.applyGrain(ctx, Math.floor(t * 12) / 12, col ? 0.07 : 0.05);
+  fx.applyGrain(ctx, Math.floor(t * 24) / 24, col ? 0.07 : 0.05);
   const blk = Math.max(1 - smooth(0, 0.5, t), smooth(263.0, 265.6, t));
   if (blk > 0) { ctx.save(); ctx.globalAlpha = blk; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
 }

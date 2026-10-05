@@ -21,7 +21,7 @@ async function worker(browser, port, k, f0, f1) {
   const file = path.join(tmp, `chunk_${String(k).padStart(2, '0')}.mp4`);
   const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'mjpeg', '-i', '-',
     '-c:v', 'libx264', '-preset', 'slow', '-crf', crf, '-tune', 'film', '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709',
-    '-maxrate', '12M', '-bufsize', '24M', '-g', String(fps * 2), '-threads', '1', file], { stdio: ['pipe', 'inherit', 'inherit'] });
+    '-maxrate', (12 * fps / 30) + 'M', '-bufsize', (24 * fps / 30) + 'M', '-g', String(fps * 2), '-threads', '1', file], { stdio: ['pipe', 'inherit', 'inherit'] });
   const t0 = Date.now();
   for (let f = f0; f < f1; f++) {
     const data = await page.evaluate(t => window.MV.grab(t, 0.94), f / fps);
