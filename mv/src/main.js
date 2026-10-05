@@ -108,7 +108,7 @@ function transition(kind, p) {
 }
 
 function hud(t, s) {
-  const hide = ['open', 'chant', 'title'].includes(s.id) || (s.id === 'outro' && t > 249.5);
+  const hide = ['open', 'chant', 'title'].includes(s.id) || (s.id === 'outro' && t > 249.6);
   let a = hide ? 0 : 0.8;
   a *= smooth(s.a, s.a + 0.6, t);
   if (a <= 0.01) return;

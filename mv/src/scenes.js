@@ -163,7 +163,7 @@ function roseField(ctx, t, t0, n, seed, pals, alpha = 1, sizeMul = 1) {
     fx.draw(ctx, spr, x, y, (R * 2.4 / spr.width) * E.outBack(p), t * 0.1 + hash(i, seed + 4) * TAU, alpha * clamp(p * 3));
   }
 }
-const FACES = { nagi: [0.2, 0.33], shin: [0.39, 0.17], yoshino: [0.63, 0.25], riamu: [0.83, 0.27], tomoe: [0.49, 0.45] };
+const FACES = { nagi: [0.2, 0.33], shin: [0.39, 0.17], yoshino: [0.63, 0.25], riamu: [0.82, 0.34], tomoe: [0.49, 0.45] };
 
 /* ------------------------------------------------------------------ scenes */
 function sOpen(ctx, t) {
@@ -537,7 +537,7 @@ function sChorus2(ctx, t) {
     if (ba > 0) {
       ctx.save(); ctx.globalAlpha = ba;
       ctx.save(); ctx.beginPath(); ctx.arc(bx, by, 330 * bp, 0, TAU); ctx.clip();
-      fx.coverImage(ctx, A.cover, [bx - 330, by - 330, 660, 660], 2.1, 0.72, 0.28);
+      fx.coverImage(ctx, A.cover, [bx - 330, by - 330, 660, 660], 2.1, 0.72, 0.33);
       rgrad(ctx, bx - 90, by - 120, 420, [[0, 'rgba(255,255,255,0.18)'], [0.6, 'rgba(255,200,240,0.05)'], [1, 'rgba(120,60,200,0.35)']]);
       ctx.restore();
       ctx.lineWidth = 3; const ir = ctx.createLinearGradient(bx - 330, by - 330, bx + 330, by + 330);
@@ -679,7 +679,7 @@ function sFinal(ctx, t) {
     const p = inv(232.0, 238.2, t);
     vgrad(ctx, [[0, '#b9a6d8'], [0.55, '#f2c6c0'], [1, '#ffe2bc']]);
     ctx.save(); ctx.globalAlpha = 0.24 * (1 - p * 0.5);
-    fx.coverImage(ctx, A.coverSoft, [0, 0, W, H], 1.1 + p * 0.06, 0.5, 0.4);
+    fx.coverImage(ctx, A.coverSoft, [0, 0, W, H], 1.4 + p * 0.06, 0.5, 0.4);
     ctx.restore();
     fx.draw(ctx, fx.glowSprite('#fffaf0', 512), 960, 520, 3, 0, 0.6, 'lighter');
     fx.petals(ctx, t, 18, 131, { pal: ['blush', 'gold'], speed: 40, wind: 20, alpha: 0.9, size: 0.9 });
@@ -688,18 +688,18 @@ function sFinal(ctx, t) {
 }
 
 function sOutro(ctx, t) {
-  if (t < 250.0) {
+  if (t < 249.75) {
     fill(ctx, P.crimson);
     rgrad(ctx, 960, 540, 1100, [[0, '#c8162f'], [1, '#5a0614']]);
     fx.fillPattern(ctx, fx.dotTile(P.champagne, 110, 8), 0.16, 1, 0, -t * 20, 0);
-    const cards = [[A.cover, 0.42, 0.35, 'Pasión'], [A.ynight, 0.55, 0.45, 'Noche'], [A.alham, 0.6, 0.45, 'Alhambra'], [A.cover, 0.83, 0.27, 'Amanecer'], [A.ynight, 0.62, 0.5, 'Luna'], [A.alham, 0.35, 0.42, 'Baile']];
+    const cards = [[A.cover, 0.42, 0.35, 'Pasión'], [A.ynight, 0.55, 0.45, 'Noche'], [A.alham, 0.6, 0.45, 'Alhambra'], [A.cover, 0.55, 0.35, 'Amanecer'], [A.ynight, 0.62, 0.5, 'Luna'], [A.alham, 0.35, 0.42, 'Baile']];
     const speed = 210, pw = 560, ph = 700, gap = 120;
     cards.forEach(([img, fxp, fyp, cap], k) => {
       const x = W + 120 + k * (pw + gap) - (t - 238.14) * speed * 1.6;
       if (x < -pw - 200 || x > W + 100) return;
       const y = 170 + (k % 2) * 60 + pulse(t, 8) * 6;
       ctx.save(); ctx.fillStyle = '#fbf3e4'; ctx.shadowColor = 'rgba(0,0,0,0.4)'; ctx.shadowBlur = 30; ctx.fillRect(x - 18, y - 18, pw + 36, ph + 110); ctx.restore();
-      ctx.save(); ctx.beginPath(); ctx.rect(x, y, pw, ph); ctx.clip(); fx.coverImage(ctx, img, [x, y, pw, ph], 1.25, fxp, fyp); ctx.restore();
+      ctx.save(); ctx.beginPath(); ctx.rect(x, y, pw, ph); ctx.clip(); fx.coverImage(ctx, img, [x, y, pw, ph], img === A.cover && cap === 'Amanecer' ? 1.6 : 1.25, fxp, fyp); ctx.restore();
       label(ctx, cap, x + pw / 2, y + ph + 48, { fam: F.corm, size: 40, italic: true, weight: 600, color: P.carmine, align: 'center' });
     });
     fx.petals(ctx, t, 20, 141, { pal: ['gold', 'orange'], speed: 90, wind: 60, alpha: 0.85 });
@@ -710,7 +710,7 @@ function sOutro(ctx, t) {
   vgrad(ctx, [[0, '#0b0a1a'], [0.6, '#170d26'], [1, '#2a0d1c']]);
   fx.fillPattern(ctx, fx.zelligeTile(P.gold, 220, 1.4), 0.07, 1.1, t * 0.02, 0, 0);
   fx.leaks(ctx, t, ['#b3122e', '#5b2a86', '#e2b25a'], 3, 5, 0.35, 1100);
-  archImage(ctx, t, A.cover, 1440, 1010, 560, 860, inv(250.0, 250.9, t), lerp(1.55, 1.42, inv(250, 264, t)), 0.5, 0.36, { vprog: inv(250.3, 251.4, t) });
+  archImage(ctx, t, A.cover, 1440, 1010, 560, 860, inv(249.75, 250.65, t), lerp(1.55, 1.42, inv(249.75, 264, t)), 0.5, 0.36, { vprog: inv(250.05, 251.15, t) });
   fx.stars(ctx, t, 50, 177, [0, 0, W, 600], 0.7, 0.12, '#ffe7b8');
   const x0 = 160;
   drawText(ctx, t, '熱情エナモラル', { x: x0, y: 430, size: 104, fontStr: font(F.mincho, 104, 800), fill: P.ivory, shadow: 'rgba(80,0,20,0.8)', anim: 'blur', start: 250.6, stagger: 0.08 });
@@ -726,6 +726,7 @@ function sOutro(ctx, t) {
   label(ctx, 'THE IDOLM@STER CINDERELLA MASTER  Passion jewelries! 004', x0, 920, { fam: F.cinzel, size: 16, weight: 600, color: hexA(P.gold2, 0.85), track: 0.2, alpha: smooth(253.4, 254, t) });
   label(ctx, 'fan-made lyric video', x0, 958, { fam: F.corm, size: 22, italic: true, color: hexA(P.champagne, 0.6), track: 0.08, alpha: smooth(253.8, 254.4, t) });
   fx.petals(ctx, t, 12, 9, { pal: ['crimson', 'scarlet'], speed: 60, alpha: 0.8, size: 0.8 });
+  flash(ctx, hitFlash(t, 249.75, 0.4) * 0.6);
 }
 
 /* ------------------------------------------------------------------ list */
