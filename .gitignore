@@ -9,3 +9,6 @@ mv/assets/photos/
 mv/assets/fonts/
 node_modules/
 __pycache__/
+mv/assets/v3/
+mv/assets/met/
+mv/assets/v4/

@@ -11,6 +11,15 @@ export const F = {
   bodoni: 'Bodoni',        // Bodoni Moda italic
   script: 'Pinyon',        // Pinyon Script
   cinzel: 'Cinzel',
+  hand: 'Caveat',          // handwriting (latin)
+  yusei: 'YuseiMagic',     // marker handwriting (japanese)
+  anton: 'Anton',
+  bebas: 'Bebas',
+  dela: 'DelaGothic',
+  dmserif: 'DMSerif',
+  abril: 'Abril',
+  typew: 'SpecialElite',
+  klee: 'Klee',
 };
 export const font = (fam, size, weight = 400, italic = false) => `${italic ? 'italic ' : ''}${weight} ${size}px "${fam}"`;
 

@@ -6,7 +6,7 @@ THE IDOLM@STER CINDERELLA MASTER Passion jewelries! 004. Character art: CD jacke
 ## Photographs
 
 From the [Open Images Dataset](https://storage.googleapis.com/openimages/web/index.html), each licensed
-[CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) by its author. Images were selected to contain no people, then upscaled
+[CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) by its author. Images were selected to contain no people; in the video they appear only as cut-out objects, halftone/ink textures or small collage pieces, upscaled
 (waifu2x) and colour-graded / composited for the video.
 
 | Used as | Title | Author | Source |
@@ -14,87 +14,142 @@ From the [Open Images Dataset](https://storage.googleapis.com/openimages/web/ind
 | b1_curtain | Closed red curtain at the Coolidge Corner Theatre - portrait | [Ben Becker](https://www.flickr.com/people/brokentrinkets/) | [32eee7477d594b6f](https://www.flickr.com/photos/brokentrinkets/3074887475) |
 | b1_letter | Advice by Brian Solis | [Brian Solis](https://www.flickr.com/people/briansolis/) | [ba0b1f00e9a03c04](https://www.flickr.com/photos/briansolis/15957150923) |
 | b1_lipstick | 18 / 365 - On the Mauve | [Kelly Hunter](https://www.flickr.com/people/inspirekelly/) | [504f6bee7b0698ba](https://www.flickr.com/photos/inspirekelly/6031622829) |
-| b2_corridor | Shimmer | [Adam Baker](https://www.flickr.com/people/atbaker/) | [352cb091efbf5fc2](https://www.flickr.com/photos/atbaker/3280269952) |
 | b2_drop | drops on rose | [Patty O&#x27;Hearn Kickham](https://www.flickr.com/people/memotions/) | [82a4f541ad81356b](https://www.flickr.com/photos/memotions/422935026) |
-| br_gold | _MG_1729 | [Ivan Moreno](https://www.flickr.com/people/37chess/) | [978b5b16ab38882c](https://www.flickr.com/photos/37chess/14223585941/) |
-| br_mist | Sunrise MWP | [Jerry Kirkhart](https://www.flickr.com/people/jkirkhart35/) | [6cd1cd2808cc099c](https://www.flickr.com/photos/jkirkhart35/16738831461/) |
 | br_palms | Marga-Marga | [Gabriel Molina](https://www.flickr.com/people/breatheoutnow/) | [804add10cbd9f34c](https://www.flickr.com/photos/breatheoutnow/14188917294) |
-| br_sun | Sunrise over frozen Lake Wingra 01-16-2013 021 | [Richard Hurd](https://www.flickr.com/people/rahimageworks/) | [8e00fc0b2ede9606](https://www.flickr.com/photos/rahimageworks/8818115028) |
 | c1_blaze | Fire texture 1 | [Morgennebel](https://www.flickr.com/people/morgennebel/) | [ca823be2f384459d](https://www.flickr.com/photos/morgennebel/4500506623) |
-| c1_coals | Carbon | [nestor ferraro](https://www.flickr.com/people/nestorferraro/) | [269db3693c4d1b83](https://www.flickr.com/photos/nestorferraro/15382944871) |
-| c1_fire2 | fire-oil-s1920 | [Phuket@photographer.net](https://www.flickr.com/people/linvoyage/) | [632894921ee0ab4d](https://www.flickr.com/photos/linvoyage/20327924370) |
-| c1_fountain | Fountain At Night | [Audrey](https://www.flickr.com/people/audreyjm529/) | [055e07a1bd2595e2](https://www.flickr.com/photos/audreyjm529/238955265) |
-| c1_ripples | water  reflection | [texaus1](https://www.flickr.com/people/texaus1/) | [c0b4148c720e50d7](https://www.flickr.com/photos/texaus1/6149795958) |
-| c1_rose1, fi_r8 | Rose Heart | [Sharon Mollerus](https://www.flickr.com/people/clairity/) | [a3821755dd3379a1](https://www.flickr.com/photos/clairity/565151939) |
-| c1_rose2 | Red rose | [alfaneque](https://www.flickr.com/people/76623287@N00/) | [45d4785f94172b18](https://www.flickr.com/photos/76623287@N00/534403008) |
-| c2_clock | overtime | [Sam Greenhalgh](https://www.flickr.com/people/zapthedingbat/) | [c20084e881db2de6](https://www.flickr.com/photos/zapthedingbat/1347803943) |
-| c2_fizz | New Years Gear | [Robert Anthony Provost](https://www.flickr.com/people/twon/) | [59c75b112901d050](https://www.flickr.com/photos/twon/2113846376) |
 | c2_guitar | Chris's new Kronbauer | [Larry Jacobsen](https://www.flickr.com/people/ljguitar/) | [6d5939d3c214bd7d](https://www.flickr.com/photos/ljguitar/422521825) |
 | c2_moon | Lunar Eclipse1 | [Gainesvegas](https://www.flickr.com/people/marylynnjohnson/) | [8261b359f88d59a4](https://www.flickr.com/photos/marylynnjohnson/2280292647) |
-| c2_pocket | Old gold watch | [allispossible.org.uk](https://www.flickr.com/people/wheatfields/) | [a11fdfd436ee2ef9](https://www.flickr.com/photos/wheatfields/3487679431/) |
-| c2_stars | Offener Sternhaufen NGC457 im Sternbild Kassiopeia. | [Alnitak2009](https://www.flickr.com/people/alnitak2009/) | [78dfe8764fd8b76f](https://www.flickr.com/photos/alnitak2009/5057362877) |
 | ch_fire | Licking flames | [Abi Skipp](https://www.flickr.com/people/9557815@N05/) | [903bfcf38f1bd02b](https://www.flickr.com/photos/9557815@N05/8151956190) |
-| ch_guitar | Texture: Guitar | [Jeric Santiago](https://www.flickr.com/people/dawgbyte77/) | [af31b214dc238a13](https://www.flickr.com/photos/dawgbyte77/3052164481) |
-| ch_rose | Rosa passione | [@Cristianhold](https://www.flickr.com/people/brunociampi/) | [dc07ef8388e1570c](https://www.flickr.com/photos/brunociampi/2493541566) |
-| ch_sparks | chispas | [jjoorrggee](https://www.flickr.com/people/yorch-the-mute/) | [b8c35e11b3f12f21](https://www.flickr.com/photos/yorch-the-mute/2913602901) |
-| ch_wine | Girl in the Fire | [Basheer Tome](https://www.flickr.com/people/basheertome/) | [5662c708e939b573](https://www.flickr.com/photos/basheertome/4375253246) |
-| d_bent | חנוכה / Hanukkah | [RonAlmog](https://www.flickr.com/people/ronalmog/) | [893306e1fa70c792](https://www.flickr.com/photos/ronalmog/5235427938) |
-| d_bonfire | oostende | [sophie](https://www.flickr.com/people/sophiea/) | [1815b244c465a60b](https://www.flickr.com/photos/sophiea/2189411025) |
-| d_fountains | IMG_7273 | [funky1opti](https://www.flickr.com/people/funky1opti/) | [f235c32c105b59ed](https://www.flickr.com/photos/funky1opti/4948769097/) |
-| d_fw_orange | Macy's Fireworks, New York City - July 4, 2013 (20 of 31) | [Douglas Palmer](https://www.flickr.com/people/diacritical/) | [d617d48882833142](https://www.flickr.com/photos/diacritical/9213821636) |
-| d_kaleido | stars | [Max Rempel](https://www.flickr.com/people/maxrempel/) | [b7ee54f06860b385](https://www.flickr.com/photos/maxrempel/3582928513/) |
-| d_lamp | Tesla Chandelier - Bottom View, Designed by Haldane Martin, Photo Micky Hoyle | [Haldane Martin](https://www.flickr.com/people/haldanemartin/) | [94feb18e405fc2ab](https://www.flickr.com/photos/haldanemartin/14363663713) |
-| d_lanterns | BEAUTIFUL NOISE | [marc falardeau](https://www.flickr.com/people/49889874@N05/) | [551b36625bf84719](https://www.flickr.com/photos/49889874@N05/7033813609) |
-| d_montjuic | Museum Barsa | [João Ernani Oliveira](https://www.flickr.com/people/joer/) | [11d233380ed7f04c](https://www.flickr.com/photos/joer/193637048) |
 | d_rose | Rose 7632 | [Kain Kalju](https://www.flickr.com/people/kainkalju/) | [ded970a85b033836](https://www.flickr.com/photos/kainkalju/5377635666) |
-| d_skylantern | make wish | [xin beitou](https://www.flickr.com/people/republicofchina/) | [292687f2070f4bad](https://www.flickr.com/photos/republicofchina/6818834379) |
 | d_tile | IMG_7640.jpg | [Christopher Michel](https://www.flickr.com/people/cmichel67/) | [d1e8c4dbbc571891](https://www.flickr.com/photos/cmichel67/79639855) |
-| d_willow | Playing with blue fire | [_Zeta_](https://www.flickr.com/people/beppezizzi/) | [a8fd52fd9feab67e](https://www.flickr.com/photos/beppezizzi/140210968) |
-| es_gold | India patterns | [Dylan Walters](https://www.flickr.com/people/dylwalters/) | [f1a888697ab3855e](https://www.flickr.com/photos/dylwalters/438524669) |
-| es_satin | DSC05944a | [SantaRosa OLD SKOOL](https://www.flickr.com/people/santarosa/) | [50b11ec319bfaf4b](https://www.flickr.com/photos/santarosa/176487558) |
 | fi_candle | Candle | [Justin Ennis](https://www.flickr.com/people/averain/) | [296895e6a00ada80](https://www.flickr.com/photos/averain/2885778417) |
-| fi_clouds | sunrise over jacksonville | [moonchild64](https://www.flickr.com/people/moonchild64/) | [73f6db99adbd33a6](https://www.flickr.com/photos/moonchild64/6136287307) |
-| fi_pale | 2010_1009-15.56.36_ariii | [Ariane Middel](https://www.flickr.com/people/ariii/) | [4a74730258bbfa18](https://www.flickr.com/photos/ariii/5073331458/) |
-| fi_palmfog | No filter | [pravin.premkumar](https://www.flickr.com/people/pravin8/) | [f1441d8164d4baa1](https://www.flickr.com/photos/pravin8/16920170708) |
-| fi_r1 | Day 333 of 365 - Birthday Flowers | [Jesse! S?](https://www.flickr.com/people/jesssseeee/) | [d66878deb35c5005](https://www.flickr.com/photos/jesssseeee/6642654389) |
-| fi_r2 | Rose on fire | [SLR Jester](https://www.flickr.com/people/slrjester/) | [ccc7098d01421ab6](https://www.flickr.com/photos/slrjester/2444525505) |
 | fi_r3 | Rose in the Sun | [C.P.Storm](https://www.flickr.com/people/cpstorm/) | [43f3a385d3564305](https://www.flickr.com/photos/cpstorm/394990940) |
-| fi_r4 | Dahlia | [Sid Mosdell](https://www.flickr.com/people/sidm/) | [076d5d45da95de9c](https://www.flickr.com/photos/sidm/6828494147) |
-| fi_r5 | Carnation 0308 4886 | [Ross Elliott](https://www.flickr.com/people/ross_elliott/) | [28acf2dd2971eafe](https://www.flickr.com/photos/ross_elliott/4568247237) |
-| fi_r6 | Pink rose | [Alejandro Mallea](https://www.flickr.com/people/janoma/) | [ded690cba82a4a7f](https://www.flickr.com/photos/janoma/4762348636) |
 | fi_r7 | Rosarossorosso | [LorenzoNk](https://www.flickr.com/people/lorenzonk/) | [6319641a42841796](https://www.flickr.com/photos/lorenzonk/3048126733) |
-| fi_ripples | Sunset at Gömmaren, Huddinge (Stockholm) | [Tommie Hansen](https://www.flickr.com/people/tommiehansen/) | [1e9d1b1936cb3b15](https://www.flickr.com/photos/tommiehansen/8730782041) |
 | fi_sail | X47A6421 | [niki georgiev](https://www.flickr.com/people/85189931@N00/) | [765454fbc64489a3](https://www.flickr.com/photos/85189931@N00/19027215850) |
-| in_curve | guitarscape | [Luis de Bethencourt](https://www.flickr.com/people/luisbg/) | [86291eee68f3b6f4](https://www.flickr.com/photos/luisbg/2083442797) |
-| in_hole | IMG_0708 | [Scott Cranfill](https://www.flickr.com/people/scottish/) | [6e887b5b19d7ad83](https://www.flickr.com/photos/scottish/6858617362) |
-| in_strings | Takamine | [Romel Sanchez](https://www.flickr.com/people/idreamoutloud/) | [7e68bc7710c9658f](https://www.flickr.com/photos/idreamoutloud/463648671) |
 | ou_astrolabe | World Innovation Summit for Education - Qatar | [Larry Johnson](https://www.flickr.com/people/drljohnson/) | [9605a01b67a53ffb](https://www.flickr.com/photos/drljohnson/4107751408) |
-| ou_birds | Otro Día Más / One More Day | [Felipe Lorente](https://www.flickr.com/people/felipelorente/) | [f44333c7ae63b06c](https://www.flickr.com/photos/felipelorente/3921250116) |
-| ou_calm | Koroni Harbour Greece | [Jon Mitchell](https://www.flickr.com/people/jonboy_mitchell/) | [91496aa65cf0b1d7](https://www.flickr.com/photos/jonboy_mitchell/2849055066) |
-| ou_champ | Wine night | [Martin Hesketh](https://www.flickr.com/people/martinhesketh/) | [43f2a4b7197637ff](https://www.flickr.com/photos/martinhesketh/8543511087) |
-| ou_chandelier | Chandelier | [Suzie Tremmel](https://www.flickr.com/people/23727257@N00/) | [a5fc24289e45b3ee](https://www.flickr.com/photos/23727257@N00/7176613094) |
-| ou_doily | lace necklace #2 | [Marta Owczarek](https://www.flickr.com/people/colorescentious/) | [b1803a66e84ebd1a](https://www.flickr.com/photos/colorescentious/4408008139) |
-| ou_lace_room | Не натуральные снежинки | [FAndrey](https://www.flickr.com/people/f-andrey/) | [a094914e723952d0](https://www.flickr.com/photos/f-andrey/6786706779) |
-| ou_ring | Lit-Candles-in-Heart-Shape__33070 | [Emilian Robert Vicol](https://www.flickr.com/people/free-stock/) | [3cfe27968d9ff63a](https://www.flickr.com/photos/free-stock/6970875634) |
-| ou_sail2 | Sunset by the Bay | [Doun](https://www.flickr.com/people/doun_dounell/) | [f7a31019ca4874b2](https://www.flickr.com/photos/doun_dounell/8564459881) |
-| ou_window | angel's trees | [woodleywonderworks](https://www.flickr.com/people/wwworks/) | [6e09d1007c7d00ec](https://www.flickr.com/photos/wwworks/2615532748) |
-| p1_coals | 41/52 | [grotos](https://www.flickr.com/people/grotos/) | [413a6a5b04977acf](https://www.flickr.com/photos/grotos/10248337983) |
-| p1_column | a (174) | [Free Casters](https://www.flickr.com/people/127358405@N03/) | [2c17b16d29b11b15](https://www.flickr.com/photos/127358405@N03/14945088087) |
-| p1_embers | glut | [PeterFranz](https://www.flickr.com/people/peter_franz/) | [ef27882418be3dee](https://www.flickr.com/photos/peter_franz/9499317211) |
-| p1_votive | Candle Rim | [Lisa Williams](https://www.flickr.com/people/pixellou/) | [399f58a7cb8f02a9](https://www.flickr.com/photos/pixellou/4881146165) |
 | p2_bells | Muriel de la Fuente.Soria. | [Miguel Ángel García.](https://www.flickr.com/people/respenda/) | [3f5068558ea3d4b5](https://www.flickr.com/photos/respenda/13365502913) |
-| p2_lights | Hiroshima | [Freedom II Andres](https://www.flickr.com/people/freedomiiphotography/) | [6729ff0264b21161](https://www.flickr.com/photos/freedomiiphotography/7725687560) |
-| p2_spires | Nidarosdomen | [Eirik Refsdal](https://www.flickr.com/people/eirikref/) | [07e9e840a2cfba89](https://www.flickr.com/photos/eirikref/77202116) |
 | slim_candle | Luz de Emergencia | [Richie Rich](https://www.flickr.com/people/bacteriano/) | [f49ff01ec314cb92](https://www.flickr.com/photos/bacteriano/1697969077) |
-| ti_fire | light_satin_flame_03 | [Jason Bobich](https://www.flickr.com/people/jaybich/) | [5a942e4c3af7294c](https://www.flickr.com/photos/jaybich/4167657846) |
-| v1_candles | Day 36 - Candles | [Iain Watson](https://www.flickr.com/people/dagoaty/) | [63b50428c6aebacd](https://www.flickr.com/photos/dagoaty/4337229487) |
-| v1_cold | Sunset @Gun Beach | [Rich Ocampo](https://www.flickr.com/people/richocampo/) | [38815c3a239f04cc](https://www.flickr.com/photos/richocampo/5586414321) |
-| v1_lanterns | Yee Peng Sansai, Floating Lantern Ceremony - Chiang Mai | [Poakpong](https://www.flickr.com/people/poakpong/) | [385474fd16d20cd4](https://www.flickr.com/photos/poakpong/5200591870) |
-| v1_palms | outside our hotel | [b r e n t](https://www.flickr.com/people/bmh4you/) | [284b85cd25754c80](https://www.flickr.com/photos/bmh4you/201731462) |
 | v1_stars | Motion | [Yashvardhan Verma](https://www.flickr.com/people/yavve/) | [d44c4cc158fd1113](https://www.flickr.com/photos/yavve/8039730527) |
 | v2_crescent | IMG_2127.jpg | [Saad Faruque](https://www.flickr.com/people/cblue98/) | [58e83db6c31e6a50](https://www.flickr.com/photos/cblue98/6599886111) |
-| v2_harbor | Untitled | [Duru...](https://www.flickr.com/people/sevilaydurul/) | [d96d7ac759d81856](https://www.flickr.com/photos/sevilaydurul/3803470470) |
-| v2_jewel | Breguet - Jewellery Catalogue 2013-2014 FR-EN - Page 19 | [準建築人手札網站 Forgemind ArchiMedia](https://www.flickr.com/people/eager/) | [060d633875ce24d8](https://www.flickr.com/photos/eager/15899060579/) |
 | v2_moonbeach | Reflection | [John Loo](https://www.flickr.com/people/johnloo/) | [ede8c3b6ea992f59](https://www.flickr.com/photos/johnloo/6135502278) |
+
+
+## The Metropolitan Museum of Art — Open Access (public domain, CC0)
+
+Spanish/Andalusian decorative art used as backgrounds, kaleidoscopes, collage pieces and ornaments.
+
+| Object | Title | Date / Culture | Link |
+|---|---|---|---|
+| Photograph | [Courtyard of the Lions, Alhambra, Granada] | 1880s–90s  | [263835](http://www.metmuseum.org/art/collection/search/263835) |
+| Photograph | [Hall of Justice, Alhambra, Granada] | 1880s–90s  | [263839](http://www.metmuseum.org/art/collection/search/263839) |
+| Photograph | [The Lion Court at the Alhambra, Viewed from Beneath the Portico Temple] | 1862  | [288043](http://www.metmuseum.org/art/collection/search/288043) |
+| Drawing | Partial design for ceiling decoration with clouds and roses | 1830–97  | [385116](http://www.metmuseum.org/art/collection/search/385116) |
+| Drawing | Design for a ceiling painted with clouds, trellises, and roses | second half 19th century  | [386262](http://www.metmuseum.org/art/collection/search/386262) |
+| Dish | Dish | late 15th century Spanish, Valencia (Manises) | [187866](http://www.metmuseum.org/art/collection/search/187866) |
+| Plate | Plate | second quarter 16th–early 17th century Spanish, Muel, Aragon | [201662](http://www.metmuseum.org/art/collection/search/201662) |
+| Dish | Dish | late 16th–early 17th century Spanish, possibly Valencia | [201905](http://www.metmuseum.org/art/collection/search/201905) |
+| Dish | Dish | mid-16th century Spanish, Catalonia | [201909](http://www.metmuseum.org/art/collection/search/201909) |
+| Dish | Dish | 16th century  | [451998](http://www.metmuseum.org/art/collection/search/451998) |
+| Plate | Dish with Heraldic Shield | 1470–1500 Spanish | [463686](http://www.metmuseum.org/art/collection/search/463686) |
+| Plate | Plate with Water Bird | late 1400s or early 1500s Spanish | [467080](http://www.metmuseum.org/art/collection/search/467080) |
+| Plate | Plate | 1470–1490 Spanish | [468513](http://www.metmuseum.org/art/collection/search/468513) |
+| Plate | Plate | 1450–1470 Spanish | [468516](http://www.metmuseum.org/art/collection/search/468516) |
+| Dish | Deep Dish | 1420–1430 Spanish | [471739](http://www.metmuseum.org/art/collection/search/471739) |
+| Dish | Dish | 1430–1460 Spanish | [471762](http://www.metmuseum.org/art/collection/search/471762) |
+| Plate | Plate | 1420–1430 Spanish | [471790](http://www.metmuseum.org/art/collection/search/471790) |
+| Dish | Dish | late 15th century Spanish | [471796](http://www.metmuseum.org/art/collection/search/471796) |
+| Dish | Dish | 15th century Spanish | [471802](http://www.metmuseum.org/art/collection/search/471802) |
+| Dish | Deep Dish | 1430–40 Spanish | [471807](http://www.metmuseum.org/art/collection/search/471807) |
+| Dish | Dish | 1430–1460 Spanish | [471810](http://www.metmuseum.org/art/collection/search/471810) |
+| Dish | Dish | late 15th–early 16th century Spanish | [471811](http://www.metmuseum.org/art/collection/search/471811) |
+| Fan | Fan | 1860s–70s American | [107571](http://www.metmuseum.org/art/collection/search/107571) |
+| Fan | Fan | 1870s American or European | [118755](http://www.metmuseum.org/art/collection/search/118755) |
+| Fan | Fan | 1830–60 French | [120434](http://www.metmuseum.org/art/collection/search/120434) |
+| Fan | Fan | 1860s American or European | [120449](http://www.metmuseum.org/art/collection/search/120449) |
+| Fan  | Fan | 1860s American or European | [120450](http://www.metmuseum.org/art/collection/search/120450) |
+| Fan | Fan | 1850–60 probably American | [120720](http://www.metmuseum.org/art/collection/search/120720) |
+| Fan | Fan | 1870s American | [120731](http://www.metmuseum.org/art/collection/search/120731) |
+| Fan | Fan | 1860–79 American | [120766](http://www.metmuseum.org/art/collection/search/120766) |
+| Fan | Fan | mid-19th century American | [120769](http://www.metmuseum.org/art/collection/search/120769) |
+| Fan | Fan | 1885–95 European | [156754](http://www.metmuseum.org/art/collection/search/156754) |
+| Mourning Fan | Mourning fan | 1885–95 French | [168462](http://www.metmuseum.org/art/collection/search/168462) |
+| Mourning fan | Mourning fan | 1880–85 American | [169733](http://www.metmuseum.org/art/collection/search/169733) |
+| Fan | Fan | 1860–69 French | [169859](http://www.metmuseum.org/art/collection/search/169859) |
+| Fan | Fan | 1885–95 American | [170045](http://www.metmuseum.org/art/collection/search/170045) |
+| Fan | Fan | 19th century French | [209646](http://www.metmuseum.org/art/collection/search/209646) |
+| Guitar | Guitar | ca. 1630–50 Italian | [503385](http://www.metmuseum.org/art/collection/search/503385) |
+| Guitar | Guitar | ca. 1835–40 Austrian | [503928](http://www.metmuseum.org/art/collection/search/503928) |
+| Guitar | Guitar | 1697 French | [503930](http://www.metmuseum.org/art/collection/search/503930) |
+| Guitar | Guitar | ca. 1800 Italian | [503932](http://www.metmuseum.org/art/collection/search/503932) |
+| Guitar | Guitar | 1694 French Parisian | [505283](http://www.metmuseum.org/art/collection/search/505283) |
+| Guitar | Guitar | ca. 1870 American | [506104](http://www.metmuseum.org/art/collection/search/506104) |
+| Guitar | Guitar | before 1867 American | [506806](http://www.metmuseum.org/art/collection/search/506806) |
+| Door knocker | Door knocker | 16th century Spanish | [194614](http://www.metmuseum.org/art/collection/search/194614) |
+| Candlesticks | Pair of candlesticks | 17th century Spanish | [198932](http://www.metmuseum.org/art/collection/search/198932) |
+| Door knocker | Door knocker | early 17th century Spanish | [202017](http://www.metmuseum.org/art/collection/search/202017) |
+| Confessional grille part | Part of a confessional grille | 1629 Spanish | [202036](http://www.metmuseum.org/art/collection/search/202036) |
+| Door knocker plate | Door Knocker | late 16th century Spanish | [466304](http://www.metmuseum.org/art/collection/search/466304) |
+| Key | Key | 15th–16th century Catalan | [468836](http://www.metmuseum.org/art/collection/search/468836) |
+| Jar | Pharmacy Jar | 1400–1450 Spanish | [464680](http://www.metmuseum.org/art/collection/search/464680) |
+| Pharmacy jar | Pharmacy Jar | second half 15th century Spanish | [468525](http://www.metmuseum.org/art/collection/search/468525) |
+| Pharmacy jar | Pharmacy Jar | second half 15th century Spanish | [471753](http://www.metmuseum.org/art/collection/search/471753) |
+| Clip earrings | Clip earrings | mid-19th century Spanish | [141739](http://www.metmuseum.org/art/collection/search/141739) |
+| Earrings | Pair of earrings | early 18th century Portuguese or Spanish | [193184](http://www.metmuseum.org/art/collection/search/193184) |
+| Brooch | Brooch | 18th century probably Spanish | [206840](http://www.metmuseum.org/art/collection/search/206840) |
+| Earrings | Pair of earrings | 18th century probably Spanish | [206850](http://www.metmuseum.org/art/collection/search/206850) |
+| Earrings | Pair of earrings | 19th century Spanish | [206855](http://www.metmuseum.org/art/collection/search/206855) |
+| Pendant | Devotional pendant | 16th century (and later) Italian or Spanish | [461595](http://www.metmuseum.org/art/collection/search/461595) |
+| Border | Border | 17th century Italian | [214828](http://www.metmuseum.org/art/collection/search/214828) |
+| Fragment | Fragment | 17th century Italian | [214853](http://www.metmuseum.org/art/collection/search/214853) |
+| Fragment | Fragment | 16th–17th century Italian | [220632](http://www.metmuseum.org/art/collection/search/220632) |
+| Edging | Edging | 17th century Italian, Genoa | [221112](http://www.metmuseum.org/art/collection/search/221112) |
+| Cap crown | Cap crown | 18th century French | [223050](http://www.metmuseum.org/art/collection/search/223050) |
+| Border | Border | 18th century Flemish, Brussels | [227682](http://www.metmuseum.org/art/collection/search/227682) |
+| Nose ornament | Nose Ornament | 1st century BCE–2nd century CE Salinar (?) | [313365](http://www.metmuseum.org/art/collection/search/313365) |
+| Drawing ; Ornament and Architecture | Seven Designs for Decorated Plates | 1845–55  | [394827](http://www.metmuseum.org/art/collection/search/394827) |
+| Album Drawings Ornament & Architecture | Album of designs for embroidery: bodices, gauntlets, caps, bags, page 43 (recto) | 1615–35  | [659941](http://www.metmuseum.org/art/collection/search/659941) |
+| Drawing | Two Roses | ca. 1884–1904  | [334302](http://www.metmuseum.org/art/collection/search/334302) |
+| Drawing | Flowers: Roses and Lilacs | late 19th–early 20th century  | [337712](http://www.metmuseum.org/art/collection/search/337712) |
+| Drawing | Flowers: Roses | late 19th–early 20th century  | [337713](http://www.metmuseum.org/art/collection/search/337713) |
+| Shawl | Shawl | ca. 1840 probably Russian | [123124](http://www.metmuseum.org/art/collection/search/123124) |
+| Shawl | Shawl | 1860–70 French | [157896](http://www.metmuseum.org/art/collection/search/157896) |
+| Shawl | Shawl | 1820–50 Flemish | [158215](http://www.metmuseum.org/art/collection/search/158215) |
+| Shawl | Shawl | 1870–90 probably American | [168327](http://www.metmuseum.org/art/collection/search/168327) |
+| Shawl | Shawl | ca. 1830 Russian, Saratov Province | [227248](http://www.metmuseum.org/art/collection/search/227248) |
+| Fragment | Fragment | 18th century Spanish | [213128](http://www.metmuseum.org/art/collection/search/213128) |
+| Piece | Piece | 17th–18th century Spanish | [213133](http://www.metmuseum.org/art/collection/search/213133) |
+| Passementerie | Passementerie | 17th century Spanish | [215144](http://www.metmuseum.org/art/collection/search/215144) |
+| Piece | Piece | early 17th century Italian or Spanish | [216625](http://www.metmuseum.org/art/collection/search/216625) |
+| Fragment | Fragment | late 17th century Spanish | [222561](http://www.metmuseum.org/art/collection/search/222561) |
+| Fringe | Fringe | late 18th century Spanish | [224903](http://www.metmuseum.org/art/collection/search/224903) |
+| Fringe | Fringe | 18th century Italian or Spanish | [224932](http://www.metmuseum.org/art/collection/search/224932) |
+| Length | Length of velvet | 16th century Spanish or Italian | [227208](http://www.metmuseum.org/art/collection/search/227208) |
+| Coverlet | Coverlet | ca. 1800 Mexican or Spanish, Catalonia | [229272](http://www.metmuseum.org/art/collection/search/229272) |
+| Fragment | Fragment | 16th century Spanish or Italian | [230357](http://www.metmuseum.org/art/collection/search/230357) |
+| Carpet | Carpet | 15th century  | [446534](http://www.metmuseum.org/art/collection/search/446534) |
+| Textile fragment | Textile Fragment | 14th–15th century  | [450734](http://www.metmuseum.org/art/collection/search/450734) |
+| Textile panel | Panel | mid to late 16th century Italian or Spanish | [461355](http://www.metmuseum.org/art/collection/search/461355) |
+| Textile | Textile with Birds | 14th century Spanish | [463236](http://www.metmuseum.org/art/collection/search/463236) |
+| Tiles | Tiles (2) | 16th–17th century Spanish, Seville | [187889](http://www.metmuseum.org/art/collection/search/187889) |
+| Tiles | Tiles (20) | 16th–17th century Spanish, Seville | [187894](http://www.metmuseum.org/art/collection/search/187894) |
+| Wall tiles | Wall tiles | 16th century Spanish, Seville | [187899](http://www.metmuseum.org/art/collection/search/187899) |
+| Wall tiles | Wall tiles | 16th century Spanish, Seville | [187905](http://www.metmuseum.org/art/collection/search/187905) |
+| Tile | Tile | 16th–17th century Spanish, Seville | [187912](http://www.metmuseum.org/art/collection/search/187912) |
+| Pavement tiles | Pavement tiles | 16th–17th century Spanish, Seville | [187916](http://www.metmuseum.org/art/collection/search/187916) |
+| Pavement tiles | Pavement tiles | 16th–17th century Spanish, Seville | [187924](http://www.metmuseum.org/art/collection/search/187924) |
+| Pavement tiles | Pavement tiles | 16th–17th century Spanish, Seville | [187927](http://www.metmuseum.org/art/collection/search/187927) |
+| Pavement tiles | Pavement tiles | 16th–17th century Spanish, Seville | [187929](http://www.metmuseum.org/art/collection/search/187929) |
+| Pavement tiles | Pavement tiles | 16th century Spanish, Seville | [187931](http://www.metmuseum.org/art/collection/search/187931) |
+| Pavement tiles | Pavement tiles | 16th century Spanish, Seville | [187933](http://www.metmuseum.org/art/collection/search/187933) |
+| Tiles | Tiles (2) | 16th–17th century Spanish, Seville | [187938](http://www.metmuseum.org/art/collection/search/187938) |
+| Tiles | Tiles with Checkered Pattern | 1475–1500 Spanish | [467572](http://www.metmuseum.org/art/collection/search/467572) |
+| Tile | Lusterware Tile | 1450–75 Spanish | [477238](http://www.metmuseum.org/art/collection/search/477238) |
+| Tile | Tile with the Heraldic device of the Nasrid kings | first third of 16th century Spanish | [479484](http://www.metmuseum.org/art/collection/search/479484) |
+| Watch | Watch | ca. 1825 Swiss, Geneva | [187195](http://www.metmuseum.org/art/collection/search/187195) |
+| Pair-case repeating watch | Pair-case repeating watch | ca. 1770–72 British, London, made for Chinese market | [194033](http://www.metmuseum.org/art/collection/search/194033) |
+| Clock watch | Clock watch | ca. 1736–95 Chinese | [194040](http://www.metmuseum.org/art/collection/search/194040) |
+| Watch | Watch | ca. 1630 French, Paris | [194208](http://www.metmuseum.org/art/collection/search/194208) |
+| Watch | Watch | ca. 1820–30 Swiss, Geneva | [195645](http://www.metmuseum.org/art/collection/search/195645) |
+| Watch | Watch | ca. 1830 Swiss, Geneva | [207363](http://www.metmuseum.org/art/collection/search/207363) |
 
 Fonts (SIL OFL): Shippori Mincho B1, Zen Old Mincho, Zen Kaku Gothic New, Cormorant Garamond, Playfair Display, Bodoni Moda, Pinyon Script, Cinzel.
