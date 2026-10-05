@@ -107,11 +107,11 @@ export function render(t) {
   eyelids(t);
   ctx.save(); ctx.globalAlpha = 0.5; ctx.drawImage(fx.vignette(0.75), 0, 0); ctx.restore();
   fx.applyGrain(ctx, Math.floor(t * 24) / 24, 0.05);
-  const blk = Math.max(1 - smooth(0, 0.4, t), smooth(263.0, 265.6, t));
+  const blk = Math.max(1 - smooth(0, 0.4, t), smooth(263.0, 264.0, t));
   if (blk > 0) { ctx.save(); ctx.globalAlpha = blk; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
 }
 
-window.MV = { ready: init(), render, grab(t, q = 0.93) { render(t); return cv.toDataURL('image/jpeg', q); }, duration: 266 };
+window.MV = { ready: init(), render, grab(t, q = 0.93) { render(t); return cv.toDataURL('image/jpeg', q); }, duration: 264.5 };
 const qs = new URLSearchParams(location.search);
 window.MV.ready.then(() => {
   if (qs.has('t')) render(parseFloat(qs.get('t')));

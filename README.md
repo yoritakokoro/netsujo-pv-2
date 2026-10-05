@@ -23,6 +23,10 @@ MV edit rather than a sequence of pages:
 * **Sung typography**: every glyph pops in white-hot on its syllable and cools to its colour; kanji large, kana small; hooks
   (Enamorar!! / Especial!! / Amanecer!! / ¡Olé!) slam in. Shots register faces and `render/facescan.cjs` reports any line
   that overlaps one — the whole song scans clean.
+* **v6.1**: the final chorus was re-cut as the climax — rightward whips carry the momentum from shot to shot, hooks land
+  on camera punches, the beat lives in local light (rings thrown from the medallion, a chase of light along the arches,
+  kaleidoscopes stepping on the beat), and 溺れたい sinks under water. The outro keeps moving to the last note (a tracking
+  shot along the polaroid wall, hopping chibis and a title sheen on the end card) and closes with an iris on the final note.
 
 ## Art direction (v5 — the calm cut, superseded)
 
