@@ -1,8 +1,10 @@
 # rendered output
 out/
+work/
 # user-provided media (official art / audio) and derived upscales — not redistributed
 mv/assets/audio/
 mv/assets/img/
+mv/assets/photos/
 # fonts are fetched with tools/fetch_fonts.sh
 mv/assets/fonts/
 node_modules/

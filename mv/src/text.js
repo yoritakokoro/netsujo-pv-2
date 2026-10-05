@@ -91,7 +91,7 @@ export function drawText(ctx, t, text, o) {
     x = 0, y = 0, vertical = false, align = 'start', fontStr, size, fill = '#fff', glow = null, glowBlur = 18,
     stroke = null, strokeW = 0, anim = 'blur', exitAnim = 'fade', times = null, start = 0, lead = 0.12, dur = 0.5,
     exit = 1e9, exitDur = 0.45, rot = 0, track = 0, alpha = 1, accent = null, scale = 1, shadow = null,
-    spaceW = 0.45, stagger = 0.045, maxPer = 0, lineGap = 1.25, seed = 1,
+    spaceW = 0.45, stagger = 0.045, maxPer = 0, lineGap = 1.25, seed = 1, hl = null,
   } = o;
   if (alpha <= 0.003 || t > exit + exitDur + 0.6) return null;
   const L = layout(text, fontStr, size, { vertical, track, spaceW, maxPer, lineGap });
@@ -145,13 +145,27 @@ export function drawText(ctx, t, text, o) {
       else ctx.rect(-w / 2 - size * 0.2, -size, (w + size * 0.4) * clipP, size * 2);
       ctx.clip();
     }
+    // sung highlight: unsung glyphs are drawn dim, sung ones bright (karaoke-like but quiet)
+    let sung = 1;
+    if (hl) {
+      const ht = hl.times[it.idx] ?? hl.times[hl.times.length - 1];
+      sung = clamp((t - (ht - 0.04)) / 0.16);
+    }
     const g = glyph(it.ch, fontStr, size, col, gOpt);
     if (blurMix > 0.02) {
-      const gb = glyph(it.ch, fontStr, size, col, { ...gOpt, blur: Math.max(2, Math.round(size * 0.08)) });
-      ctx.globalAlpha = a * blurMix; ctx.drawImage(gb.c, -gb.w / 2, -gb.h / 2);
+      const gb = glyph(it.ch, fontStr, size, hl && sung < 1 ? hl.dimFill : col, { ...gOpt, glow: hl && sung < 1 ? null : gOpt.glow, blur: Math.max(2, Math.round(size * 0.08)) });
+      ctx.globalAlpha = a * blurMix * (hl ? lerp(hl.dim, 1, sung) : 1); ctx.drawImage(gb.c, -gb.w / 2, -gb.h / 2);
     }
-    ctx.globalAlpha = a * (1 - blurMix * 0.85);
-    ctx.drawImage(g.c, -g.w / 2, -g.h / 2);
+    if (hl && sung < 1) {
+      const gd = glyph(it.ch, fontStr, size, hl.dimFill, { ...gOpt, glow: null });
+      ctx.globalAlpha = a * (1 - blurMix * 0.85) * hl.dim * (1 - sung);
+      ctx.drawImage(gd.c, -gd.w / 2, -gd.h / 2);
+    }
+    ctx.globalAlpha = a * (1 - blurMix * 0.85) * sung;
+    if (sung > 0.003) {
+      if (hl && sung < 1) { const k = 1 + (1 - sung) * 0.04; ctx.scale(k, k); }
+      ctx.drawImage(g.c, -g.w / 2, -g.h / 2);
+    }
     ctx.restore();
   });
   ctx.restore();

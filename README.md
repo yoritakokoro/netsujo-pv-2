@@ -5,32 +5,43 @@ A flamenco-themed, typography-driven lyric video for **熱情エナモラル**
 
 Every frame is drawn by a deterministic HTML Canvas renderer (`mv/`) and captured with headless
 Chromium, then encoded with ffmpeg. The only character art used is the CD cover and the card
-illustrations supplied for this song; every other visual (fans, roses, petals, lace, Nasrid tiles,
-Córdoba arches, stars, moon, sea, silk, embers) is generated procedurally in `mv/src/fx.js`,
-so no stock imagery and no other people appear.
+illustrations supplied for this song. All other imagery is CC BY 2.0 photography from the Open Images
+Dataset, filtered by its human-verified labels to exclude any image containing people, then hand-picked,
+upscaled and graded — see [CREDITS.md](CREDITS.md).
 
-## Art direction
+## Art direction (v2)
 
-| Section | Time | Concept |
+One Andalusian night, from the first star to dawn. Real photographs (no people) carry the
+imagery; the character art appears inside that world rather than on flat graphic backgrounds.
+The candle lit in the prologue is the night's love: it becomes fire in the choruses and is blown
+out at 「かわたれに目を閉じて」 as the sun takes over.
+
+| Section | Time | Images |
 |---|---|---|
-| Prólogo | 0:00 | "Vamos a bailar / Te quiero mucho / ¡Olé!" — each chant opens on a folding-fan wipe; crimson, ink, polka-dot ivory, sunburst |
-| Title | 0:09 | Cover art inside a Córdoba horseshoe arch with red/ivory voussoirs |
-| I Noche estrellada | 0:16 | Starry sky, constellation drawn line by line, lantern-lit Andalusian arcade; vertical 縦書き lyric columns |
-| II Carmín | 0:30 | Rouge brush strokes, crimson silk flood for 纏う深紅, the navy evening card for 濃紺の宵に靡いてく |
-| III Calor | 0:38 | Heat build: a giant fan unfolds over the pre-chorus, embers, heartbeat rings |
-| IV Enamorar | 0:48 | Chorus: cover as a rising sun disc, skewed member panels, full art with petals |
-| Interludio | 1:09 | Vintage *cartel* poster with the dancer cut-out |
-| V–VII | 1:19 | Moonlit sea → seaside card, blooming rose (kiss), bell rings fading to "ふたり" |
-| VIII Lucero del alba | 1:52 | Alhambra card, morning star, clock ring, bubble (うたかた), guitar strings |
-| IX Baile | 2:13 | Dance break: Nasrid tile kaleidoscope, marquee, one composition per bar |
-| X Aurora | 2:46 | Sunrise over the sea, Yoshino cut-out for 抱きしめて |
-| XI Especial | 3:10 | Split polka-dot poster, 熱情 stamp, member portraits |
-| XII Amanecer | 3:29 | Final chorus: dawn gold, rose field 繚乱, arcade of member arches, pale かわたれ fade |
-| Fin | 3:58 | Polaroid gallery → end card with credits |
+| Prólogo | 0:00 | a single candle → rose / wine by candlelight / guitar / bonfire under each Spanish chant |
+| Title | 0:09 | flame on black, title typography |
+| I Noche | 0:16 | star field (with glints) → two candles (躊躇う吐息 重なる手と手) → cold blue sea (凍える身体) → palms warming (熱帯夜) |
+| II Carmín | 0:30 | lipstick, a handwritten note, red velvet curtain (纏う深紅), Yoshino's night card (濃紺の宵) |
+| III Calor | 0:38 | Yoshino by candlelight with a faint double (「らしくない」私), embers building to the chorus |
+| IV Enamorar | 0:48 | fire-burn reveal of the cover, fountain of light, member crops, roses, burning cover |
+| Intermedio | 1:09 | guitar macros |
+| V Mar | 1:19 | lighthouse, blurred harbour lights, a necklace (揃いのピアス), seaside card |
+| VI Beso | 1:34 | dew on a rose, a corridor of light (「連れ去って」) |
+| VII Campanas | 1:42 | bell tower, defocused lights, spires against dusk |
+| VIII Lucero | 1:52 | Alhambra card with the morning star, sinking moon, clock & pocket watch (時は過ぎ行く), fizz (うたかた) |
+| IX Baile | 2:13 | Nagi dancing in front of a fire-lit Nasrid tile wall with her shadow thrown across it; one shot per bar |
+| X Aurora | 2:46 | sunrise over the lake, palms at dawn, Yoshino in the morning mist |
+| XI Especial | 3:11 | editorial spread: crimson satin, portraits changing per line, 熱情 |
+| XII Amanecer | 3:29 | dawn clouds through the cover, roses on the beat (繚乱), the candle goes out (かわたれ) |
+| Fin | 3:58 | morning-after still lifes with the cast credits, end card |
 
-Lyrics are timed per character: the vocal stem was separated (UVR MDX-Net), recognised with a
-Japanese transducer model, force-aligned to the known lyrics with a semi-Markov DP, and each line was
-cross-checked with Whisper. Beats are on a fitted 124 BPM grid.
+Finishing: per-photo film grade (S-curve, split toning, halation), bloom, gate weave, grain,
+letterbox during verses that opens on the choruses. Transitions: defocus, dissolve, whip-pan,
+exposure flash and a fire-burn matte made from a fire photograph.
+
+Lyrics: each line fades in as a phrase ~0.35 s before it is sung; a quiet highlight follows the
+aligned vocal; lines hold until the sung (including sustained) note ends. Verses use vertical
+columns or a rolling two-line stack; choruses alternate left/right with gold rules.
 
 ## Reproduce
 
@@ -41,6 +52,7 @@ tools/fetch_fonts.sh        # OFL fonts from google/fonts
 #   mv/assets/audio/song.mp3
 #   mv/assets/img/{cover.jpg,yoshino_cut.png,yoshino_night.png,nagi_cut.png,nagi_shin_alhambra.png}
 # optional 2x waifu2x upscales -> mv/assets/img/up/ (see tools/w2x.py)
+python3 tools/fetch_photos.py [--upscale <waifu2x swin_unet/photo/noise1_scale2x.onnx>]   # photos -> mv/assets/photos/
 node render/stills.cjs out/stills 12.5 50 90      # review frames
 node render/render.cjs out/netsujo_enamoral_lyric_mv.mp4 --workers 4 --crf 20
 ```
@@ -55,6 +67,7 @@ Preview in a browser: serve `mv/` and open `index.html?play` (click to start aud
 4. `python tools/rzwin.py audio/vocals16k.wav audio/rz_voc.json` — sherpa-onnx ReazonSpeech, overlapping windows
 5. `python tools/align.py audio/rz_voc.json audio/align_voc.json` — forced alignment to `mv/data/lyrics.json`
 6. `python tools/build_timing.py` — writes `mv/data/timing.json` (per-line and per-character times)
+6b. `python tools/fix_timing.py` — manual start/hold corrections verified with Whisper
 7. `python tools/wh.py a:b c:d …` — Whisper spot-checks
 
 Models: `Kim_Vocal_2.onnx` (TRvlvr/model_repo releases), `sherpa-onnx-zipformer-ja-reazonspeech-2024-08-01`

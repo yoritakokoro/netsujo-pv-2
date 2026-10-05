@@ -1,0 +1,433 @@
+{
+ "_note": "key: [category, index in picked.json, grade]",
+ "slim_candle": [
+  "fire",
+  18,
+  "ember"
+ ],
+ "ch_rose": [
+  "rose",
+  8,
+  "crimson"
+ ],
+ "ch_wine": [
+  "jewel",
+  2,
+  "crimson"
+ ],
+ "ch_guitar": [
+  "guitar",
+  2,
+  "ember"
+ ],
+ "ch_fire": [
+  "fire",
+  3,
+  "ember"
+ ],
+ "ch_sparks": [
+  "fw",
+  5,
+  "ember"
+ ],
+ "ti_fire": [
+  "fire",
+  9,
+  "ember"
+ ],
+ "v1_stars": [
+  "moon",
+  13,
+  "night"
+ ],
+ "v1_candles": [
+  "candle",
+  10,
+  "night"
+ ],
+ "v1_cold": [
+  "nightsea",
+  3,
+  "cold"
+ ],
+ "v1_palms": [
+  "tower",
+  3,
+  "night"
+ ],
+ "v1_lanterns": [
+  "glow",
+  0,
+  "night"
+ ],
+ "b1_lipstick": [
+  "vanity",
+  1,
+  "crimson"
+ ],
+ "b1_letter": [
+  "jewel",
+  14,
+  "crimson"
+ ],
+ "b1_curtain": [
+  "lace",
+  0,
+  "crimson"
+ ],
+ "p1_votive": [
+  "candle",
+  15,
+  "ember"
+ ],
+ "p1_embers": [
+  "fire",
+  5,
+  "ember"
+ ],
+ "p1_coals": [
+  "fire",
+  10,
+  "ember"
+ ],
+ "c1_fountain": [
+  "arch",
+  5,
+  "gold"
+ ],
+ "c1_ripples": [
+  "dawnsea",
+  0,
+  "crimson"
+ ],
+ "c1_blaze": [
+  "fire",
+  1,
+  "ember"
+ ],
+ "c1_coals": [
+  "fire",
+  11,
+  "ember"
+ ],
+ "c1_rose1": [
+  "rose",
+  2,
+  "crimson"
+ ],
+ "c1_rose2": [
+  "rose",
+  12,
+  "crimson"
+ ],
+ "in_strings": [
+  "guitar",
+  4,
+  "ember"
+ ],
+ "in_curve": [
+  "guitar",
+  1,
+  "ember"
+ ],
+ "in_hole": [
+  "guitar",
+  6,
+  "ember"
+ ],
+ "v2_moonbeach": [
+  "nightsea",
+  1,
+  "cold"
+ ],
+ "v2_harbor": [
+  "nightsea",
+  6,
+  "cold"
+ ],
+ "v2_jewel": [
+  "jewel",
+  5,
+  "cold"
+ ],
+ "v2_crescent": [
+  "moon",
+  0,
+  "cold"
+ ],
+ "b2_drop": [
+  "rose",
+  7,
+  "crimson"
+ ],
+ "b2_corridor": [
+  "arch",
+  1,
+  "gold"
+ ],
+ "p2_bells": [
+  "tower",
+  0,
+  "daynight"
+ ],
+ "p2_spires": [
+  "time",
+  11,
+  "dusk"
+ ],
+ "p2_lights": [
+  "glow",
+  12,
+  "cold"
+ ],
+ "c2_stars": [
+  "moon",
+  11,
+  "night"
+ ],
+ "c2_moon": [
+  "moon",
+  3,
+  "gold"
+ ],
+ "c2_clock": [
+  "time",
+  7,
+  "mono"
+ ],
+ "c2_pocket": [
+  "time",
+  4,
+  "mono"
+ ],
+ "c2_fizz": [
+  "jewel",
+  8,
+  "crimson"
+ ],
+ "c2_guitar": [
+  "guitar",
+  5,
+  "ember"
+ ],
+ "d_tile": [
+  "tile",
+  0,
+  "ember"
+ ],
+ "d_bonfire": [
+  "fire",
+  0,
+  "ember"
+ ],
+ "d_willow": [
+  "fw",
+  6,
+  "gold"
+ ],
+ "d_fw_orange": [
+  "fw",
+  2,
+  "ember"
+ ],
+ "d_montjuic": [
+  "tower",
+  7,
+  "gold"
+ ],
+ "d_fountains": [
+  "tower",
+  8,
+  "gold"
+ ],
+ "d_skylantern": [
+  "glow",
+  13,
+  "ember"
+ ],
+ "d_bent": [
+  "fire",
+  13,
+  "ember"
+ ],
+ "d_rose": [
+  "rose",
+  4,
+  "crimson"
+ ],
+ "d_kaleido": [
+  "tile",
+  4,
+  "ember"
+ ],
+ "d_lamp": [
+  "glow",
+  6,
+  "gold"
+ ],
+ "d_lanterns": [
+  "glow",
+  7,
+  "ember"
+ ],
+ "br_sun": [
+  "dawnsea",
+  13,
+  "dawn"
+ ],
+ "br_palms": [
+  "dawnsea",
+  9,
+  "dawn"
+ ],
+ "br_gold": [
+  "jewel",
+  6,
+  "gold"
+ ],
+ "br_mist": [
+  "dawnsea",
+  16,
+  "dawn"
+ ],
+ "es_satin": [
+  "lace",
+  1,
+  "crimson"
+ ],
+ "es_gold": [
+  "tile",
+  2,
+  "crimson"
+ ],
+ "fi_clouds": [
+  "dawnsea",
+  12,
+  "dawn"
+ ],
+ "fi_sail": [
+  "dawnsea",
+  1,
+  "dawn"
+ ],
+ "fi_ripples": [
+  "dawnsea",
+  11,
+  "gold"
+ ],
+ "fi_r1": [
+  "rose",
+  0,
+  "crimson"
+ ],
+ "fi_r2": [
+  "rose",
+  11,
+  "dawn"
+ ],
+ "fi_r3": [
+  "rose",
+  13,
+  "crimson"
+ ],
+ "fi_r4": [
+  "petal",
+  0,
+  "crimson"
+ ],
+ "fi_r5": [
+  "petal",
+  6,
+  "dawn"
+ ],
+ "fi_r6": [
+  "petal",
+  5,
+  "dawn"
+ ],
+ "fi_r7": [
+  "rose",
+  3,
+  "crimson"
+ ],
+ "fi_r8": [
+  "petal",
+  1,
+  "crimson"
+ ],
+ "fi_candle": [
+  "candle",
+  0,
+  "dawn"
+ ],
+ "fi_pale": [
+  "petal",
+  8,
+  "dawn"
+ ],
+ "fi_palmfog": [
+  "window",
+  1,
+  "dawn"
+ ],
+ "ou_window": [
+  "window",
+  0,
+  "dawn"
+ ],
+ "ou_lace_room": [
+  "window",
+  3,
+  "dawn"
+ ],
+ "ou_birds": [
+  "dawnsea",
+  8,
+  "dawn"
+ ],
+ "ou_champ": [
+  "jewel",
+  7,
+  "gold"
+ ],
+ "ou_ring": [
+  "candle",
+  13,
+  "ember"
+ ],
+ "ou_astrolabe": [
+  "time",
+  12,
+  "gold"
+ ],
+ "ou_doily": [
+  "lace2",
+  1,
+  "mono"
+ ],
+ "ou_chandelier": [
+  "glow",
+  3,
+  "gold"
+ ],
+ "ou_calm": [
+  "dawnsea",
+  10,
+  "dawn"
+ ],
+ "ou_sail2": [
+  "dawnsea",
+  3,
+  "dawn"
+ ],
+ "c1_fire2": [
+  "fire",
+  6,
+  "ember"
+ ],
+ "p1_column": [
+  "fire",
+  12,
+  "ember"
+ ]
+}

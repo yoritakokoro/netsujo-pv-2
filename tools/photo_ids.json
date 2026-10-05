@@ -1,0 +1,432 @@
+{
+ "slim_candle": {
+  "id": "f49ff01ec314cb92",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/f49ff01ec314cb92.jpg"
+ },
+ "ch_rose": {
+  "id": "dc07ef8388e1570c",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/dc07ef8388e1570c.jpg"
+ },
+ "ch_wine": {
+  "id": "5662c708e939b573",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/5662c708e939b573.jpg"
+ },
+ "ch_guitar": {
+  "id": "af31b214dc238a13",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/af31b214dc238a13.jpg"
+ },
+ "ch_fire": {
+  "id": "903bfcf38f1bd02b",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/validation/903bfcf38f1bd02b.jpg"
+ },
+ "ch_sparks": {
+  "id": "b8c35e11b3f12f21",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/b8c35e11b3f12f21.jpg"
+ },
+ "ti_fire": {
+  "id": "5a942e4c3af7294c",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/5a942e4c3af7294c.jpg"
+ },
+ "v1_stars": {
+  "id": "d44c4cc158fd1113",
+  "grade": "night",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/d44c4cc158fd1113.jpg"
+ },
+ "v1_candles": {
+  "id": "63b50428c6aebacd",
+  "grade": "night",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/63b50428c6aebacd.jpg"
+ },
+ "v1_cold": {
+  "id": "38815c3a239f04cc",
+  "grade": "cold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/38815c3a239f04cc.jpg"
+ },
+ "v1_palms": {
+  "id": "284b85cd25754c80",
+  "grade": "night",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/284b85cd25754c80.jpg"
+ },
+ "v1_lanterns": {
+  "id": "385474fd16d20cd4",
+  "grade": "night",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/385474fd16d20cd4.jpg"
+ },
+ "b1_lipstick": {
+  "id": "504f6bee7b0698ba",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/504f6bee7b0698ba.jpg"
+ },
+ "b1_letter": {
+  "id": "ba0b1f00e9a03c04",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/ba0b1f00e9a03c04.jpg"
+ },
+ "b1_curtain": {
+  "id": "32eee7477d594b6f",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/32eee7477d594b6f.jpg"
+ },
+ "p1_votive": {
+  "id": "399f58a7cb8f02a9",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/validation/399f58a7cb8f02a9.jpg"
+ },
+ "p1_embers": {
+  "id": "ef27882418be3dee",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/ef27882418be3dee.jpg"
+ },
+ "p1_coals": {
+  "id": "413a6a5b04977acf",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/413a6a5b04977acf.jpg"
+ },
+ "c1_fountain": {
+  "id": "055e07a1bd2595e2",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/055e07a1bd2595e2.jpg"
+ },
+ "c1_ripples": {
+  "id": "c0b4148c720e50d7",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/c0b4148c720e50d7.jpg"
+ },
+ "c1_blaze": {
+  "id": "ca823be2f384459d",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/ca823be2f384459d.jpg"
+ },
+ "c1_coals": {
+  "id": "269db3693c4d1b83",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/269db3693c4d1b83.jpg"
+ },
+ "c1_rose1": {
+  "id": "a3821755dd3379a1",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/a3821755dd3379a1.jpg"
+ },
+ "c1_rose2": {
+  "id": "45d4785f94172b18",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/45d4785f94172b18.jpg"
+ },
+ "in_strings": {
+  "id": "7e68bc7710c9658f",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/7e68bc7710c9658f.jpg"
+ },
+ "in_curve": {
+  "id": "86291eee68f3b6f4",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/validation/86291eee68f3b6f4.jpg"
+ },
+ "in_hole": {
+  "id": "6e887b5b19d7ad83",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/6e887b5b19d7ad83.jpg"
+ },
+ "v2_moonbeach": {
+  "id": "ede8c3b6ea992f59",
+  "grade": "cold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/ede8c3b6ea992f59.jpg"
+ },
+ "v2_harbor": {
+  "id": "d96d7ac759d81856",
+  "grade": "cold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/d96d7ac759d81856.jpg"
+ },
+ "v2_jewel": {
+  "id": "060d633875ce24d8",
+  "grade": "cold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/060d633875ce24d8.jpg"
+ },
+ "v2_crescent": {
+  "id": "58e83db6c31e6a50",
+  "grade": "cold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/58e83db6c31e6a50.jpg"
+ },
+ "b2_drop": {
+  "id": "82a4f541ad81356b",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/82a4f541ad81356b.jpg"
+ },
+ "b2_corridor": {
+  "id": "352cb091efbf5fc2",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/352cb091efbf5fc2.jpg"
+ },
+ "p2_bells": {
+  "id": "3f5068558ea3d4b5",
+  "grade": "daynight",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/3f5068558ea3d4b5.jpg"
+ },
+ "p2_spires": {
+  "id": "07e9e840a2cfba89",
+  "grade": "dusk",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/07e9e840a2cfba89.jpg"
+ },
+ "p2_lights": {
+  "id": "6729ff0264b21161",
+  "grade": "cold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/6729ff0264b21161.jpg"
+ },
+ "c2_stars": {
+  "id": "78dfe8764fd8b76f",
+  "grade": "night",
+  "url": "https://open-images-dataset.s3.amazonaws.com/validation/78dfe8764fd8b76f.jpg"
+ },
+ "c2_moon": {
+  "id": "8261b359f88d59a4",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/validation/8261b359f88d59a4.jpg"
+ },
+ "c2_clock": {
+  "id": "c20084e881db2de6",
+  "grade": "mono",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/c20084e881db2de6.jpg"
+ },
+ "c2_pocket": {
+  "id": "a11fdfd436ee2ef9",
+  "grade": "mono",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/a11fdfd436ee2ef9.jpg"
+ },
+ "c2_fizz": {
+  "id": "59c75b112901d050",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/59c75b112901d050.jpg"
+ },
+ "c2_guitar": {
+  "id": "6d5939d3c214bd7d",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/6d5939d3c214bd7d.jpg"
+ },
+ "d_tile": {
+  "id": "d1e8c4dbbc571891",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/validation/d1e8c4dbbc571891.jpg"
+ },
+ "d_bonfire": {
+  "id": "1815b244c465a60b",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/1815b244c465a60b.jpg"
+ },
+ "d_willow": {
+  "id": "a8fd52fd9feab67e",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/a8fd52fd9feab67e.jpg"
+ },
+ "d_fw_orange": {
+  "id": "d617d48882833142",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/d617d48882833142.jpg"
+ },
+ "d_montjuic": {
+  "id": "11d233380ed7f04c",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/11d233380ed7f04c.jpg"
+ },
+ "d_fountains": {
+  "id": "f235c32c105b59ed",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/f235c32c105b59ed.jpg"
+ },
+ "d_skylantern": {
+  "id": "292687f2070f4bad",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/292687f2070f4bad.jpg"
+ },
+ "d_bent": {
+  "id": "893306e1fa70c792",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/893306e1fa70c792.jpg"
+ },
+ "d_rose": {
+  "id": "ded970a85b033836",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/ded970a85b033836.jpg"
+ },
+ "d_kaleido": {
+  "id": "b7ee54f06860b385",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/b7ee54f06860b385.jpg"
+ },
+ "d_lamp": {
+  "id": "94feb18e405fc2ab",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/94feb18e405fc2ab.jpg"
+ },
+ "d_lanterns": {
+  "id": "551b36625bf84719",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/551b36625bf84719.jpg"
+ },
+ "br_sun": {
+  "id": "8e00fc0b2ede9606",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/8e00fc0b2ede9606.jpg"
+ },
+ "br_palms": {
+  "id": "804add10cbd9f34c",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/804add10cbd9f34c.jpg"
+ },
+ "br_gold": {
+  "id": "978b5b16ab38882c",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/978b5b16ab38882c.jpg"
+ },
+ "br_mist": {
+  "id": "6cd1cd2808cc099c",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/6cd1cd2808cc099c.jpg"
+ },
+ "es_satin": {
+  "id": "50b11ec319bfaf4b",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/50b11ec319bfaf4b.jpg"
+ },
+ "es_gold": {
+  "id": "f1a888697ab3855e",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/f1a888697ab3855e.jpg"
+ },
+ "fi_clouds": {
+  "id": "73f6db99adbd33a6",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/73f6db99adbd33a6.jpg"
+ },
+ "fi_sail": {
+  "id": "765454fbc64489a3",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/765454fbc64489a3.jpg"
+ },
+ "fi_ripples": {
+  "id": "1e9d1b1936cb3b15",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/1e9d1b1936cb3b15.jpg"
+ },
+ "fi_r1": {
+  "id": "d66878deb35c5005",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/d66878deb35c5005.jpg"
+ },
+ "fi_r2": {
+  "id": "ccc7098d01421ab6",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/ccc7098d01421ab6.jpg"
+ },
+ "fi_r3": {
+  "id": "43f3a385d3564305",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/43f3a385d3564305.jpg"
+ },
+ "fi_r4": {
+  "id": "076d5d45da95de9c",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/076d5d45da95de9c.jpg"
+ },
+ "fi_r5": {
+  "id": "28acf2dd2971eafe",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/28acf2dd2971eafe.jpg"
+ },
+ "fi_r6": {
+  "id": "ded690cba82a4a7f",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/ded690cba82a4a7f.jpg"
+ },
+ "fi_r7": {
+  "id": "6319641a42841796",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/6319641a42841796.jpg"
+ },
+ "fi_r8": {
+  "id": "a3821755dd3379a1",
+  "grade": "crimson",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/a3821755dd3379a1.jpg"
+ },
+ "fi_candle": {
+  "id": "296895e6a00ada80",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/296895e6a00ada80.jpg"
+ },
+ "fi_pale": {
+  "id": "4a74730258bbfa18",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/4a74730258bbfa18.jpg"
+ },
+ "fi_palmfog": {
+  "id": "f1441d8164d4baa1",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/f1441d8164d4baa1.jpg"
+ },
+ "ou_window": {
+  "id": "6e09d1007c7d00ec",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/6e09d1007c7d00ec.jpg"
+ },
+ "ou_lace_room": {
+  "id": "a094914e723952d0",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/a094914e723952d0.jpg"
+ },
+ "ou_birds": {
+  "id": "f44333c7ae63b06c",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/f44333c7ae63b06c.jpg"
+ },
+ "ou_champ": {
+  "id": "43f2a4b7197637ff",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/validation/43f2a4b7197637ff.jpg"
+ },
+ "ou_ring": {
+  "id": "3cfe27968d9ff63a",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/3cfe27968d9ff63a.jpg"
+ },
+ "ou_astrolabe": {
+  "id": "9605a01b67a53ffb",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/9605a01b67a53ffb.jpg"
+ },
+ "ou_doily": {
+  "id": "b1803a66e84ebd1a",
+  "grade": "mono",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/b1803a66e84ebd1a.jpg"
+ },
+ "ou_chandelier": {
+  "id": "a5fc24289e45b3ee",
+  "grade": "gold",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/a5fc24289e45b3ee.jpg"
+ },
+ "ou_calm": {
+  "id": "91496aa65cf0b1d7",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/91496aa65cf0b1d7.jpg"
+ },
+ "ou_sail2": {
+  "id": "f7a31019ca4874b2",
+  "grade": "dawn",
+  "url": "https://open-images-dataset.s3.amazonaws.com/train/f7a31019ca4874b2.jpg"
+ },
+ "c1_fire2": {
+  "id": "632894921ee0ab4d",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/validation/632894921ee0ab4d.jpg"
+ },
+ "p1_column": {
+  "id": "2c17b16d29b11b15",
+  "grade": "ember",
+  "url": "https://open-images-dataset.s3.amazonaws.com/test/2c17b16d29b11b15.jpg"
+ }
+}
