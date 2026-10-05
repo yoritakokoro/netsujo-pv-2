@@ -194,3 +194,46 @@ export function label(ctx, s, x, y, o = {}) {
   ctx.restore();
   return w;
 }
+
+// Kinetic lyric typesetting for the type-led shots (after the lyric-video idiom): kanji set large, kana
+// small and slightly lowered so a line reads as one designed shape; each glyph arrives as it is sung.
+// o: {x, y, size, vertical, align, kana(0.52), track, fam, weight, fill, stroke, strokeW, glow, glowBlur,
+//     lead, dur, exit, exitDur, alpha, wave, accent:{from,to,fill,glow}}
+const isKanji = ch => /[一-鿿々]/.test(ch);
+const isPunct = ch => /[、。「」『』（）！？!?,.・…]/.test(ch);
+export function kinetic(ctx, t, text, times, o = {}) {
+  const { x = 0, y = 0, size: S = 120, vertical = false, align = 'start', kana = 0.52, track = 0.04, fam = F.mincho, weight = 800,
+    fill = '#fbf4e8', stroke = null, strokeW = 0, glow = 'rgba(255,214,170,0.35)', glowBlur = 22, shadow = null, lead = 0.12, dur = 0.55,
+    exit = 1e9, exitDur = 0.6, alpha = 1, wave = 0.07, accent = null, seed = 3 } = o;
+  if (alpha <= 0.003 || t > exit + exitDur + 0.2) return;
+  const chars = [...text], items = [];
+  let pos = 0;
+  chars.forEach((ch, idx) => {
+    if (ch === '　' || ch === ' ') { pos += S * 0.32; return; }
+    const s = isKanji(ch) ? S : isPunct(ch) ? S * 0.42 : S * kana;
+    const adv = vertical ? s * (1 + track) : Math.max(measure(font(fam, s, weight), ch), s * 0.5) + s * track;
+    const lift = isKanji(ch) ? 0 : (S - s) * (isPunct(ch) ? 0.36 : 0.26) + Math.sin(idx * 0.9 + seed) * S * wave;
+    items.push({ ch, idx, s, c: pos + adv / 2, lift });
+    pos += adv;
+  });
+  const off = align === 'center' ? -pos / 2 : align === 'end' ? -pos : 0;
+  ctx.save(); ctx.translate(x, y);
+  items.forEach((it, j) => {
+    const ct = times ? (times[it.idx] ?? times[times.length - 1]) : j * 0.05;
+    const p = clamp((t - (ct - lead)) / dur); if (p <= 0) return;
+    const q = clamp((t - (exit + j * 0.02)) / exitDur); if (q >= 1) return;
+    const e = E.outExpo(p), a = E.outCubic(p) * (1 - E.inCubic(q)) * alpha;
+    if (a <= 0.004) return;
+    let col = fill, gl = glow;
+    if (accent && it.idx >= accent.from && it.idx < accent.to) { col = accent.fill ?? fill; gl = accent.glow ?? glow; }
+    const fs = font(fam, it.s, weight), gOpt = { glow: gl, glowBlur: glowBlur * it.s / S + 6, stroke, strokeW: strokeW * it.s / S, shadow };
+    const px = vertical ? 0 : off + it.c, py = vertical ? off + it.c + (1 - e) * it.s * 0.18 - q * it.s * 0.12 : it.lift + (1 - e) * it.s * 0.18 - q * it.s * 0.12;
+    const sc = 1 + (1 - e) * 0.1, blurMix = Math.max(1 - e, q * 0.8);
+    ctx.save(); ctx.translate(px, py); if (vertical && ROT_V.has(it.ch)) ctx.rotate(Math.PI / 2); ctx.scale(sc, sc);
+    const g = glyph(it.ch, fs, it.s, col, gOpt);
+    if (blurMix > 0.02) { const gb = glyph(it.ch, fs, it.s, col, { ...gOpt, blur: Math.max(2, Math.round(it.s * 0.08)) }); ctx.globalAlpha = a * blurMix; ctx.drawImage(gb.c, -gb.w / 2, -gb.h / 2); }
+    ctx.globalAlpha = a * (1 - blurMix * 0.85); ctx.drawImage(g.c, -g.w / 2, -g.h / 2);
+    ctx.restore();
+  });
+  ctx.restore();
+}

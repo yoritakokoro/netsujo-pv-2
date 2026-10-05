@@ -19,6 +19,15 @@ opened by hand, smoke, petals, polaroids developing, the bell's rings of light.
 The standing art is used at the size each shot needs — full figure only where it means something
 (the dance-break shadow play, the white dress in the mist), otherwise framed on the face.
 
+* **Not every line needs a character.** About a third of the song is carried by the lyric itself, set as a
+  designed block (kanji large, kana small, glyphs arriving as they are sung) over a motif from the words:
+  the Alhambra under the stars, a frozen room that warms to candle light, a red silk mantón, burning type,
+  a botanical rose print, the dial of a pocket watch, a jewel at dawn.
+* **Neon line art** (after the idiom of recent idol lyric videos): Met fans, dishes, an iron rosette window,
+  guitars, a jewel and a watch traced to line art (`tools/neon_lines.py`) and lit like neon tubes, colours
+  switching on the bar; Moorish horseshoe arches and ruffle scallops drawn as neon.
+* **Call-and-response in one colour**: each singer's art flattened into her official colour over neon
+  ornament, so the answering half reads as a colour change.
 * **Bookends**: the chants light the five Moorish arches one singer at a time (¡Olé! lights them all);
   the final chorus returns to the same arches, all lit at dawn.
 * **Outfits come in sets**: stage costumes with stage costumes (chants, choruses, call-and-response

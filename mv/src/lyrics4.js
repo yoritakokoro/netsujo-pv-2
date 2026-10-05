@@ -14,31 +14,32 @@ const M = (s, w = 700) => font(F.mincho, s, w);
 // ---------------------------------------------------------------- layout table
 const L = {};
 const set = (ids, o) => ids.forEach(i => (L[i] = { ...(L[i] || {}), ...o }));
-set([4, 5], { slot: 'col', y: 165, until: 23.45 }); L[4].x = 1700; L[5].x = 1590;
-set([6, 7], { slot: 'col', y: 165, until: 30.3 }); L[6].x = 1700; L[7].x = 1590;
+set([5], { slot: 'col', x: 1700, y: 165, until: 23.45 });
+set([7], { slot: 'col', x: 1700, y: 165, until: 30.3 });
 set([8], { slot: 'strip', x: 130, y: 870, rot: -0.025, until: 31.75 });
 set([9], { slot: 'strip', x: 130, y: 870, rot: 0.018, until: 34.75, echo: [1460, 900, -0.08] });
-set([10], { slot: 'strip', x: 1730, y: 150, rot: 0.02, vertical: true, size: 70, until: 36.4 });
-set([11], { slot: 'strip', x: 960, y: 930, rot: -0.015, align: 'center', until: 38.45, echo: [1500, 820, 0.06] });
+set([10], { slot: 'scene' }); set([11], { slot: 'scene', echo: [1500, 820, 0.06] });
 set([12], { slot: 'low', side: 'L' }); set([13], { slot: 'center', y: 540, size: 76 });
-set([15, 18, 54, 57], { slot: 'low', side: 'L' }); set([16, 55], { slot: 'low', side: 'R' });
+set([15, 54, 57], { slot: 'low', side: 'L' }); set([16, 55], { slot: 'low', side: 'R' });
 set([19, 20, 36, 37, 58, 59, 61, 62], { slot: 'split' });
-set([21, 38], { slot: 'low', side: 'R' });
+set([38], { slot: 'low', side: 'R' });
 set([23, 24], { slot: 'strip', x: 120, rot: -0.02 }); L[23].y = 840; L[23].until = 87.45; L[24].y = 930; L[24].rot = 0.015; L[24].until = 87.5;
 set([25, 26], { slot: 'strip', x: 120, rot: 0.015 }); L[25].y = 905; L[25].until = 94.3; L[26].y = 992; L[26].rot = -0.012; L[26].until = 94.35;
-set([27], { slot: 'col', x: 1700, y: 160, maxPer: 10, echo: [700, 560, -0.05] });
+set([27], { slot: 'scene', echo: [700, 560, -0.05] });
 set([28], { slot: 'col', x: 330, y: 160, maxPer: 10, until: 102.5, echo: [880, 220, 0.05] });
 set([29], { slot: 'low', side: 'L' }); set([30], { slot: 'center', y: 560, size: 72 });
-set([32, 35], { slot: 'low', side: 'L' }); set([33], { slot: 'low', side: 'R' });
-set([40, 41], { slot: 'low', side: 'L' }); set([42, 43], { slot: 'low', side: 'R' });
+set([32], { slot: 'low', side: 'L' }); set([33], { slot: 'low', side: 'R' });
+set([40, 41], { slot: 'low', side: 'L' }); set([43], { slot: 'low', side: 'R' });
 set([44], { slot: 'col', x: 1690, y: 170 });
 set([45, 46], { slot: 'low', side: 'L' }); L[46].size = 74;
 set([48, 49], { slot: 'low', side: 'L' }); set([51], { slot: 'low', side: 'R' }); set([52], { slot: 'low', side: 'L' });
 set([60], { slot: 'low', side: 'L' }); set([63], { slot: 'center', y: 540, size: 68, until: 235.1 });
 [14, 17, 31, 34, 47, 50, 53, 56].forEach(i => (L[i] = { slot: 'hero' }));
-[14, 17, 53, 56].forEach(i => (L[i].x = 600));
+[14, 53, 56].forEach(i => (L[i].x = 600)); L[17].y = 300;
 L[31].y = 250;
 [22, 39, 64].forEach(i => (L[i] = { slot: 'script' }));
+[4, 6, 18, 21, 35, 42].forEach(i => (L[i] = { slot: 'scene' }));   // type-led shots set these lines themselves
+L[34].y = 230;
 
 function cfg(i) {
   const l = T.lines[i], nx = T.lines[i + 1], c = { size: 56, ...(L[i] || { slot: 'low', side: 'L' }) };

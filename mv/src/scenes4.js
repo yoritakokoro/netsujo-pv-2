@@ -8,10 +8,10 @@ import { T, barT, beatT, beatF, barF, pulse } from './timing.js';
 import { IMG, buf, cover, place, tinted, duo, rgba, withMask, archPath, circlePath, rectPath, rings, lattice, dots, ink, glow, sparkle,
   stars, embers, petals, bokeh, softDot } from './gfx.js';
 import { piece, sticker, slap, pop, hop, tape, polaroid, scribble, doodle, boil } from './collage.js';
-import { F, font, drawText, label } from './text.js';
+import { F, font, drawText, label, kinetic } from './text.js';
 import { chant } from './lyrics4.js';
 import { MEM, ORDER, GOLD, IV, setCam, layer, OS, bg, bgGrad, wash, radial, FACE, framing, figure, lerpFr, CF, kaleido, tileWall,
-  laceBorder, fringe, fanOpen, obj, halo, earrings, develop, fgBlur, lightRays } from './kit4.js';
+  laceBorder, fringe, fanOpen, obj, halo, earrings, develop, fgBlur, lightRays, neon, neonStroke, horseshoe, scallops, mono } from './kit4.js';
 
 const Ls = i => T.lines[i].start;
 const ch = (i, j) => T.lines[i].chars[j];
@@ -98,28 +98,39 @@ export function runShots(ctx, t, shots) {
   return s;
 }
 
+/* ------------------------------------------------------------ lyric typography for the type-led shots */
+// Not every part needs a standing art: in these shots the line itself is the picture. The scene sets it
+// as a designed block, glyphs arriving as they are sung (lyrics4 skips these lines), with a small Latin
+// caption and hairline, over a motif from the lyric.
+const seg = (i, a = 0, b) => { const l = T.lines[i], cs = [...l.text]; b = b ?? cs.length; return { text: cs.slice(a, b).join(''), times: l.chars.slice(a, b) }; };
+function kin(ctx, t, i, o = {}) { // mixed-size kinetic setting of (a segment of) line i
+  const l = T.lines[i], q = seg(i, o.from || 0, o.to);
+  kinetic(ctx, t, q.text, q.times, { exit: (l.hold || l.end) + 0.45, shadow: 'rgba(10,2,4,0.55)', ...o });
+}
+function caption(ctx, t, text, x, y, t0, o = {}) {
+  const ex = o.exit ?? 1e9, a = smooth(t0, t0 + 0.8, t) * (1 - smooth(ex, ex + 0.6, t));
+  if (a <= 0.003) return;
+  label(ctx, text, x, y, { fam: F.corm, size: o.size || 30, italic: true, weight: 500, color: o.color || GOLD, track: 0.12, align: o.align || 'start', alpha: a * 0.95 });
+  if (o.rule) { const [rx, ry, rw, rh] = o.rule; ctx.save(); ctx.globalAlpha = a * 0.8; ctx.fillStyle = o.color || GOLD; ctx.fillRect(rx, ry, rw * E.outCubic(smooth(t0, t0 + 1.2, t)), rh); ctx.restore(); }
+}
+
 /* ------------------------------------------------------------ reusable shot types */
-// one member, fixed framing: kaleidoscope or textile behind, dish halo
-const memberShot = (who, key, o = {}) => (ctx, t, s) => {
-  const m = MEM[who];
-  if (o.textile) textileBG(ctx, o.textile, { tint: o.tint || m.deep, tintA: o.tintA ?? 0.35 });
-  else kaleBG(ctx, t, o.kale || 'tile_477238', { tint: o.tint || m.deep, tintA: o.tintA ?? 0.4, spin: o.spin ?? 0.025, ph: hash(who.length, 3) * 6 });
-  if (o.lattice !== false) layer(ctx, 1, g => lattice(g, t, rgba(m.light, 1), 0.06, 170, 0.2, 0, 0));
-  const fr = framing(key, o.size || 'bust', o.side ?? 0.62, o);
-  if (o.halo) layer(ctx, 1, g => halo(g, M(o.halo), fr.x + (o.flip ? -1 : 1) * fr.fh * 0.25, fr.y - fr.fh * 0.05, fr.fh * (o.haloK || 1.25), t, 0.95, 0.03));
-  layer(ctx, 1, g => figure(g, key, fr, { flip: o.flip, rim: m.light, rimSide: o.flip ? -1 : 1, grade: o.grade, gradeA: o.gradeA, gradeOp: o.gradeOp }));
-  if (o.fg) layer(ctx, 1, g => fgBlur(g, M(o.fg) || IMG[o.fg], o.fgx ?? 1700, o.fgy ?? 900, o.fgh ?? 600, 12, 0.9, 0.3));
-  if (o.deco !== false) frameDeco(ctx, t, { lace: o.lace, fringe: o.fringe });
-};
 // call-and-response: two members of the same outfit set; the answering half fades in on its cue
 const splitShot = (L, R, tR, o = {}) => (ctx, t, s) => {
   const k = E.inOutSine(clamp((t - (tR - 0.25)) / 0.45)), cut = W * 0.52, sk = 150;
   const side = (who, key, kale, flip, xFace) => g => {
-    kaleBG(g, t, kale, { tint: MEM[who].deep, tintA: 0.42, spin: flip ? -0.02 : 0.02 });
-    layer(g, 1, h => lattice(h, t, rgba(MEM[who].light, 1), 0.06, 160, 0.2, 0, 0));
-    const fr = framing(key, 'bust', xFace, { k: 1.25 });
+    const m = MEM[who], fr = framing(key, 'bust', xFace, { k: 1.25 });
+    if (o.neon) { // the reference idiom: the art flattened to one colour, neon ornament behind it
+      layer(g, 1, h => { bg(h, '#06030a'); radial(h, xFace * W, 420, 900, [[0, rgba(m.deep, 0.95)], [1, 'rgba(0,0,0,0)']]);
+        neonStroke(h, m.ink, 2.5, q => { for (let j = -1; j < 4; j++) horseshoe(q, xFace * W + (j - 1.5) * 300, H + 40, 230, 760); }, 0.32);
+        neon(h, o.neon[flip ? 1 : 0], fr.x, fr.y - 10, fr.fh * 2.7, m.ink, { a: 0.8, rot: t * 0.04 * (flip ? -1 : 1) }); });
+      layer(g, 1, h => figure(h, key, fr, { img: mono(IMG[key], m.deep, m.light), flip: !!flip, glow: m.ink, glowA: 0.75, glowBlur: 24, shadow: false }));
+      return;
+    }
+    kaleBG(g, t, kale, { tint: m.deep, tintA: 0.42, spin: flip ? -0.02 : 0.02 });
+    layer(g, 1, h => lattice(h, t, rgba(m.light, 1), 0.06, 160, 0.2, 0, 0));
     if (o.halo) layer(g, 1, h => halo(h, M(o.halo[flip ? 1 : 0]), fr.x, fr.y - 20, fr.fh * 1.2, t, 0.9, 0.03));
-    layer(g, 1, h => figure(h, key, fr, { flip: !!flip, rim: MEM[who].light, rimSide: flip ? -1 : 1, grade: o.grade, gradeA: o.gradeA, gradeOp: o.gradeOp }));
+    layer(g, 1, h => figure(h, key, fr, { flip: !!flip, rim: m.light, rimSide: flip ? -1 : 1, grade: o.grade, gradeA: o.gradeA, gradeOp: o.gradeOp }));
   };
   side(L.who, L.key, L.kale || 'tile_187924', L.flip, L.x ?? 0.28)(ctx);
   if (k > 0) {
@@ -220,12 +231,18 @@ function titleCollage(ctx, t, s) {
 }
 
 /* ------------------------------------------------------------ VERSE 1 (night) */
-function tomoeWide(ctx, t, s) { // wide: the Court of the Lions at night, Tomoe in the frame
-  photoBG(ctx, 'alhambra_288043', '#05071c', '#9aa8e8', { z: 1.08, fx: 0.5, fy: 0.55 });
-  layer(ctx, 1, g => { stars(g, t, 120, 11, [0, -100, W, 520], 0.8); glow(g, 1500, 160, 260, '#c8d4ff', 0.25); obj(g, IMG.obj_v2_crescent, 1500, 160, 200, { shadow: false, rot: -0.2 }); });
-  layer(ctx, 1, g => radial(g, 600, 900, 900, [[0, 'rgba(255,150,80,0.18)'], [1, 'rgba(0,0,0,0)']], 'screen'));
-  layer(ctx, 1, g => figure(g, 'to_cos', framing('to_cos', 'wide', 0.44, { h: 860 }), { rim: '#aab8ff', rimA: 0.5, grade: '#2a3080', gradeA: 0.32 }));
-  layer(ctx, 1, g => fgBlur(g, M('iron_194614'), W + 60, 560, 1500, 8, 0.85));
+function nightStars(ctx, t, s) { // 瞬く星が綺麗な夜に — the Court of the Lions under the stars; a star lights on every sung syllable
+  photoBG(ctx, 'alhambra_288043', '#04061a', '#8a98d8', { z: 1.1, fx: 0.45, fy: 0.62 });
+  layer(ctx, 1, g => {
+    const gr = g.createLinearGradient(0, 0, 0, 700); gr.addColorStop(0, 'rgba(3,4,18,0.94)'); gr.addColorStop(1, 'rgba(3,4,18,0)'); g.fillStyle = gr; g.fillRect(...OS);
+    stars(g, t, 170, 11, [0, -100, W, 600], 1); glow(g, 420, 190, 280, '#c8d4ff', 0.25); obj(g, IMG.obj_v2_crescent, 420, 190, 190, { shadow: false, rot: -0.25 });
+    T.lines[4].chars.forEach((ct, k) => { const a = smooth(ct - 0.05, ct + 0.3, t); if (a > 0) sparkle(g, 160 + hash(k, 71) * 1100, 90 + hash(k, 72) * 420, 0.7 + hash(k, 73) * 0.8, a * (0.75 + 0.25 * Math.sin(t * 3 + k)), '#f4f0ff'); });
+  });
+  layer(ctx, 1, g => fgBlur(g, M('iron_194614'), -60, 560, 1500, 8, 0.7));
+  const starInk = { fill: '#f4f2ff', glow: 'rgba(170,190,255,0.55)', size: 132, vertical: true, kana: 0.55 };
+  kin(ctx, t, 4, { ...starInk, to: 4, x: 1660, y: 200 });
+  kin(ctx, t, 4, { ...starInk, from: 4, x: 1500, y: 330 });
+  caption(ctx, t, 'una noche de estrellas', 1790, 1000, Ls(4) + 1.0, { align: 'end', color: '#c8d0f0', exit: Ls(5) - 0.3, rule: [1530, 1030, 260, 2] });
 }
 function tomoeClose(ctx, t, s) { // close-up; two warm lights drift together (重なる手と手)
   photoBG(ctx, 'alhambra_288043', '#04061a', '#5a68b0', { z: 1.6, fx: 0.4, fy: 0.5 });
@@ -240,11 +257,12 @@ function riamuNight(ctx, t, s) { // 凍える身体 → 熱帯夜: one held shot
   wash(ctx, '#3a0a08', 0.58 * w, 'multiply');
   layer(ctx, 1, g => { glow(g, 1300, 400, 700, '#9ab8ff', 0.25 * (1 - w)); radial(g, 600, 900, 1200, [[0, `rgba(255,120,50,${0.55 * w})`], [1, 'rgba(0,0,0,0)']], 'screen'); });
   layer(ctx, 1, g => { obj(g, M('iron_198932'), 230, 760, 620, { filter: `brightness(${0.55 + 0.45 * w})` }); obj(g, IMG.obj_slim_candle, 230, 520, 230, { shadow: false, a: w }); glow(g, 230, 450, 220, '#ffb060', w * 0.9); });
-  const fr = framing('ri_cos', 'bust', 0.46);
-  layer(ctx, 1, g => {
-    figure(g, 'ri_cos', fr, { rim: '#b8d0ff', rimA: 0.55, grade: '#2850a0', gradeA: 0.3 });
-    if (w > 0.003) figure(g, 'ri_cos', fr, { a: w, shadow: false, rim: '#ffb070', rimA: 0.6, rimSide: -1, grade: '#ff7040', gradeA: 0.22, gradeOp: 'soft-light' });
-  });
+  const fr = framing('ri_cos', 'bust', 0.46), app = smooth(Ls(7) - 0.4, Ls(7) + 1.2, t);  // あなたを乞う: she appears with the warmth
+  if (app > 0.003) layer(ctx, 1, g => figure(g, 'ri_cos', fr, { a: app, rim: '#ffb070', rimA: 0.6, rimSide: -1, grade: '#ff7040', gradeA: 0.22 * w, gradeOp: 'soft-light' }));
+  const frost = { fill: '#eef4ff', glow: 'rgba(150,185,255,0.55)', exit: Ls(7) - 0.35, align: 'center' };
+  kin(ctx, t, 6, { ...frost, to: 5, x: 960, y: 450, size: 170, kana: 0.5 });
+  kin(ctx, t, 6, { ...frost, from: 5, x: 960, y: 640, size: 120, kana: 0.62 });
+  caption(ctx, t, 'calma este cuerpo helado', 960, 755, Ls(6) + 1.2, { align: 'center', color: '#b8c8f0', exit: Ls(7) - 0.4 });
   if (w < 1) layer(ctx, 1, g => { for (let k = 0; k < 40; k++) { const x = (hash(k, 3) * W + t * 14) % W, y = (hash(k, 4) * H + t * (24 + hash(k, 5) * 30)) % H; g.globalAlpha = 0.45 * (1 - w); g.drawImage(softDot('#e8f0ff', 16), x, y, 6 + hash(k, 6) * 8, 6 + hash(k, 6) * 8); } g.globalAlpha = 1; });
   embers(ctx, t, 26, 7, { a: w * 0.7, speed: 45 });
 }
@@ -268,18 +286,24 @@ function vanity(ctx, t, s) {
     scribble(g, t, Ls(9) - 0.1, 'à la madame…', 200, 120, 54, '#7a1f3a', -0.05, 1.2);
   });
 }
-function yoshinoRed(ctx, t, s) { // 纏う深紅 → 濃紺の宵: the crimson velvet behind her portrait turns to night
+function mantle(ctx, t, s) { // 纏う深紅 → 濃紺の宵に靡いてく: a red silk mantón; the velvet behind it turns to night and it sways
   const n = smooth(Ls(11) - 0.45, Ls(11) + 0.6, t);
-  textileBG(ctx, 'textile_222561', { z: 1.15 });
-  if (n > 0) layer(ctx, 1, g => { const [c, b] = buf('navy'); paperBG(b, 'paper_navy'); stars(b, t, 60, 41, [0, 0, W, 600], 0.7); g.save(); g.globalAlpha = n; g.drawImage(c, 0, 0); g.restore(); });
-  layer(ctx, 1, g => { const p = slap(t, s.a + 0.05); piece(g, 800, 500, 1000 * p.s, 640 * p.s, { img: IMG.card_yo, z: 1.9, fx: CF.cardYo.yo[0], fy: CF.cardYo.yo[1] + 0.04, rot: -0.04 + p.r, seed: 21, a: p.a }); tape(g, 380, 200, 170, -0.4, 'rgba(250,236,210,0.8)', p.a); });
-  layer(ctx, 1, g => {
-    obj(g, M('shawl_157896'), 1540, 260, 520, { rot: 0.5, a: 0.92 * (1 - n) });
-    obj(g, IMG.obj_d_rose, 330, 900, 380, { rot: 0.2, a: slap(t, s.a + 0.4).a * (1 - n) });
-    doodle(g, 'star', 1520, 150, 2.0, clamp((t - Ls(11) - 0.1) / 0.7), GOLD, 4);
-    scribble(g, t, Ls(11) + 0.3, 'noche azul', 1380, 300, 56, '#e8d8b8', -0.06, 1.0);
-    laceBorder(g, 'm_lace_221112_mask', H + 4, 80, '#d8d0f0', 0.8 * n, true, 0);
+  textileBG(ctx, 'textile_222561', { z: 1.15 }); wash(ctx, '#2a0206', 0.3, 'multiply');
+  if (n > 0) layer(ctx, 1, g => { const [c, b] = buf('navy'); paperBG(b, 'paper_navy'); stars(b, t, 70, 41, [0, 0, W, 700], 0.8); g.save(); g.globalAlpha = n; g.drawImage(c, 0, 0); g.restore(); });
+  const im = M('shawl_168327');
+  if (im) layer(ctx, 1, g => { // upper body of the shawl only (the museum mannequin stays out of frame), fading into the dark
+    const sx = im.width * 0.1, sw = im.width * 0.795, sh = im.height * 0.62, dw = 1150, dh = dw * sh / sw;
+    const [c, b] = buf('mantle'); b.drawImage(im, sx, 0, sw, sh, 0, 0, dw, dh);
+    b.globalCompositeOperation = 'destination-in'; const gr = b.createLinearGradient(0, dh * 0.55, 0, dh); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); b.fillStyle = gr; b.fillRect(0, 0, dw, dh);
+    const sway = Math.sin((t - Ls(11)) * 1.7) * 0.035 * n;
+    g.save(); g.translate(60 + dw / 2, -70); g.transform(1, 0, sway, 1, 0, 0); g.shadowColor = 'rgba(8,0,2,0.6)'; g.shadowBlur = 40; g.shadowOffsetY = 24;
+    g.globalAlpha = smooth(s.a - 0.2, s.a + 0.6, t); g.drawImage(c, 0, 0, dw, dh, -dw / 2, 0, dw, dh); g.restore();
   });
+  const roll = 1 - 0.55 * smooth(Ls(11) - 0.3, Ls(11) + 0.3, t);
+  kin(ctx, t, 10, { x: 1590, y: 190, vertical: true, size: 180, kana: 0.45, fill: '#fbf0e6', glow: 'rgba(255,60,70,0.5)', alpha: roll, exit: s.b - 0.1 });
+  kin(ctx, t, 11, { x: 1390, y: 300, vertical: true, size: 104, kana: 0.55, fill: '#ece6ff', glow: 'rgba(170,160,255,0.55)', exit: s.b - 0.1 });
+  caption(ctx, t, 'carmesí', 1640, 880, Ls(10) + 0.6, { color: '#f2c8b0', exit: s.b - 0.3 });
+  caption(ctx, t, 'azul de noche', 1400, 1010, Ls(11) + 0.8, { color: '#c8c0f0', exit: s.b - 0.3, rule: [1400, 1036, 220, 2] });
 }
 
 /* ------------------------------------------------------------ PRE-CHORUS */
@@ -331,11 +355,27 @@ function nagiCard(o = {}) { return (ctx, t, s) => {
   petals(ctx, t, 18, 21, { a: 1, speed: 90, wind: 90 });
   frameDeco(ctx, t, { fh: 120, fringe: o.fringe });
 }; }
-function shinFire(ctx, t, s) {
-  memberShot('shi', 'shi_cos', { textile: 'textile_216625', tint: '#4a0418', tintA: 0.45, size: 'bust', k: 1.35, side: 0.56, halo: 'dish_201905', deco: false })(ctx, t, s);
-  layer(ctx, 1, g => ink(g, IMG.ink_c1_blaze, '#ff6a2a', [0, 520, W, 560], 1.1, 0.5, 0.6, 0.55, 'screen'));
-  layer(ctx, 1, g => { obj(g, IMG.obj_fi_r3, 200, 960, 420, { rot: 0.3 }); obj(g, IMG.obj_d_rose, 1760, 980, 440, { rot: -0.2 }); });
-  embers(ctx, t, 50, 33, { a: 1, speed: 100 });
+const NEONC = ['#ff3a5c', '#ffc94a', '#ff6fc0'];   // crimson, gold, rose: switched on the bar
+function neonFans(ctx, t, s) { // 今宵夢舞う 大胆に — Met fans traced in neon, the colours changing with the bar
+  layer(ctx, 1, g => { bg(g, '#06030a'); lattice(g, t, '#4a2050', 0.22, 170, 0, 0, 0); radial(g, 960, 600, 1100, [[0, 'rgba(70,10,40,0.4)'], [1, 'rgba(0,0,0,0.7)']]); });
+  const bar = Math.floor(barF(t + 0.02)), c = k => NEONC[(bar + k) % 3];
+  layer(ctx, 1, g => {
+    neon(g, 'fan_120720', 960, 700, 820, c(0), { a: opens(t, s.a, 0.7) });
+    neon(g, 'fan_169859', 330, 860, 600, c(1), { a: opens(t, s.a + T.beat, 0.7), rot: -0.3 });
+    neon(g, 'fan_156754', 1590, 860, 600, c(2), { a: opens(t, s.a + 2 * T.beat, 0.7), rot: 0.3 });
+    neonStroke(g, c(0), 3, h => scallops(h, -40, W + 40, H - 30, 40), 0.6 * smooth(s.a, s.a + 0.8, t));
+  });
+  kin(ctx, t, 18, { to: 5, x: 960, y: 560, align: 'center', size: 150, kana: 0.5, glow: 'rgba(255,120,170,0.55)' });
+  kin(ctx, t, 18, { from: 6, x: 960, y: 790, align: 'center', size: 230, kana: 0.45, fill: { grad: ['#fffaf0', '#ffe2b0', '#f2b866'] }, glow: 'rgba(255,170,90,0.65)' });
+  caption(ctx, t, 'esta noche, sin miedo', 960, 940, Ls(18) + 1.0, { align: 'center', exit: s.b - 0.3 });
+}
+function fireLove(ctx, t, s) { // とこしえに燃える愛 — the line itself burns
+  layer(ctx, 1, g => { bg(g, '#0e0303'); const im = M('textile_227208'); if (im) cover(g, duo(im, '#0e0303', '#6a1810'), OS, 1.25, 0.5, 0.5); radial(g, 960, 1060, 1300, [[0, 'rgba(255,110,40,0.5)'], [1, 'rgba(0,0,0,0)']], 'screen'); });
+  layer(ctx, 1, g => ink(g, IMG.ink_c1_blaze, '#ff6a2a', [0, 520, W, 560], 1.1, 0.5, 0.6, 0.7, 'screen'));
+  layer(ctx, 1, g => { obj(g, IMG.obj_fi_r3, 190, 940, 460, { rot: 0.3 }); obj(g, IMG.obj_d_rose, 1750, 960, 460, { rot: -0.2 }); });
+  kin(ctx, t, 21, { x: 960, y: 500, align: 'center', size: 230, kana: 0.42, fill: { grad: ['#fff6e0', '#ffd08a', '#ff8a3c'] }, glow: 'rgba(255,110,40,0.8)', glowBlur: 34, exit: s.b - 0.05 });
+  caption(ctx, t, 'un amor que arde para siempre', 960, 640, Ls(21) + 0.8, { align: 'center', exit: s.b - 0.3 });
+  embers(ctx, t, 60, 33, { a: 1, speed: 100 });
   frameDeco(ctx, t, { fh: 120 });
 }
 function coverWide(ctx, t, s, o = {}) { // the whole jacket in a gilded frame on a tile wall
@@ -411,11 +451,17 @@ function summerYoshino(ctx, t, s) {
 }
 
 /* ------------------------------------------------------------ B2 / PRE 2 (stage costumes, night) */
-function tomoeKiss(ctx, t, s) {
-  layer(ctx, 1, g => { bgGrad(g, [[0, '#2a1030'], [0.6, '#6a2a50'], [1, '#2a0c20']]); bokeh(g, t, 18, 61, ['#ffb0c8', '#ffd0a0', '#e8a0ff'], 1, 1.1); });
-  layer(ctx, 1, g => figure(g, 'to_cos', lerpFr(framing('to_cos', 'bust', 0.4), framing('to_cos', 'face', 0.42), 0.5), { rim: '#ffd0e0', glow: '#ffb0c8', glowA: 0.3 }));
-  layer(ctx, 1, g => fgBlur(g, IMG.obj_fi_r3, 1600, 820, 720, 10, 0.95, 0.2));
-  petals(ctx, t, 12, 63, { a: 0.9, speed: 40, wind: 20, size: 0.9 });
+function roseKiss(ctx, t, s) { // 戸惑っているあなたにそっと口づけて — watercolour roses, the line set vertically in ink
+  layer(ctx, 1, g => { paperBG(g, 'paper_peach'); wash(g, '#fbe6ec', 0.25, 'screen');
+    const im = M('rose_334302'); if (im) { const h = 930, w = im.width * h / im.height; // the botanical print, whole, laid on the page
+      g.save(); g.translate(760, 545); g.rotate(-0.025); g.shadowColor = 'rgba(60,20,30,0.35)'; g.shadowBlur = 30; g.shadowOffsetY = 14; g.fillStyle = '#fffaf4'; g.fillRect(-w / 2 - 22, -h / 2 - 22, w + 44, h + 44); g.restore();
+      g.save(); g.translate(760, 545); g.rotate(-0.025); g.drawImage(im, -w / 2, -h / 2, w, h); g.restore(); tape(g, 760, 82, 200, 0.04, 'rgba(255,214,226,0.75)'); }
+    bokeh(g, t, 12, 61, ['#ffd0dc', '#fff0e0', '#f0c8ff'], 0.55, 1.0); });
+  const inkC = { fill: '#3a1420', glow: 'rgba(255,255,255,0.7)', glowBlur: 14, shadow: null, size: 120, kana: 0.5, vertical: true };
+  kin(ctx, t, 27, { ...inkC, to: 10, x: 1720, y: 150 });
+  kin(ctx, t, 27, { ...inkC, from: 10, x: 1560, y: 330, accent: { from: 3, to: 7, fill: '#b01e3c' } });
+  caption(ctx, t, 'un beso, despacio', 1500, 1000, Ls(27) + 2.0, { align: 'end', color: '#9a3a50', exit: s.b - 0.3, rule: [1290, 1028, 210, 2] });
+  petals(ctx, t, 10, 63, { a: 0.8, speed: 35, wind: 20, size: 0.9 });
 }
 function shinAway(ctx, t, s) { // 「連れ去って」: she turns back from a lamp-lit Moorish corridor
   layer(ctx, 1, g => { cover(g, duo(M('alhambra_263839'), '#140818', '#e8c0e8'), OS, 1.3, 0.5, 0.52); glow(g, 960, 560, 480, '#ffe0c8', 0.55); });
@@ -453,9 +499,11 @@ function watches(ctx, t, s) { // 時は過ぎ行く 冷淡に — five watches a
   const k = Math.floor(beatF(t)), fr = E.outCubic(clamp((beatF(t) - k) * 4)), rot = (k + fr) * (TAU / 60);
   const W5 = ['watch_207363', 'watch_195645', 'watch_187195', 'watch_194040', 'watch_194033'];
   layer(ctx, 1, g => W5.forEach((w, j) => { const a = (j / 5) * TAU - Math.PI / 2 + 0.3; obj(g, M(w), 960 + Math.cos(a) * 560, 540 + Math.sin(a) * 320, 250, { rot: Math.sin(t * 0.8 + j) * 0.05 }); }));
-  layer(ctx, 1, g => { withMask(g, circlePath(960, 540, 240), h => cover(h, IMG.card_na, [720, 300, 480, 480], 2.3, CF.cardNa.na[0], CF.cardNa.na[1] - 0.04)); rings(g, 960, 540, [246, 262], GOLD, 2, 0.9);
+  layer(ctx, 1, g => { withMask(g, circlePath(960, 540, 240), h => { bg(h, '#0a0814'); obj(h, M('watch_194208'), 960, 590, 560, { shadow: false, a: 0.28 }); radial(h, 960, 540, 260, [[0, 'rgba(10,8,20,0.2)'], [1, 'rgba(10,8,20,0.85)']]); }); rings(g, 960, 540, [246, 262], GOLD, 2, 0.9);
     for (let j = 0; j < 60; j++) { const a = (j / 60) * TAU - Math.PI / 2; g.save(); g.strokeStyle = GOLD; g.globalAlpha = 0.6; g.lineWidth = j % 5 ? 1 : 3; g.beginPath(); g.moveTo(960 + Math.cos(a) * 280, 540 + Math.sin(a) * 280); g.lineTo(960 + Math.cos(a) * (j % 5 ? 296 : 312), 540 + Math.sin(a) * (j % 5 ? 296 : 312)); g.stroke(); g.restore(); }
     const ha = rot - Math.PI / 2; g.save(); g.strokeStyle = GOLD; g.lineWidth = 3; g.beginPath(); g.moveTo(960 + Math.cos(ha) * 262, 540 + Math.sin(ha) * 262); g.lineTo(960 + Math.cos(ha) * 318, 540 + Math.sin(ha) * 318); g.stroke(); g.restore(); });
+  kin(ctx, t, 35, { to: 6, x: 960, y: 490, align: 'center', size: 96, kana: 0.5, fill: '#e8e4f4', glow: 'rgba(170,170,255,0.4)', exit: s.b - 0.05 });
+  kin(ctx, t, 35, { from: 7, x: 960, y: 625, align: 'center', size: 120, kana: 0.55, fill: { grad: ['#fffaf0', '#f2d9a6', '#c8a05a'] }, exit: s.b - 0.05 });
 }
 // うたかたに紡ぐ愛 — a rack focus through a glass of rising bubbles: the foam is sharp first,
 // then it melts into bokeh as Yoshino's face behind it comes into focus.
@@ -500,18 +548,18 @@ function danceWall(ctx, t, s) { // wide, intentional full figure: her shadow thr
 }
 const KALE = { yo: 'tile_477238', na: 'textile_461355', shi: 'textile_230357', to: 'tile_187927', ri: 'tile_187929' };
 const DISH = { yo: 'dish_471811', na: 'dish_471739', shi: 'dish_468516', to: 'dish_201662', ri: 'dish_471790' };
-const rollCall = (who, size, k = 1) => (ctx, t, s) => { // member introductions, one held portrait each
-  const m = MEM[who];
-  kaleBG(ctx, t, KALE[who], { tint: m.deep, tintA: 0.5, spin: 0.03 });
-  layer(ctx, 1, g => { g.save(); g.font = font(F.anton, 420, 400); g.textBaseline = 'middle'; g.textAlign = 'center'; g.strokeStyle = rgba(m.light, 0.32); g.lineWidth = 3; g.strokeText(m.name, 700, 560); g.restore(); });
-  const fr = framing(COS[who], size, 0.66, { k });
-  layer(ctx, 1, g => halo(g, M(DISH[who]), fr.x, fr.y, fr.fh * 1.3, t, 0.9, 0.03));
+const NDISH = { yo: 'iron_466304', na: 'dish_471762', shi: 'dish_468516', to: 'iron_466304', ri: 'dish_471762' };
+const rollCall = (who, size, k = 1) => (ctx, t, s) => { // member introductions: neon arches in her colour, one held portrait
+  const m = MEM[who], fr = framing(COS[who], size, 0.66, { k });
+  layer(ctx, 1, g => { bg(g, '#06030a'); radial(g, fr.x, 520, 1200, [[0, rgba(m.deep, 1)], [0.6, rgba(m.deep, 0.4)], [1, 'rgba(0,0,0,0)']]);
+    neonStroke(g, m.ink, 3, q => { for (let j = 0; j < 7; j++) horseshoe(q, 120 + j * 290, H + 60, 220, 820); }, 0.75);
+    g.save(); g.font = font(F.anton, 420, 400); g.textBaseline = 'middle'; g.textAlign = 'center'; g.strokeStyle = rgba(m.light, 0.28); g.lineWidth = 3; g.strokeText(m.name, 700, 560); g.restore(); });
+  layer(ctx, 1, g => neon(g, NDISH[who], fr.x, fr.y, fr.fh * 2.6, m.ink, { a: 0.75, rot: t * 0.04 }));
   layer(ctx, 1, g => figure(g, COS[who], fr, { rim: m.light, rimSide: -1 }));
   const p = E.outCubic(clamp((t - s.a - 0.15) / 0.7));
   label(ctx, m.name, 150, 780 + (1 - p) * 12, { fam: F.anton, size: 110, color: IV, track: 0.06, alpha: p });
   ctx.save(); ctx.globalAlpha = p; ctx.fillStyle = m.ink; ctx.fillRect(156, 812, 260 * p, 6); ctx.restore();
   label(ctx, `${m.jp}　CV.${m.cv}`, 156, 870, { size: 28, weight: 700, color: IV, track: 0.12, alpha: smooth(s.a + 0.4, s.a + 1.0, t) });
-  frameDeco(ctx, t, { fh: 120 });
 };
 function jewels(ctx, t, s) { // Passion jewelries: the five gather as jewels on one chain, then the light floods in
   const p = inv(s.a, 166.53, t);
@@ -549,9 +597,13 @@ function profiles(ctx, t, s) { // 朝日が照らした ふたりの横顔を: N
   layer(ctx, 1, g => figure(g, 'na_cos', lerpFr(framing('na_cos', 'knee', 0.68), framing('na_cos', 'bust', 0.67), 0.6),
     { rim: '#fff0c8', rimA: 0.75, rimSide: -1, glow: '#ffd8a0', glowA: 0.28, grade: '#ffb080', gradeA: 0.18, gradeOp: 'soft-light' }));
 }
-function cufflinkFace(ctx, t, s) { // ああ あなたのカフスを: her face, held
-  layer(ctx, 1, g => cover(g, IMG.card_yo, OS, 2.2, CF.cardYo.yo[0] - 0.03, CF.cardYo.yo[1]));
-  wash(ctx, '#ffb080', 0.25, 'soft-light'); wash(ctx, '#fff0e0', 0.12, 'screen');
+function dawnJewel(ctx, t, s) { // ああ あなたのカフスを — a small gold jewel catching the first light
+  dawnSky(ctx, t, inv(166.5, 191, t), 1320);
+  layer(ctx, 1, g => { obj(g, M('jewel_206840'), 1320, 500, 560, { rot: 0.06, shadowA: 0.3 }); sparkle(g, 1262, 446, 1.4 + 0.25 * Math.sin(t * 2.4), 0.9, '#fffaf0'); sparkle(g, 1385, 610, 0.9 + 0.2 * Math.sin(t * 3.1 + 1), 0.8, '#fffaf0'); });
+  const dawnInk = { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)', shadow: 'rgba(90,30,40,0.45)', exit: s.b - 0.05 };
+  kin(ctx, t, 42, { ...dawnInk, to: 2, x: 200, y: 420, size: 120, kana: 0.62 });
+  kin(ctx, t, 42, { ...dawnInk, from: 3, x: 200, y: 590, size: 150, kana: 0.72, accent: { from: 4, to: 7, fill: '#fff4d8', glow: 'rgba(255,190,90,0.8)' } });
+  caption(ctx, t, 'tus gemelos, al amanecer', 205, 690, Ls(42) + 1.0, { color: '#fff0dc', exit: s.b - 0.3, rule: [205, 718, 280, 2] });
 }
 function cufflinkHands(ctx, t, s) { // 握りしめたまま: insert on the hands holding on
   layer(ctx, 1, g => cover(g, IMG.card_yo, OS, 2.9, CF.cardYo.hands[0], CF.cardYo.hands[1]));
@@ -683,22 +735,22 @@ export function build() {
   add(1.62, introArches, PUSH, 'dissolve', 0.6);
   add(9.75, titleCollage, PUSH, 'flash', 0.5, { tro: { amount: 0.55 } });
   // verse 1 — night
-  add(15.9, tomoeWide, PUSH, 'dissolve', 0.9);
+  add(15.9, nightStars, PUSH, 'dissolve', 0.9);
   add(19.85, tomoeClose, PUSH, 'dissolve', 0.6);
   add(23.45, riamuNight, PUSHL, 'dissolve', 0.7);
   // B1 — collage
   add(30.3, vanity, PUSH, 'dissolve', 0.5);
-  add(34.75, yoshinoRed, PUSH, 'dissolve', 0.5);
+  add(34.75, mantle, PUSH, 'dissolve', 0.5);
   // pre-chorus
   add(38.45, nagiMirror, PUSH, 'dissolve', 0.7);
   add(42.3, fivesFans, PUSHL, 'dissolve', 0.7);
   // chorus 1
   add(48.46, chorusOpen, PULL, 'cut', 0, { kick: 0.7 });
   add(52.0, faceSlats(['na', 'shi', 'yo', 'to', 'ri']), PUSH, 'dissolve', 0.3);
-  add(55.6, nagiCard({ z: 1.5, fx: CF.cardNa.na[0], fy: CF.cardNa.na[1] - 0.05 }), PUSH, 'dissolve', 0.3);
-  add(59.25, splitShot({ who: 'to', key: 'to_cos', kale: 'tile_187927' }, { who: 'na', key: 'na_cos', kale: 'textile_461355' }, ch(19, 5), { halo: ['dish_471790', 'dish_471807'] }));
-  add(61.45, splitShot({ who: 'ri', key: 'ri_cos', kale: 'tile_187929' }, { who: 'yo', key: 'yo_cos', kale: 'tile_477238' }, ch(20, 5), { halo: ['dish_471739', 'dish_471811'] }));
-  add(63.4, shinFire, PUSH, 'dissolve', 0.3);
+  add(55.6, neonFans, PUSH, 'dissolve', 0.3);
+  add(59.25, splitShot({ who: 'to', key: 'to_cos', kale: 'tile_187927' }, { who: 'na', key: 'na_cos', kale: 'textile_461355' }, ch(19, 5), { neon: ['iron_466304', 'dish_471762'] }));
+  add(61.45, splitShot({ who: 'ri', key: 'ri_cos', kale: 'tile_187929' }, { who: 'yo', key: 'yo_cos', kale: 'tile_477238' }, ch(20, 5), { neon: ['dish_468516', 'iron_466304'] }));
+  add(63.4, fireLove, PUSH, 'dissolve', 0.3);
   add(66.9, coverWide, PULL, 'dissolve', 0.6);
   // interlude
   add(69.75, guitarTable, STILL, 'dissolve', 0.8);
@@ -706,7 +758,7 @@ export function build() {
   add(79.43, summerNagi, PUSH, 'dissolve', 0.8);
   add(87.5, summerYoshino, PUSH, 'dissolve', 0.6);
   // B2 / pre-chorus 2
-  add(94.37, tomoeKiss, PUSH, 'dissolve', 0.8);
+  add(94.37, roseKiss, PUSH, 'dissolve', 0.8);
   add(98.3, shinAway, PUSH, 'dissolve', 0.6);
   add(102.62, riamuBells, PUSH, 'dissolve', 0.6);
   add(106.25, silence, PUSHL, 'dissolve', 0.8);
@@ -714,8 +766,8 @@ export function build() {
   add(112.33, morningStar, PULL, 'cut', 0, { kick: 0.7 });
   add(115.4, moonPavilion, STILL, 'dissolve', 0.5);
   add(119.45, watches, PUSH, 'dissolve', 0.3);
-  add(123.2, splitShot({ who: 'shi', key: 'shi_cos', kale: 'textile_230357' }, { who: 'to', key: 'to_cos', kale: 'tile_187927' }, ch(36, 5), { grade: '#2a3080', gradeA: 0.15 }));
-  add(125.35, splitShot({ who: 'na', key: 'na_cos', kale: 'textile_461355' }, { who: 'ri', key: 'ri_cos', kale: 'tile_187929' }, ch(37, 5), { grade: '#2a3080', gradeA: 0.15 }));
+  add(123.2, splitShot({ who: 'shi', key: 'shi_cos', kale: 'textile_230357' }, { who: 'to', key: 'to_cos', kale: 'tile_187927' }, ch(36, 5), { neon: ['dish_471762', 'iron_466304'] }));
+  add(125.35, splitShot({ who: 'na', key: 'na_cos', kale: 'textile_461355' }, { who: 'ri', key: 'ri_cos', kale: 'tile_187929' }, ch(37, 5), { neon: ['iron_466304', 'dish_468516'] }));
   add(127.55, bubbles, STILL, 'dissolve', 0.4);
   add(130.55, guitarMacro, STILL, 'dissolve', 0.5);
   // dance break
@@ -725,7 +777,7 @@ export function build() {
   add(barT(83), jewels, PUSH, 'dissolve', 0.4);
   // bridge — dawn
   add(166.53, profiles, PUSH, 'cut', 0, { kick: 0.8 });
-  add(174.35, cufflinkFace, PUSH, 'dissolve', 0.8);
+  add(174.35, dawnJewel, PUSH, 'dissolve', 0.8);
   add(178.5, cufflinkHands, PUSH, 'dissolve', 0.5);
   add(180.85, mist, PUSH, 'dissolve', 0.8);
   add(185.8, embrace, PUSH, 'dissolve', 0.7);

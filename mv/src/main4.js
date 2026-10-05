@@ -5,6 +5,7 @@ import * as fx from './fx.js';
 import { IMG } from './gfx.js';
 import { build, SHOTS, runShots } from './scenes4.js';
 import { drawLyrics } from './lyrics4.js';
+import { NEON } from './kit4.js';
 
 const FONT_FILES = [
   ['Shippori', 'ShipporiMinchoB1-Medium.ttf', '500'], ['Shippori', 'ShipporiMinchoB1-Bold.ttf', '700'], ['Shippori', 'ShipporiMinchoB1-ExtraBold.ttf', '800'],
@@ -42,6 +43,7 @@ async function init() {
   ['lace_220632', 'lace_221112', 'lace_214828', 'lace_214853', 'lace_227682', 'lace_223050'].forEach(k => L('m_' + k + '_mask', `assets/met/${k}_mask.png`));
   L('m_fringe', 'assets/met/fringe_224903.png');
   OBJ.forEach(k => L('obj_' + k, `assets/v3/obj_${k}.png`));
+  NEON.forEach(k => L('neon_' + k, `assets/neon/${k}.png`));
   HT.forEach(k => { L('ht_' + k, `assets/v3/ht_${k}.png`); L('ink_' + k, `assets/v3/ink_${k}.png`); });
   PHOTOS.forEach(k => L('photo_' + k, `assets/photos/${k}.jpg`));
   PAPERS.forEach(k => L(k, `assets/v3/${k}.jpg`));

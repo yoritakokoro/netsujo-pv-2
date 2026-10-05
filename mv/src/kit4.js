@@ -65,7 +65,7 @@ export function framing(key, size, side = 0.5, o = {}) {
 }
 // draw a standing art with a framing (or interpolate between two framings with p)
 export function figure(ctx, key, fr, o = {}) {
-  const img = IMG[key]; if (!img) return;
+  const img = o.img || IMG[key]; if (!img) return;
   const [fx, fy, ff] = FACE[key];
   const h = fr.fh / ff, w = img.width * h / img.height;
   const flip = !!o.flip;
@@ -190,3 +190,37 @@ export function lightRays(ctx, cx, cy, R, rot, n, color, a) {
   }
   ctx.restore();
 }
+
+/* ---------------------------------------------------------------- neon line art */
+// Met objects traced to line art (tools/neon_lines.py), lit like neon tubes: a wide soft halo, the
+// coloured tube and a pale hot core. Colours are switched on the beat by the shots.
+export const NEON = ['fan_169859', 'fan_120720', 'fan_156754', 'fan_120449', 'guitar_503385', 'guitar_505283', 'dish_471762', 'dish_468516',
+  'iron_466304', 'jewel_206840', 'watch_207363'];
+export function neon(ctx, key, cx, cy, h, color, o = {}) {
+  const im = IMG['neon_' + key]; if (!im || (o.a ?? 1) <= 0.003) return;
+  const w = im.width * h / im.height, tube = tinted(im, color), halo = blurred(tube, o.halo ?? 9);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= o.a ?? 1;
+  ctx.translate(cx, cy); if (o.rot) ctx.rotate(o.rot); if (o.flip) ctx.scale(-1, 1);
+  const k = h / im.height / halo._scale;
+  ctx.globalAlpha *= 0.9; ctx.drawImage(halo, -w / 2 - halo._pad * h / im.height, -h / 2 - halo._pad * h / im.height, halo.width * k, halo.height * k);
+  ctx.drawImage(tube, -w / 2, -h / 2, w, h);
+  ctx.globalAlpha *= o.core ?? 0.55; ctx.drawImage(tinted(im, '#fff8f0'), -w / 2, -h / 2, w, h);
+  ctx.restore();
+}
+// neon geometry drawn directly: Moorish horseshoe arches, polka dots (lunares), scalloped ruffles (volantes)
+export function neonStroke(ctx, color, lw, draw, a = 1) {
+  if (a <= 0.003) return;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= a; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = color; ctx.shadowColor = color; ctx.shadowBlur = lw * 6; ctx.lineWidth = lw; ctx.beginPath(); draw(ctx); ctx.stroke();
+  ctx.shadowBlur = 0; ctx.globalAlpha *= 0.6; ctx.strokeStyle = '#fff8f0'; ctx.lineWidth = Math.max(1, lw * 0.4); ctx.stroke();
+  ctx.restore();
+}
+export function horseshoe(g, x, bottom, w, h) { // Moorish horseshoe arch outline
+  const r = w / 2, cy = bottom - h + r, b = 0.5;
+  g.moveTo(x - r * Math.cos(b), bottom); g.lineTo(x - r * Math.cos(b), cy + r * Math.sin(b)); g.arc(x, cy, r, Math.PI - b, TAU + b); g.lineTo(x + r * Math.cos(b), bottom);
+}
+export function scallops(g, x0, x1, y, r) { // a ruffle edge of half circles
+  g.moveTo(x0, y); for (let x = x0; x < x1; x += r * 2) g.arc(x + r, y, r, Math.PI, 0, true);
+}
+// a standing art flattened into one member colour (the reference idiom: monochrome crops of the art)
+export function mono(img, deep, light) { return duo(img, deep, light, 'mono'); }
