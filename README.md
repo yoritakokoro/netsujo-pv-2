@@ -9,7 +9,22 @@ illustrations supplied for this song. All other imagery is CC BY 2.0 photography
 Dataset, filtered by its human-verified labels to exclude any image containing people, then hand-picked,
 upscaled and graded — see [CREDITS.md](CREDITS.md).
 
-## Art direction (v5 — the calm cut)
+## v6 (current) — the plan is in [docs/PLAN_v6.md](docs/PLAN_v6.md)
+
+Re-planned from scratch after v5 read like a slideshow. The renderer (`mv/src/v6/`, entry `mv/src/main6.js`) now works like an
+MV edit rather than a sequence of pages:
+
+* **Every shot moves**: a keyframed camera per shot (push, pull, pan, tilt, whip along a wall) with hand-held drift; the whole
+  plate moves as one. Fast moves get matching motion blur (directional / radial) so they stay smooth at 60 fps.
+* **Transitions on the beat** that straddle the cut: zoom-through, white flash, bloom, whip, negative flash, fan wipe,
+  ruffle wipe, iris, panels, silk sweep.
+* **Intensity curve** from the measured loudness (`tools/drums.py` -> `mv/data/drums.json`): a gentle whole-frame bump once
+  per bar only where the song is at full power.
+* **Sung typography**: every glyph pops in white-hot on its syllable and cools to its colour; kanji large, kana small; hooks
+  (Enamorar!! / Especial!! / Amanecer!! / ¡Olé!) slam in. Shots register faces and `render/facescan.cjs` reports any line
+  that overlaps one — the whole song scans clean.
+
+## Art direction (v5 — the calm cut, superseded)
 
 A flamenco night, edited the way an MV holds a song: **one shot per phrase or longer**, framings that
 stay put, and a tripod camera — at most a slow uniform push-in shared by every layer (no parallax, roll,
