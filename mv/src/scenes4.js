@@ -349,6 +349,23 @@ function faceSlats(whos) { return (ctx, t, s) => { // five portrait strips cut f
   }));
   frameDeco(ctx, t, { fh: 110 });
 }; }
+function sunPoster(ctx, t, s) { // 昇った太陽は 眠らないまま — a flamenco poster: the five as silhouettes under a sun that will not set
+  const u = uOf(t, s), sy = 610 - 40 * E.inOutSine(u);
+  layer(ctx, 1, g => {
+    bgGrad(g, [[0, '#2a0208'], [0.38, '#8a0a1a'], [0.62, '#e0401c'], [0.74, '#ffb04a'], [0.745, '#2a0508'], [1, '#0e0204']]);
+    ['#ffd98a', '#ff9a4a', '#ff5a5a', '#d81e4a', '#7a0a2a'].forEach((c, k) => { const r = 300 + k * 70 + Math.sin(t * 0.8 - k * 0.6) * 6; rings(g, 960, sy, [r], c, 10 - k, 0.55 - k * 0.07); });
+    glow(g, 960, sy, 620, '#ffcf7a', 0.55); g.fillStyle = '#fff1c8'; g.beginPath(); g.arc(960, sy, 250, 0, TAU); g.fill();
+    radial(g, 960, sy, 250, [[0, 'rgba(255,255,240,0.6)'], [1, 'rgba(255,190,90,0)']], 'source-over');
+    lightRays(g, 960, sy, 1600, t * 0.03, 34, '#ffd08a', 0.3);
+    g.fillStyle = '#120205'; g.fillRect(-300, 800, W + 600, 600);   // the stage floor, horizon at 800
+    g.save(); g.globalCompositeOperation = 'screen'; for (let k = 0; k < 30; k++) { const y = 806 + Math.pow(k / 30, 1.5) * 260, w = 60 + k * 26; g.globalAlpha = 0.18 * (0.6 + 0.4 * Math.sin(t * 1.6 + k)); g.fillStyle = '#ffb060'; g.fillRect(960 - w / 2, y, w, 2 + k * 0.06); } g.restore();
+  });
+  layer(ctx, 1, g => ORDER.forEach((w, k) => { const key = COS[w], a = smooth(s.a + 0.1 + k * 0.12, s.a + 0.7 + k * 0.12, t);
+    figure(g, key, framing(key, 'wide', 0.13 + k * 0.185, { h: 470, drop: 0.0 }), { img: tinted(IMG[key], '#140306'), a, shadow: false, glow: '#ff9a50', glowA: 0.45, glowBlur: 16, floor: 812 }); }));
+  kin(ctx, t, 16, { to: 6, x: 960, y: 175, align: 'center', size: 150, kana: 0.48, fill: '#fff6e6', glow: 'rgba(255,120,60,0.7)', accent: { from: 3, to: 5, fill: { grad: ['#fffaf0', '#ffe2b0', '#f2b866'] } } });
+  kin(ctx, t, 16, { from: 7, x: 960, y: 310, align: 'center', size: 96, kana: 0.62, fill: '#fff6e6', glow: 'rgba(255,120,60,0.6)' });
+  frameDeco(ctx, t, { fh: 120 });
+}
 function nagiCard(o = {}) { return (ctx, t, s) => {
   layer(ctx, 1, g => cover(g, IMG.card_na, OS, o.z || 1.3, o.fx ?? 0.5, o.fy ?? 0.42));
   layer(ctx, 1, g => radial(g, 960, 540, 1200, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(30,6,8,0.55)']]));
@@ -746,7 +763,7 @@ export function build() {
   add(42.3, fivesFans, PUSHL, 'dissolve', 0.7);
   // chorus 1
   add(48.46, chorusOpen, PULL, 'cut', 0, { kick: 0.7 });
-  add(52.0, faceSlats(['na', 'shi', 'yo', 'to', 'ri']), PUSH, 'dissolve', 0.3);
+  add(52.0, sunPoster, PUSH, 'dissolve', 0.3);
   add(55.6, neonFans, PUSH, 'dissolve', 0.3);
   add(59.25, splitShot({ who: 'to', key: 'to_cos', kale: 'tile_187927' }, { who: 'na', key: 'na_cos', kale: 'textile_461355' }, ch(19, 5), { neon: ['iron_466304', 'dish_471762'] }));
   add(61.45, splitShot({ who: 'ri', key: 'ri_cos', kale: 'tile_187929' }, { who: 'yo', key: 'yo_cos', kale: 'tile_477238' }, ch(20, 5), { neon: ['dish_468516', 'iron_466304'] }));

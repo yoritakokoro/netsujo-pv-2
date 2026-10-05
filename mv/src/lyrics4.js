@@ -20,7 +20,7 @@ set([8], { slot: 'strip', x: 130, y: 870, rot: -0.025, until: 31.75 });
 set([9], { slot: 'strip', x: 130, y: 870, rot: 0.018, until: 34.75, echo: [1460, 900, -0.08] });
 set([10], { slot: 'scene' }); set([11], { slot: 'scene', echo: [1500, 820, 0.06] });
 set([12], { slot: 'low', side: 'L' }); set([13], { slot: 'center', y: 540, size: 76 });
-set([15, 54, 57], { slot: 'low', side: 'L' }); set([16, 55], { slot: 'low', side: 'R' });
+set([15, 54, 57], { slot: 'low', side: 'L' }); set([55], { slot: 'low', side: 'R' });
 set([19, 20, 36, 37, 58, 59, 61, 62], { slot: 'split' });
 set([38], { slot: 'low', side: 'R' });
 set([23, 24], { slot: 'strip', x: 120, rot: -0.02 }); L[23].y = 840; L[23].until = 87.45; L[24].y = 930; L[24].rot = 0.015; L[24].until = 87.5;
@@ -38,7 +38,7 @@ set([60], { slot: 'low', side: 'L' }); set([63], { slot: 'center', y: 540, size:
 [14, 53, 56].forEach(i => (L[i].x = 600)); L[17].y = 300;
 L[31].y = 250;
 [22, 39, 64].forEach(i => (L[i] = { slot: 'script' }));
-[4, 6, 18, 21, 35, 42].forEach(i => (L[i] = { slot: 'scene' }));   // type-led shots set these lines themselves
+[4, 6, 16, 18, 21, 35, 42].forEach(i => (L[i] = { slot: 'scene' }));   // type-led shots set these lines themselves
 L[34].y = 230;
 
 function cfg(i) {
