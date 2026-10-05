@@ -786,7 +786,7 @@ const bloom = {
 const split5a = { plate(g, t, s) { colourSplit(g, t, { who: 'to', key: 'to_cos', kale: 'tile_187927' }, { who: 'ri', key: 'ri_cos', kale: 'tile_187929' }, T.lines[58].chars[5], { warm: true, step: true, shift: [-(t - s.a) * 18, (t - s.a) * 18] }); },
   over(g, t) { splitText(g, t, 58); }, cam: [[220.0, { x: 900, z: 1.1 }, 'ox'], [220.6, { x: 960, z: 1.02 }, 'l'], [222.1, { x: 990, z: 1.07 }]], hh: 0.6, pulse: 1.3 };
 const split5b = { plate(g, t, s) { colourSplit(g, t, { who: 'to', key: 'to_cos', kale: 'tile_187929' }, { who: 'ri', key: 'ri_cos', kale: 'tile_187927' }, T.lines[59].chars[5], { size: 'face', k: 1.2, step: true, sea: true, grade: '#9ab4ff', gradeA: 0.25, gradeOp: 'soft-light', shift: [-(t - s.a) * 14, -(t - s.a) * 22] }); },
-  over(g, t) { splitText(g, t, 59); }, cam: [[222.1, { y: 470, z: 1.0 }, 'l'], [224.1, { y: 610, z: 1.1 }]], hh: 0.6, pulse: 1.3 };
+  over(g, t) { L(g, t, 59, { to: 4, x: 140, y: 960, size: 76, kana: 0.7 }); L(g, t, 59, { from: 5, x: 1780, y: 960, align: 'end', size: 76, kana: 0.7 }); }, cam: [[222.1, { y: 520, z: 1.0 }, 'l'], [224.1, { y: 640, z: 1.1 }]], hh: 0.6, pulse: 1.3 };
 const nagiKiss = {
   plate(g, t, s) { fillBig(g, '#2a1020'); cover(g, IMG.card_na, [-300, -200, W + 600, H + 400], 1.7, CF.cardNa.na[0] + 0.02, CF.cardNa.na[1] - 0.06); radialW(g, 960, 540, 1300, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(30,6,8,0.5)']]);
     addFace(g, 896, 705, 400); addFace(g, 180, 950, 345);
@@ -798,7 +798,7 @@ const nagiKiss = {
   // a steady push towards her face that tightens on キス
   cam: [[224.1, { x: 896, y: 660, z: 1.0, r: 0.02 }, 'io'], [226.65, { x: 896, y: 720, z: 1.3, r: 0 }, 'ox'], [227.1, { x: 896, y: 735, z: 1.42, r: -0.01 }, 'l'], [228.1, { x: 920, y: 750, z: 1.48, r: -0.015 }]], hh: 0.6, pulse: 1.2,
 };
-// このまま／このまま: Tomoe & Riamu answered by Yoshino, Nagi & Shin; on 焦がれたい all five arrive in tilted strips
+// このまま／このまま: Tomoe & Riamu answered by Yoshino, Nagi & Shin; on 焦がれたい all five drop in as tilted strips
 const STRIP = ['to', 'ri', 'yo', 'na', 'shi'], STRIP_T = [229.82, 229.94, 230.92, 231.04, 231.16];
 const duoGroups = {
   plate(g, t) {
@@ -811,7 +811,7 @@ const duoGroups = {
       g.save(); g.strokeStyle = GOLD; g.lineWidth = 4; g.beginPath(); g.moveTo(x0 + 80, -400); g.lineTo(x0 - 80, H + 400); g.stroke(); g.restore(); }
     const pw = W / 5, sk = 70;
     STRIP.forEach((w, j) => { const u = E.outExpo(clamp((t - STRIP_T[j]) / 0.5)); if (u <= 0) return;
-      const x0 = j * pw, m = MEM[w], dy = (1 - u) * (j % 2 ? -1 : 1) * (H + 600);
+      const x0 = j * pw, m = MEM[w], dy = -(1 - u) * (H + 600);
       g.save(); g.translate(0, dy);
       withMask(g, rectPath(x0 - 1, -400, pw + 2, H + 800, sk), h => {
         fillBig(h, m.deep); kaleido(h, M('tile_187927'), { n: 8, rot: st * 0.22 * (j % 2 ? -1 : 1) + j, R: 760, cx: x0 + pw / 2, cy: 480 }); washW(h, m.deep, 0.55, 'multiply');
