@@ -451,14 +451,32 @@ function watches(ctx, t, s) { // 時は過ぎ行く 冷淡に — watches orbit 
   layer(ctx, 1, g => { withMask(g, circlePath(960, 540, 240), h => cover(h, IMG.card_na, [720, 300, 480, 480], 2.3, CF.cardNa.na[0], CF.cardNa.na[1] - 0.04)); rings(g, 960, 540, [246, 262], GOLD, 2, 0.9);
     for (let j = 0; j < 60; j++) { const a = (j / 60) * TAU - rot; g.save(); g.strokeStyle = GOLD; g.globalAlpha = 0.6; g.lineWidth = j % 5 ? 1 : 3; g.beginPath(); g.moveTo(960 + Math.cos(a) * 280, 540 + Math.sin(a) * 280); g.lineTo(960 + Math.cos(a) * (j % 5 ? 296 : 312), 540 + Math.sin(a) * (j % 5 ? 296 : 312)); g.stroke(); g.restore(); } });
 }
+// うたかたに紡ぐ愛 — a rack focus through a glass of rising bubbles: the foam is sharp first,
+// then it melts into bokeh as Yoshino's face behind it comes into focus.
+function blurInto(g, px, draw) { // draw something defocused via a half-res buffer
+  if (px < 0.6) { draw(g); return; }
+  const [c, b] = buf('rack', W / 2, H / 2);
+  b.filter = `blur(${px / 2}px)`; b.save(); b.scale(0.5, 0.5); draw(b); b.restore(); b.filter = 'none';
+  g.drawImage(c, 0, 0, W, H);
+}
 function bubbles(ctx, t, s) {
-  layer(ctx, 0.8, g => { cover(g, IMG.card_yo, OS, lerp(1.2, 1.08, uOf(t, s)), 0.55, 0.42); wash(g, '#1e0a32', 0.3, 'multiply'); });
-  layer(ctx, 1.1, g => { for (let i = 0; i < 9; i++) {
-    const sp = 60 + hash(i, 5) * 60, life = (H + 400) / sp, ph = hash(i, 6) * life, v = ((t + ph) % life) / life;
-    const x = 200 + hash(i, 7) * 1500 + Math.sin(t + i) * 30, y = H + 200 - v * (H + 400), r = 50 + hash(i, 8) * 110;
-    withMask(g, circlePath(x, y, r), h => cover(h, IMG.card_yo, [x - r, y - r, r * 2, r * 2], 3.2, CF.cardYo.yo[0], CF.cardYo.yo[1]));
-    const ir = g.createLinearGradient(x - r, y - r, x + r, y + r); ir.addColorStop(0, '#ffd0f0'); ir.addColorStop(0.4, '#b0e0ff'); ir.addColorStop(0.75, '#fff2b0'); ir.addColorStop(1, '#ff9ad0');
-    g.save(); g.strokeStyle = ir; g.lineWidth = 2.5; g.beginPath(); g.arc(x, y, r, 0, TAU); g.stroke(); g.strokeStyle = 'rgba(255,255,255,0.75)'; g.lineWidth = 4; g.beginPath(); g.arc(x, y, r * 0.85, Math.PI * 1.1, Math.PI * 1.45); g.stroke(); g.restore(); } });
+  const u = uOf(t, s), rack = E.inOutSine(clamp((u - 0.28) / 0.42));
+  const face = CF.cardYo.yo;
+  layer(ctx, 0.6, g => {
+    bg(g, '#120608');
+    blurInto(g, lerp(22, 0, rack), b => { cover(b, IMG.card_yo, [0, 0, W, H], lerp(2.05, 2.3, u), face[0] + 0.03, face[1] - 0.01); });
+    wash(g, '#3a1020', lerp(0.35, 0.12, rack), 'multiply');
+  });
+  // the glass of bubbles in front (screen-blended: only the light of the bubbles stays)
+  layer(ctx, 1.25, g => {
+    g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = lerp(0.95, 0.6, rack);
+    blurInto(g, lerp(0, 26, rack), b => { b.filter = 'contrast(1.5) brightness(0.85) saturate(0.7) sepia(0.35)'; cover(b, M('c2_fizz') || IMG.photo_c2_fizz, [0, 0, W, H], 2.3, 0.6, lerp(0.62, 0.42, u)); b.filter = 'none'; });
+    g.restore();
+  });
+  // pearl highlights on a few bubbles as the line resolves
+  layer(ctx, 1.3, g => { for (let i = 0; i < 7; i++) { const a = smooth(0.55 + i * 0.05, 0.7 + i * 0.05, u) * (0.6 + 0.4 * Math.sin(t * 3 + i));
+    sparkle(g, 300 + hash(i, 41) * 1300, lerp(900, 120, (u + hash(i, 42)) % 1), 0.5 + hash(i, 43) * 0.5, a, '#fff0f4'); } });
+  layer(ctx, 1, g => radial(g, W / 2, H / 2, 1200, [[0, 'rgba(0,0,0,0)'], [0.6, 'rgba(20,4,10,0.1)'], [1, 'rgba(20,4,10,0.65)']]));
 }
 function guitarMacro(ctx, t, s) { // Canción de amor: the camera glides along an inlaid Baroque guitar
   layer(ctx, 0.3, g => { bg(g, '#0c0604'); glow(g, 900, 560, 800, '#ffb060', 0.3); });
@@ -605,6 +623,7 @@ function candleOut(ctx, t, s) {
   const out = smooth(233.3, 233.75, t);
   layer(ctx, 0.3, g => { bgGrad(g, [[0, '#2a2038'], [1, '#4a3048']]); g.save(); g.globalAlpha = 0.3 * (1 - out * 0.5); cover(g, IMG.cover, OS, 1.35, 0.5, 0.36); g.restore(); wash(g, '#2a2040', 0.35, 'multiply'); });
   layer(ctx, 1, g => { obj(g, IMG.obj_fi_candle, 960, 820, 520, { filter: `brightness(${1 - out * 0.45})` }); glow(g, 958, 640, 300, '#ffb060', 0.8 * (1 - out));
+    if (out > 0) { g.save(); g.translate(962, 640); g.scale(0.45, 1); const fl = g.createRadialGradient(0, 0, 0, 0, 0, 120); fl.addColorStop(0, `rgba(40,30,44,${out})`); fl.addColorStop(0.6, `rgba(40,30,44,${0.85 * out})`); fl.addColorStop(1, 'rgba(40,30,44,0)'); g.globalCompositeOperation = 'multiply'; g.fillStyle = fl; g.fillRect(-140, -140, 280, 280); g.restore(); }
     const u = t - 233.45; if (u > 0) { g.save(); g.globalCompositeOperation = 'screen'; for (let i = 0; i < 60; i++) { const age = u - i * 0.05; if (age <= 0 || age > 3) continue; const y = 650 - age * 150, x = 958 + noise1(age * 0.9 + i * 0.1, 7) * age * 60, r = 6 + age * 30; g.globalAlpha = 0.18 * (1 - age / 3); g.drawImage(softDot('#e8e0f0', 64), x - r, y - r, r * 2, r * 2); } g.restore(); } });
   wash(ctx, '#c8b8e8', out * 0.25, 'screen');
 }
@@ -710,7 +729,7 @@ export function build() {
   add(Ls(60) - 0.1, nagiCard({ z0: 2.0, z1: 1.7, fx: CF.cardNa.na[0] + 0.02, fy: CF.cardNa.na[1] - 0.06 }), {}, 'dissolve', 0.4);
   add(Ls(61) - 0.1, duoGroups, { z: [1.04, 1.08] }, 'slats', 0.35);
   add(Ls(63) - 0.1, candleOut, { z: [1.02, 1.1] }, 'dissolve', 0.6);
-  add(Ls(64) - 0.1, finalPale, { z: [1.2, 1.0], ease: E.outCubic }, 'dissolve', 0.9);
+  add(235.32, finalPale, { z: [1.12, 1.0], ease: E.outCubic }, 'cut', 0);
   add(238.14, credits, { x: [30, -30] }, 'sheet', 0.6);
   add(249.75, endCard, { z: [1.08, 1.02] }, 'dissolve', 0.9);
   S.forEach((s, i) => (s.b = S[i + 1] ? S[i + 1].a : 999));

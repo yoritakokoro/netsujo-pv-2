@@ -1,5 +1,5 @@
 // v4 compositor: loads assets (incl. The Met open-access objects), runs the storyboard, lyrics and film finishing.
-import { W, H, clamp, smooth, makeCanvas } from './util.js';
+import { W, H, clamp, smooth, lerp, E, makeCanvas } from './util.js';
 import { T, loadTiming } from './timing.js';
 import * as fx from './fx.js';
 import { IMG } from './gfx.js';
@@ -22,7 +22,7 @@ const STICKERS = ['yo_cos', 'na_cos', 'to_cos', 'shi_cos', 'ri_cos', 'na_casual'
 const OBJ = ['b1_lipstick', 'b2_drop', 'c1_fountain', 'c2_guitar', 'c2_moon', 'd_rose', 'fi_candle', 'fi_r3', 'fi_r7', 'ou_astrolabe', 'ou_champ',
   'ou_chandelier', 'ou_doily', 'p2_bells', 'slim_candle', 'v2_crescent', 'v2_jewel', 'ch_wine'];
 const HT = ['v1_stars', 'b1_curtain', 'ch_fire', 'c1_blaze', 'd_tile'];
-const PHOTOS = ['b1_letter', 'v2_moonbeach', 'fi_sail', 'br_palms', 'd_tile'];
+const PHOTOS = ['b1_letter', 'v2_moonbeach', 'fi_sail', 'br_palms', 'd_tile', 'c2_fizz'];
 const PAPERS = ['paper_cream', 'paper_navy', 'paper_kraft', 'paper_peach', 'paper_red', 'paper_black'];
 
 const loadImg = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('load ' + src)); i.src = src; });
@@ -62,6 +62,41 @@ function bloom(amount) {
 const COLLAGE = [[9.75, 15.9], [30.3, 38.45], [69.75, 94.37], [238.14, 249.75]];
 const inCollage = t => COLLAGE.some(([a, b]) => t >= a && t < b);
 
+// かわたれに目を閉じて: the eyes close (lids from top and bottom), then open again on the morning.
+let lidBuf = null;
+function lidClosure(t) {
+  const l = T.lines[63], c = l.chars;
+  const tA = c[5] - 0.12, tB = c[6] + 0.2, tC = c[7] - 0.05, tD = 235.12;
+  if (t < tA || t > 236.9) return 0;
+  if (t < tB) return 0.45 * E.inOutSine(clamp((t - tA) / (tB - tA)));
+  if (t < tC) return lerp(0.45, 0.32, E.inOutSine(clamp((t - tB) / (tC - tB))));
+  if (t < tD) return lerp(0.32, 1, E.inOutCubic(clamp((t - tC) / (tD - tC))));
+  if (t < 235.45) return 1;
+  if (t < 235.95) return lerp(1, 0.38, E.outCubic((t - 235.45) / 0.5));
+  if (t < 236.12) return lerp(0.38, 0.55, E.inOutSine((t - 235.95) / 0.17));   // a sleepy blink
+  return lerp(0.55, 0, E.inOutSine(clamp((t - 236.12) / 0.75)));
+}
+function eyelids(t) {
+  const c = lidClosure(t);
+  if (c <= 0.002) return;
+  // the world goes soft as the eyes close
+  if (c > 0.05) { sctx.setTransform(1, 0, 0, 1, 0, 0); sctx.globalCompositeOperation = 'source-over'; sctx.globalAlpha = 1; sctx.filter = 'blur(3px)'; sctx.drawImage(cv, 0, 0, 480, 270); sctx.filter = 'none';
+    ctx.save(); ctx.globalAlpha = Math.min(1, c * 1.2) * 0.85; ctx.drawImage(small, 0, 0, W, H); ctx.restore(); }
+  if (!lidBuf) lidBuf = makeCanvas(W / 2, H / 2);
+  const g = lidBuf.getContext('2d'), w = W / 2, hh = H / 2;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, w, hh);
+  const open = (620 * (1 - c) + 900 * Math.pow(1 - c, 4)) / 2, R = 1250 / 2, cx = w / 2, cy = 560 / 2;
+  const path = (k, up) => { g.beginPath(); g.moveTo(-20, up ? -20 : hh + 20);
+    for (let x = -20; x <= w + 20; x += 8) { const dx = (x - cx) / R, e = Math.sqrt(Math.max(0, 1 - dx * dx)); g.lineTo(x, up ? cy - open * k * e : cy + open * 0.82 * k * e); }
+    g.lineTo(w + 20, up ? -20 : hh + 20); g.closePath(); g.fill(); };
+  // warm light through the eyelids at the rim, black inside
+  g.filter = 'blur(14px)'; g.fillStyle = '#240605'; path(0.96, true); path(0.96, false);
+  g.filter = 'blur(6px)'; g.fillStyle = '#060103'; path(1.12, true); path(1.12, false); g.filter = 'none';
+  ctx.save(); ctx.drawImage(lidBuf, 0, 0, W, H);
+  if (c > 0.97) { const k = (c - 0.97) / 0.03; const gr = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, 900); gr.addColorStop(0, `rgba(70,16,14,${0.55 * k})`); gr.addColorStop(1, 'rgba(10,2,4,0)'); ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H); }
+  ctx.restore();
+}
+
 export function render(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'none';
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
@@ -70,6 +105,7 @@ export function render(t) {
   const col = inCollage(t);
   bloom(col ? 0.08 : 0.24);
   drawLyrics(ctx, t);
+  eyelids(t);
   ctx.save(); ctx.globalAlpha = col ? 0.35 : 0.55; ctx.drawImage(fx.vignette(0.75), 0, 0); ctx.restore();
   fx.applyGrain(ctx, Math.floor(t * 12) / 12, col ? 0.07 : 0.05);
   const blk = Math.max(1 - smooth(0, 0.5, t), smooth(263.0, 265.6, t));

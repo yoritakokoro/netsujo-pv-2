@@ -34,7 +34,7 @@ set([40, 41], { slot: 'low', side: 'L' }); set([42, 43], { slot: 'low', side: 'R
 set([44], { slot: 'col', x: 1690, y: 170 });
 set([45, 46], { slot: 'low', side: 'L' }); L[46].size = 74;
 set([48, 49], { slot: 'low', side: 'L' }); set([51], { slot: 'low', side: 'R' }); set([52], { slot: 'low', side: 'L' });
-set([60], { slot: 'low', side: 'L' }); set([63], { slot: 'center', y: 540, size: 68 });
+set([60], { slot: 'low', side: 'L' }); set([63], { slot: 'center', y: 540, size: 68, until: 235.1 });
 [14, 17, 31, 34, 47, 50, 53, 56].forEach(i => (L[i] = { slot: 'hero' }));
 [14, 17, 53, 56].forEach(i => (L[i].x = 600));
 L[31].y = 250;
@@ -95,10 +95,11 @@ function sungLine(ctx, t, text, fs, size, track, x, y, align, times, who, vertic
   const off = align === 'center' ? -Lr.len / 2 : align === 'end' ? -Lr.len : 0;
   const cols = ['rgba(242,217,166,0.85)'];
   ctx.save(); ctx.lineCap = 'round';
+  const ba = ctx.globalAlpha;
   Lr.items.forEach((it, j) => {
     const ht = times[it.idx]; const p = clamp((t - ht + 0.04) / 0.2);
     if (p <= 0) return;
-    ctx.strokeStyle = cols[j % cols.length]; ctx.lineWidth = Math.max(3, size * 0.06); ctx.globalAlpha = 0.95;
+    ctx.strokeStyle = cols[j % cols.length]; ctx.lineWidth = Math.max(3, size * 0.06); ctx.globalAlpha = 0.95 * ba;
     ctx.beginPath();
     if (vertical) { const cx = x + it.x + size * 0.62, cy = y + it.y + off; ctx.moveTo(cx, cy - size * 0.5); ctx.lineTo(cx, cy - size * 0.5 + size * p); }
     else { const w = measure(fs, it.ch) + size * track, cx = x + it.x + off; ctx.moveTo(cx - w / 2, y + size * 0.66); ctx.lineTo(cx - w / 2 + w * p, y + size * 0.66); }
@@ -138,7 +139,7 @@ export function drawLyrics(ctx, t) {
       if (nx && L[i + 1] && L[i + 1].slot === 'col' && t > nx.start - 0.3) alpha = lerp(1, 0.45, clamp((t - nx.start + 0.3) / 0.5));
       plate(ctx, who, c.x + size * 0.5, c.y - 34, pa * alpha, 'right', 0.85);
       drawText(ctx, t, l.text, { ...base, x: c.x, y: c.y, vertical: true, alpha });
-      sungLine(ctx, t, l.text, fs, size, 0.08, c.x, c.y, 'start', c.hl, who, true);
+      ctx.save(); ctx.globalAlpha = pa * alpha; sungLine(ctx, t, l.text, fs, size, 0.08, c.x, c.y, 'start', c.hl, who, true); ctx.restore();
     } else if (c.slot === 'low') {
       const nx = T.lines[i + 1]; let dy = 0, alpha = 1;
       if (nx && L[i + 1] && L[i + 1].slot === 'low' && L[i + 1].side === c.side && nx.sec === l.sec) {
@@ -147,13 +148,13 @@ export function drawLyrics(ctx, t) {
       const R = c.side === 'R', x = R ? W - 140 : 140, y = 930 + dy, align = R ? 'end' : 'start';
       plate(ctx, who, x, y - size * 1.0, pa * alpha, R ? 'right' : 'left');
       drawText(ctx, t, l.text, { ...base, x, y, align, alpha });
-      ctx.save(); ctx.globalAlpha = alpha; sungLine(ctx, t, l.text, fs, size, 0.08, x, y, align, c.hl, who); ctx.restore();
+      ctx.save(); ctx.globalAlpha = alpha * pa; sungLine(ctx, t, l.text, fs, size, 0.08, x, y, align, c.hl, who); ctx.restore();
     } else if (c.slot === 'center') {
       const y = c.y || 540;
       ctx.save(); ctx.globalAlpha = 0.6 * pa; ctx.translate(960, y); ctx.scale(1500 / 256, size * 3.4 / 256); ctx.drawImage(softDot('#0a0306', 256), -128, -128); ctx.restore();
       plate(ctx, who, 960, y - size * 1.05, pa, 'center');
       drawText(ctx, t, l.text, { ...base, x: 960, y, align: 'center' });
-      sungLine(ctx, t, l.text, fs, size, 0.08, 960, y, 'center', c.hl, who);
+      ctx.save(); ctx.globalAlpha = pa; sungLine(ctx, t, l.text, fs, size, 0.08, 960, y, 'center', c.hl, who); ctx.restore();
     } else if (c.slot === 'split') {
       const chars = [...l.text], cut = l.parts[1].from;
       const parts = [[chars.slice(0, cut).join('').trim(), l.parts[0].who, 0], [chars.slice(cut).join('').trim(), l.parts[1].who, cut]];
@@ -164,7 +165,7 @@ export function drawLyrics(ctx, t) {
         const a = smooth(ap, ap + 0.3, t) * (1 - smooth(c.exit, c.exit + 0.4, t));
         plate(ctx, w, x, y - size * 1.0, a, R ? 'right' : 'left');
         drawText(ctx, t, s, { ...base, x, y, align, start: ap, hl: { times, dim: 0.42, dimFill: IV } });
-        sungLine(ctx, t, s, fs, size, 0.08, x, y, align, times, w);
+        ctx.save(); ctx.globalAlpha = a; sungLine(ctx, t, s, fs, size, 0.08, x, y, align, times, w); ctx.restore();
       });
     } else if (c.slot === 'strip') {
       drawStrip(ctx, t, l, c, who, fs, size, pa);
