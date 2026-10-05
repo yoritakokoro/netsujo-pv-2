@@ -134,7 +134,7 @@ export function drawLyrics(ctx, t, letterbox = 0) {
       drawText(ctx, t, l.text, { ...base, x: 960, y: c.y + dy, align: 'center', alpha });
     } else if (c.slot === 'L' || c.slot === 'R') {
       const L = c.slot === 'L';
-      const x = L ? 150 : W - 150, y = 905;
+      const x = L ? 150 : W - 150, y = L ? 846 : 956;
       // thin gold rule that draws in beside the line
       const len = layout(l.text, c.fontStr, c.size, { track: c.track }).len;
       const pr = E.outExpo(clamp((t - c.appear) / 0.8)) * (1 - E.inCubic(clamp((t - c.exit) / 0.5)));
