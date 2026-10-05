@@ -822,8 +822,9 @@ const duoGroups = {
       g.strokeStyle = GOLD; g.lineWidth = 4; g.shadowColor = '#ffe0a0'; g.shadowBlur = 16; g.beginPath(); g.moveTo(x0 + sk, -400); g.lineTo(x0 - sk, H + 400); g.moveTo(x0 + pw + sk, -400); g.lineTo(x0 + pw - sk, H + 400); g.stroke();
       g.restore(); });
   },
-  over(g, t) { L(g, t, 61, { to: 4, x: 140, y: 960, size: 70, kana: 0.7 }); L(g, t, 61, { from: 5, x: 1780, y: 960, align: 'end', size: 70, kana: 0.7 });
-    L(g, t, 62, { to: 4, x: 140, y: 960, size: 70, kana: 0.7 }); L(g, t, 62, { from: 5, x: 1780, y: 960, align: 'end', size: 70, kana: 0.7 }); },
+  over(g, t) { const o61 = { size: 70, kana: 0.7, y: 885, exit: 229.82, exitDur: 0.35 };
+    L(g, t, 61, { ...o61, to: 4, x: 140 }); L(g, t, 61, { ...o61, from: 5, x: 1780, align: 'end' });
+    L(g, t, 62, { to: 4, x: 140, y: 975, size: 70, kana: 0.7 }); L(g, t, 62, { from: 5, x: 1780, y: 975, align: 'end', size: 70, kana: 0.7 }); },
   cam: [[228.1, { x: 900, z: 1.1 }, 'ox'], [228.7, { x: 960, z: 1.0 }, 'l'], [229.8, { x: 960, z: 1.0 }, 'io'], [231.95, { x: 960, z: 1.04 }]], hh: 0.6, pulse: 1.3,
 };
 const candleOut = {
