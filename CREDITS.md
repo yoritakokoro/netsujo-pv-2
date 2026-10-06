@@ -17,6 +17,7 @@ From the [Open Images Dataset](https://storage.googleapis.com/openimages/web/ind
 | b2_drop | drops on rose | [Patty O&#x27;Hearn Kickham](https://www.flickr.com/people/memotions/) | [82a4f541ad81356b](https://www.flickr.com/photos/memotions/422935026) |
 | br_palms | Marga-Marga | [Gabriel Molina](https://www.flickr.com/people/breatheoutnow/) | [804add10cbd9f34c](https://www.flickr.com/photos/breatheoutnow/14188917294) |
 | c1_blaze | Fire texture 1 | [Morgennebel](https://www.flickr.com/people/morgennebel/) | [ca823be2f384459d](https://www.flickr.com/photos/morgennebel/4500506623) |
+| c2_fizz | New Years Gear | [Robert Anthony Provost](https://www.flickr.com/people/twon/) | [59c75b112901d050](https://www.flickr.com/photos/twon/2113846376) |
 | c2_guitar | Chris's new Kronbauer | [Larry Jacobsen](https://www.flickr.com/people/ljguitar/) | [6d5939d3c214bd7d](https://www.flickr.com/photos/ljguitar/422521825) |
 | c2_moon | Lunar Eclipse1 | [Gainesvegas](https://www.flickr.com/people/marylynnjohnson/) | [8261b359f88d59a4](https://www.flickr.com/photos/marylynnjohnson/2280292647) |
 | ch_fire | Licking flames | [Abi Skipp](https://www.flickr.com/people/9557815@N05/) | [903bfcf38f1bd02b](https://www.flickr.com/photos/9557815@N05/8151956190) |
@@ -152,4 +153,6 @@ Spanish/Andalusian decorative art used as backgrounds, kaleidoscopes, collage pi
 | Watch | Watch | ca. 1820–30 Swiss, Geneva | [195645](http://www.metmuseum.org/art/collection/search/195645) |
 | Watch | Watch | ca. 1830 Swiss, Geneva | [207363](http://www.metmuseum.org/art/collection/search/207363) |
 
-Fonts (SIL OFL): Shippori Mincho B1, Zen Old Mincho, Zen Kaku Gothic New, Cormorant Garamond, Playfair Display, Bodoni Moda, Pinyon Script, Cinzel.
+Fonts (SIL OFL): Shippori Mincho B1, Zen Kaku Gothic New, Dela Gothic One, Yusei Magic, Klee One, DM Serif Display, Cormorant Garamond, Pinyon Script, Cinzel, Anton, Caveat (the v6 MV); earlier versions also used Zen Old Mincho, Playfair Display, Bodoni Moda.
+
+The assets the current MV actually draws are listed by `render/assets_used.cjs`; a ready-to-paste credit text for the video page is in [docs/bilibili_credits.txt](docs/bilibili_credits.txt).
