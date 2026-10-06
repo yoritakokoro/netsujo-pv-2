@@ -7,7 +7,7 @@ import { piece, sticker, slap, pop, hop, tape, polaroid, scribble, doodle, boil 
 import { F, font, drawText, label } from '../text.js';
 import { MEM, ORDER, GOLD, IV, FACE, framing, figure, lerpFr, CF, kaleido, fanOpen, obj, halo, earrings, develop, fgBlur, lightRays,
   neon, neonStroke, horseshoe, scallops, mono, laceBorder } from '../kit4.js';
-import { energy, pulse } from './core6.js';
+import { energy, pulse, keyed } from './core6.js';
 import { sing, slam, addFace } from './type6.js';
 import { dawnSky, sunElev, starBurst, godRays, dust, lensFlare, relit, lightFront } from './dawn6.js';
 
@@ -265,14 +265,15 @@ const fans5 = {
   plate(g, t, s) {
     const p = inv(s.a, 48.2, t);
     kaleW(g, t, 'textile_461355', { tint: '#3a0408', tintA: 0.55 - p * 0.25, spin: 0.03 + p * 0.08 });
-    lightRays(g, 960, 790, 1600, t * 0.06, 30, '#ffd08a', smooth(44.5, 47.8, t) * 0.7);
+    lightRays(g, 960, 875, 1600, t * 0.06, 30, '#ffd08a', smooth(44.5, 47.8, t) * 0.7);
     const fans = ['fan_169859', 'fan_120720', 'fan_156754', 'fan_118755', 'fan_107571'], t0 = barT(Math.ceil(barF(s.a + 0.2)));
     [2, 1, 3, 0, 4].forEach((k, j) => fanOpen(g, M(fans[k]), 960 + (k - 2) * 360, 820 - Math.abs(k - 2) * 40, 430, E.outCubic(clamp((t - (t0 + j * T.bar * 0.5)) / 0.55)), { rot: (k - 2) * 0.12 }));
-    obj(g, IMG.obj_fi_candle, 960, 930, 360, {}); glow(g, 960, 790, 260 + p * 560, '#ffb060', 0.6 + p * 0.4);
+    // the candle's cut-out ends in a straight edge: it sits low enough that the edge never enters the frame
+    obj(g, IMG.obj_fi_candle, 960, 1000, 360, {}); glow(g, 960, 875, 260 + p * 560, '#ffb060', 0.6 + p * 0.4);
     embers(g, t, Math.round(20 + 60 * p), 13, { a: 0.9, speed: 90 + 100 * p, rect: [-300, -300, W + 600, H + 600] });
   },
   over(g, t) { L(g, t, 13, { x: 960, y: 520, align: 'center', size: 110, kana: 0.55, fill: '#fff4e6', glow: 'rgba(255,170,90,0.6)', exit: 48.0 }); },
-  cam: [[42.3, { y: 600, z: 1.0 }, 'i'], [48.2, { y: 790, z: 2.3 }]], hh: 0.4, pulse: 0.8,
+  cam: [[42.3, { y: 585, z: 1.0 }, 'i'], [48.2, { y: 820, z: 2.3 }]], hh: 0.4, pulse: 0.8,
 };
 
 /* ================================================================ CHORUS 1 */
@@ -329,16 +330,16 @@ const neonFans = {
   cam: [[55.7, { z: 1.12 }, 'o'], [59.35, { z: 1.0 }]], hh: 0.6, pulse: 1.5,
 };
 function monoSplit(g, t, L0, R0, tR, neonKeys) {
-  const side = (who, key, flip, xFace, nk) => h => {
-    const m = MEM[who], fr = framing(key, 'bust', xFace, { k: 1.25 });
+  const side = (who, key, flip, xFace, nk, t0) => h => {
+    const m = MEM[who], fr = framing(key, 'bust', xFace, { k: 1.25 }), on = ignite(t, t0, flip ? 31 : 37);
     fillBig(h, '#06030a'); radialW(h, xFace * W, 420, 900, [[0, rgba(m.deep, 0.95)], [1, 'rgba(0,0,0,0)']]);
-    neonStroke(h, m.ink, 2.5, q => { for (let j = -2; j < 5; j++) horseshoe(q, xFace * W + (j - 1.5) * 300, H + 40, 230, 760); }, 0.35);
-    neon(h, nk, fr.x, fr.y - 10, fr.fh * 2.7, m.ink, { a: 0.85, rot: t * 0.06 * (flip ? -1 : 1) });
+    neonStroke(h, m.ink, 2.5, q => { for (let j = -2; j < 5; j++) horseshoe(q, xFace * W + (j - 1.5) * 300, H + 40, 230, 760); }, 0.45 * on);
+    neon(h, nk, fr.x, fr.y - 10, fr.fh * 2.7, m.ink, { a: 0.95 * on, rot: t * 0.06 * (flip ? -1 : 1) });
     figure(h, key, fr, { img: mono(IMG[key], m.deep, m.light), flip: !!flip, glow: m.ink, glowA: 0.8, glowBlur: 24, shadow: false }); face(h, key, fr);
   };
-  side(L0.who, L0.key, false, 0.27, neonKeys[0])(g);
+  side(L0.who, L0.key, false, 0.27, neonKeys[0], -1)(g);
   const k = E.outExpo(clamp((t - (tR - 0.12)) / 0.4)), cut = lerp(W + 300, W * 0.52, k), sk = 150;
-  if (k > 0) { withMask(g, rectPath(cut, BIG[1], W * 3, BIG[3], -sk * 3), side(R0.who, R0.key, true, 0.75, neonKeys[1]));
+  if (k > 0) { withMask(g, rectPath(cut, BIG[1], W * 3, BIG[3], -sk * 3), side(R0.who, R0.key, true, 0.75, neonKeys[1], tR - 0.1));
     g.save(); g.strokeStyle = GOLD; g.lineWidth = 4; g.shadowColor = '#ffe0a0'; g.shadowBlur = 20; g.beginPath(); g.moveTo(cut + sk, -400); g.lineTo(cut - sk, H + 400); g.stroke(); g.restore(); }
 }
 const split1 = {
@@ -514,34 +515,54 @@ const silence = {
   cam: [[106.25, { z: 1.0 }, 'iq'], [112.33, { z: 1.22 }]], hh: 0.4, pulse: 0.6,
 };
 
-/* ================================================================ CHORUS 2 (midnight) */
+/* ================================================================ CHORUS 2 (midnight) — v6.4: every hook lands on a camera punch;
+   the moon sinks and becomes the watch dial (a circle-for-circle match cut); the splits ignite like neon */
+// a neon tube switching on: a few uneven blinks, then steady (and breathing with the beat)
+function ignite(t, t0, seed) {
+  const u = t - t0; if (u < 0) return 0.06; if (u > 0.32) return 0.8 + 0.2 * pulse(t);
+  return hash(Math.floor(u * 30), seed) > 0.45 ? 0.9 : 0.15;
+}
 const morningStar = {
-  plate(g, t) {
+  plate(g, t, s) {
     fillBig(g, '#0c0818'); cover(g, IMG.card_na, [-300, -200, W + 600, H + 400], 1.2, 0.42, 0.45);
     radialW(g, 960, 540, 1300, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(20,6,30,0.55)']]);
-    sparkle(g, 1660, 140, 2.8 + pulse(t, 4) * 0.4, 1); glow(g, 1660, 140, 300, '#e8d8ff', 0.6);
+    stars(g, t, 70, 33, [-300, -300, W + 600, 700], 0.6);
+    shock(g, t, 1660, 140, 60, '#e8dcff', 0.7);
+    glow(g, 1660, 140, 340, '#e8d8ff', 0.6 + 0.2 * pulse(t, 4, 4)); starBurst(g, 1660, 140, t, 0.55 + 0.45 * Math.exp(-Math.max(0, t - s.a) * 1.5), 0.8);
     petals(g, t, 16, 21, { a: 0.9, speed: 90, wind: 80, rect: [-300, -300, W + 600, H + 600] });
     addFace(g, 1111, 579, 290); addFace(g, 620, 750, 245);
   },
-  over(g, t) { slam(g, t, 'Enamorar!!', T.lines[31].chars.concat([112.85, 112.9]), { x: 960, y: 190, size: 150, exit: 113.7, gloss: '恋　に　落　ち　て' }); low(g, t, 32, 'L', 950); },
-  cam: [[112.33, { z: 1.35 }, 'ox'], [113.5, { z: 1.0 }, 'io'], [115.4, { z: 1.05 }]], hh: 0.6, pulse: 1.4,
+  over(g, t) { slam(g, t, 'Enamorar!!', T.lines[31].chars.concat([112.85, 112.9]), { x: 960, y: 190, size: 150, exit: 113.7, gloss: '恋　に　落　ち　て' }); low(g, t, 32, 'R', 955); },
+  // snap out with a roll on Enamorar!!, then drift up towards the morning star (ゆかないで)
+  cam: [[112.33, { x: 960, y: 540, z: 1.5, r: -0.1 }, 'ox'], [113.25, { x: 960, y: 560, z: 1.0, r: 0 }, 'io'], [115.4, { x: 1060, y: 560, z: 1.12, r: 0.015 }]], hh: 0.6, pulse: 1.4,
 };
+// the moon sinks; the camera follows it down and ends centred on it, the size of the watch dial that replaces it
+const WISH = () => T.lines[33].chars[7]; // 願
+function shootingStar(g, t, t0, x0, y0, dx, dy) {
+  const u = (t - t0) / 0.7; if (u < 0 || u > 1) return;
+  const e = E.outCubic(u), x = x0 + dx * e, y = y0 + dy * e, a = Math.sin(Math.PI * u);
+  g.save(); g.globalCompositeOperation = 'lighter'; const gr = g.createLinearGradient(x - dx * 0.35, y - dy * 0.35, x, y);
+  gr.addColorStop(0, 'rgba(220,210,255,0)'); gr.addColorStop(1, `rgba(255,250,240,${0.9 * a})`); g.strokeStyle = gr; g.lineWidth = 3; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(x - dx * 0.35, y - dy * 0.35); g.lineTo(x, y); g.stroke(); g.restore(); sparkle(g, x, y, 0.8, a, '#fffaf0');
+}
 const moonSet = {
   plate(g, t, s) {
     const u = clamp((t - s.a) / (s.b - s.a));
-    gradBig(g, [[0, '#04030c'], [0.65, '#141038'], [1, '#2a1838']], -500, 1200); stars(g, t, 160, 93, [-300, -500, W + 600, 1400], 0.7);
-    const my = lerp(250, 520, E.inOutSine(u)); obj(g, IMG.obj_c2_moon, 1320, my, 460, { shadow: false }); glow(g, 1320, my, 540, '#ffd8a0', 0.32);
-    const im = M('alhambra_263835'); if (im) { const [c, b] = buf('moon6', W + 800, 900); cover(b, duo(im, '#06040e', '#7a6aa8'), [0, 0, W + 800, 900], 1.0, 0.5, 0.78);
-      b.globalCompositeOperation = 'destination-in'; const gr = b.createLinearGradient(0, 0, 0, 320); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,1)'); b.fillStyle = gr; b.fillRect(0, 0, W + 800, 900); g.drawImage(c, -400, 300); }
+    gradBig(g, [[0, '#04030c'], [0.65, '#141038'], [1, '#2a1838']], -500, 1200); stars(g, t, 180, 93, [-300, -500, W + 900, 1400], 0.75);
+    const wt = WISH(); shootingStar(g, t, wt - 0.05, 300, 120, 700, 260); shootingStar(g, t, wt + 0.85, 1900, 60, -600, 240);
+    const my = lerp(250, 520, E.inOutSine(u)); glow(g, 1320, my, 620, '#ffd8a0', 0.3 + 0.08 * Math.sin(t * 1.3)); obj(g, IMG.obj_c2_moon, 1320, my, 460, { shadow: false });
+    const im = M('alhambra_263835'); if (im) { const [c, b] = buf('moon6', W + 1400, 900); cover(b, duo(im, '#06040e', '#7a6aa8'), [0, 0, W + 1400, 900], 1.0, 0.5, 0.78);
+      b.globalCompositeOperation = 'destination-in'; const gr = b.createLinearGradient(0, 0, 0, 320); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,1)'); b.fillStyle = gr; b.fillRect(0, 0, W + 1400, 900); g.drawImage(c, -400, 330); }
   },
   over(g, t) { low(g, t, 33, 'R', 950, { fill: '#f0eaff', glow: 'rgba(200,190,255,0.5)' }); },
-  cam: [[115.4, { y: 420, z: 1.06 }, 'io'], [119.45, { y: 580, z: 1.0 }]], hh: 0.5, pulse: 1.0,
+  cam: [[115.4, { x: 1080, y: 330, z: 1.0 }, 'io'], [119.45, { x: 1320, y: 520, z: 1.2 }]], hh: 0.5, pulse: 1.0,
 };
 const watchDial = {
   plate(g, t) {
     kaleW(g, t, 'tile_187912', { tint: '#0a0818', tintA: 0.65, spin: 0.01 });
+    shock(g, t, 960, 540, 330, GOLD, 0.5);
     const k = Math.floor(beatF(t)), fr = E.outCubic(clamp((beatF(t) - k) * 4)), rot = (k + fr) * (TAU / 60);
-    ['watch_207363', 'watch_195645', 'watch_187195', 'watch_194040', 'watch_194033'].forEach((w, j) => { const a = (j / 5) * TAU - Math.PI / 2 + 0.3 + t * 0.06; obj(g, M(w), 960 + Math.cos(a) * 600, 540 + Math.sin(a) * 340, 250, { rot: Math.sin(t * 0.8 + j) * 0.05 }); });
+    ['watch_207363', 'watch_195645', 'watch_187195', 'watch_194040', 'watch_194033'].forEach((w, j) => { const a = (j / 5) * TAU - Math.PI / 2 + 0.3 + t * 0.06; obj(g, M(w), 960 + Math.cos(a) * 600, 540 + Math.sin(a) * 340, 250 * (1 + 0.05 * pulse(t, 1, 8)), { rot: Math.sin(t * 0.8 + j) * 0.05 }); });
     withMask(g, circlePath(960, 540, 240), h => { fillBig(h, '#0a0814'); obj(h, M('watch_194208'), 960, 590, 560, { shadow: false, a: 0.28 }); radialW(h, 960, 540, 260, [[0, 'rgba(10,8,20,0.2)'], [1, 'rgba(10,8,20,0.85)']]); });
     rings(g, 960, 540, [246, 262], GOLD, 2, 0.9);
     for (let j = 0; j < 60; j++) { const a = (j / 60) * TAU - Math.PI / 2; g.save(); g.strokeStyle = GOLD; g.globalAlpha = 0.6; g.lineWidth = j % 5 ? 1 : 3; g.beginPath(); g.moveTo(960 + Math.cos(a) * 280, 540 + Math.sin(a) * 280); g.lineTo(960 + Math.cos(a) * (j % 5 ? 296 : 312), 540 + Math.sin(a) * (j % 5 ? 296 : 312)); g.stroke(); g.restore(); }
@@ -553,85 +574,132 @@ const watchDial = {
     L(g, t, 35, { to: 6, x: cx, y: cy - 50 * c.z, align: 'center', size: 96 * c.z, kana: 0.5, fill: '#e8e4f4', glow: 'rgba(170,170,255,0.4)', exit: 123.25 });
     L(g, t, 35, { from: 7, x: cx, y: cy + 85 * c.z, align: 'center', size: 120 * c.z, kana: 0.55, fill: { grad: ['#fffaf0', '#f2d9a6', '#c8a05a'] }, exit: 123.25 });
   },
-  cam: [[119.45, { z: 1.3 }, 'ox'], [120.4, { z: 1.0 }, 'io'], [123.2, { z: 1.07 }]], hh: 0.5, pulse: 1.3,
+  // snap out of the dial with a turn, then the whole clock face slowly turns back (time slipping by)
+  cam: [[119.45, { z: 1.3, r: 0.16 }, 'ox'], [120.4, { z: 1.0, r: 0 }, 'io'], [123.2, { z: 1.1, r: -0.05 }]], hh: 0.5, pulse: 1.3,
 };
+// the right half ignites as its singer comes in; the camera punches in on that moment
+const splitCam = i => (t, s) => { const tR = T.lines[i].chars[5];
+  return keyed(t, [[s.a, { z: 1.08, x: 900 }, 'ox'], [s.a + 0.45, { z: 1.0, x: 960 }, 'l'], [tR - 0.08, { z: 1.02, x: 960 }, 'ox'], [tR + 0.35, { z: 1.1, x: 980, r: 0.015 }, 'l'], [s.b, { z: 1.13, x: 990, r: 0.02 }]]); };
 const split3 = { plate(g, t) { monoSplit(g, t, { who: 'shi', key: 'shi_cos' }, { who: 'to', key: 'to_cos' }, T.lines[36].chars[5], ['dish_471762', 'iron_466304']); },
-  over(g, t) { splitText(g, t, 36); }, cam: [[123.2, { z: 1.0 }, 'l'], [125.35, { z: 1.05 }]], hh: 0.6, pulse: 1.3 };
+  over(g, t) { splitText(g, t, 36); }, cam: splitCam(36), hh: 0.6, pulse: 1.3 };
 const split4 = { plate(g, t) { monoSplit(g, t, { who: 'na', key: 'na_cos' }, { who: 'ri', key: 'ri_cos' }, T.lines[37].chars[5], ['iron_466304', 'dish_468516']); },
-  over(g, t) { splitText(g, t, 37); }, cam: [[125.35, { z: 1.0 }, 'l'], [127.55, { z: 1.05 }]], hh: 0.6, pulse: 1.3 };
+  over(g, t) { splitText(g, t, 37); }, cam: splitCam(37), hh: 0.6, pulse: 1.3 };
 function blurInto(g, px, draw) {
   if (px < 0.6) { draw(g); return; }
   const m = g.getTransform(); const [c, b] = buf('rack6', W / 2, H / 2);
   b.filter = `blur(${px / 2}px)`; b.save(); b.setTransform(m.a / 2, m.b / 2, m.c / 2, m.d / 2, m.e / 2, m.f / 2); draw(b); b.restore(); b.filter = 'none';
   g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(c, 0, 0, W, H); g.restore();
 }
+// うたかた: a rack focus through rising fizz, the camera rising with the bubbles
 const bubbles = {
   plate(g, t, s) {
     const u = clamp((t - s.a) / (s.b - s.a)), rack = E.inOutSine(clamp((u - 0.25) / 0.45)), f = CF.cardYo.yo;
     fillBig(g, '#120608');
     blurInto(g, lerp(22, 0, rack), b => cover(b, IMG.card_yo, [-200, -150, W + 400, H + 300], 2.0, f[0] + 0.03, f[1] - 0.01));
-    if (rack > 0.5) addFace(g, 960, 470, 420);
+    if (rack > 0.5) addFace(g, 682, 510, 538);
     washW(g, '#3a1020', lerp(0.35, 0.12, rack), 'multiply');
     g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = lerp(0.95, 0.6, rack);
     blurInto(g, lerp(0, 26, rack), b => { b.filter = 'contrast(1.5) brightness(0.85) saturate(0.7) sepia(0.35)'; cover(b, IMG.photo_c2_fizz, [-200, -150, W + 400, H + 300], 2.1, 0.6, lerp(0.62, 0.4, u)); b.filter = 'none'; });
     g.restore();
+    rising(g, t * 1.6, 1300, 17); rising(g, t * 1.3, 500, 19);
     for (let i = 0; i < 9; i++) { const a = smooth(0.5 + i * 0.04, 0.65 + i * 0.04, u) * (0.6 + 0.4 * Math.sin(t * 3 + i)); sparkle(g, 300 + hash(i, 41) * 1300, lerp(900, 120, (u * 0.7 + hash(i, 42)) % 1), 0.5 + hash(i, 43) * 0.5, a, '#fff0f4'); }
   },
   over(g, t) { low(g, t, 38, 'R', 950, { fill: '#fff0f4', glow: 'rgba(255,190,210,0.55)' }); },
-  cam: [[127.55, { z: 1.0 }, 'l'], [130.55, { z: 1.1 }]], hh: 0.4, pulse: 0.8,
+  cam: [[127.55, { y: 615, z: 1.0, r: 0.012 }, 'io'], [130.55, { y: 480, z: 1.14, r: -0.01 }]], hh: 0.4, pulse: 0.8,
 };
+// Canción de amor: the camera glides along the strings; a glint runs along them on every beat
 const guitarMacro = {
-  plate(g, t) { fillBig(g, '#0c0604'); glow(g, 900, 560, 900, '#ffb060', 0.3); obj(g, M('guitar_503932'), 1050, 560, 1700, { rot: -1.25, shadow: false }); embers(g, t, 40, 101, { a: 0.7, speed: 50, rect: [-300, -300, W + 600, H + 600] }); },
+  plate(g, t) { fillBig(g, '#0c0604'); glow(g, 900, 560, 1000, '#ffb060', 0.3 + 0.12 * pulse(t, 4, 3)); obj(g, M('guitar_503932'), 1050, 560, 1700, { rot: -1.25, shadow: false });
+    const b = beatF(t), fr = b - Math.floor(b), gx = lerp(1700, 300, E.inOutSine(fr)), gy = 560 + (gx - 1050) * Math.tan(-1.25 + Math.PI / 2) * 0;
+    g.save(); g.globalCompositeOperation = 'screen'; g.translate(gx, gy); g.rotate(0.32); const gr = g.createLinearGradient(-90, 0, 90, 0);
+    gr.addColorStop(0, 'rgba(255,214,150,0)'); gr.addColorStop(0.5, `rgba(255,236,190,${0.45 * Math.sin(Math.PI * fr)})`); gr.addColorStop(1, 'rgba(255,214,150,0)'); g.fillStyle = gr; g.fillRect(-90, -400, 180, 800); g.restore();
+    embers(g, t, 40, 101, { a: 0.7, speed: 50, rect: [-300, -300, W + 600, H + 600] }); },
   over(g, t) { const l = T.lines[39];
-    drawText(g, t, l.text, { x: 960, y: 520, align: 'center', size: 150, fontStr: font(F.script, 150, 400), fill: { grad: ['#fff6e0', '#f6d58e', '#d9a548'] }, glow: 'rgba(255,190,120,0.6)', glowBlur: 24, start: l.start - 0.15, stagger: 0.06, dur: 0.8, anim: 'blur', exit: 133.7, exitAnim: 'up', exitDur: 0.5 }); },
-  cam: [[130.55, { x: 760, z: 1.08 }, 'io'], [133.62, { x: 1180, z: 1.0 }]], hh: 0.5, pulse: 0.9,
+    drawText(g, t, l.text, { x: 960, y: 520, align: 'center', size: 150, fontStr: font(F.script, 150, 400), fill: { grad: ['#fff6e0', '#f6d58e', '#d9a548'] }, glow: 'rgba(255,190,120,0.6)', glowBlur: 24, shadow: 'rgba(16,6,2,0.9)', start: l.start - 0.15, stagger: 0.06, dur: 0.8, anim: 'blur', exit: 133.7, exitAnim: 'up', exitDur: 0.5 }); },
+  cam: [[130.55, { x: 1350, y: 590, z: 1.45, r: 0.05 }, 'io'], [133.62, { x: 640, y: 530, z: 1.22, r: -0.02 }]], hh: 0.5, pulse: 0.9,
 };
 
-/* ================================================================ DANCE BREAK */
+/* ================================================================ DANCE BREAK — v6.4: a tablao. One spotlight on Nagi, a Moorish
+   lattice thrown on the wall behind her, her shadow dancing on it, two coloured beams sweeping across; then the roll call
+   (neon arches igniting) and the five jewels converging into the dawn */
 const danceWall = {
   plate(g, t) {
-    fillBig(g, '#080304'); kaleido(g, M('tile_187924'), { n: 8, rot: t * 0.03, R: 1900, cy: 620, zoom: 1.2 }); washW(g, '#ff8a40', 0.35, 'soft-light');
-    radialW(g, 960, 1150, 1400, [[0, 'rgba(0,0,0,0)'], [0.55, 'rgba(0,0,0,0.35)'], [1, 'rgba(0,0,0,0.92)']]);
-    const sway = Math.sin((t - 133.62) * Math.PI / T.beat / 4) * 0.03, fl = 0.8 + 0.2 * noise1(t * 3, 9) + 0.15 * pulse(t);
-    g.save(); g.filter = 'blur(14px)'; g.globalAlpha = 0.7 * fl; place(g, tinted(IMG.na_cos, '#0a0204'), 1260, 470, 1650, { rot: sway }); g.restore();
-    ink(g, IMG.ink_c1_blaze, '#ff7a2a', [-200, 600, W + 400, 520], 1.05, 0.5, 0.7, 0.85, 'screen');
-    const fr = framing('na_cos', 'wide', 0.45, { h: 1000 }); figure(g, 'na_cos', fr, { glow: '#ff7a3c', glowA: 0.45, rim: '#ffb070' }); face(g, 'na_cos', fr);
-    embers(g, t, 50, 41, { a: 0.9, speed: 100, rect: [-300, -300, W + 600, H + 600] });
+    const b = beatF(t), fl = 0.92 + 0.08 * noise1(t * 3, 9) + 0.08 * pulse(t, 1, 8), SX = 860;
+    fillBig(g, '#0a0406'); tiles(g, M('tile_187938'), 240, 0.1);
+    // the gobo: a turning lattice of light on the wall around her
+    g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = 0.5 * fl;
+    withMask(g, circlePath(SX, 420, 760), h => { kaleido(h, M('tile_187938'), { n: 8, rot: t * 0.04, R: 800, cx: SX, cy: 420, zoom: 1.1 }); });
+    g.restore();
+    radialW(g, SX, 420, 820, [[0, 'rgba(255,170,90,0.0)'], [0.6, 'rgba(10,4,6,0.35)'], [1, 'rgba(10,4,6,0.96)']]);
+    glow(g, SX + 180, 430, 820, '#ffb070', 0.42 * fl);
+    // her shadow on the wall, larger and swaying with the music
+    const sway = Math.sin((t - 133.62) * Math.PI / (T.beat * 2)) * 0.05;
+    g.save(); g.filter = 'blur(10px)'; g.globalAlpha = 0.72; place(g, tinted(IMG.na_cos, '#140406'), 1180, 400, 1500, { rot: sway }); g.restore();
+    // the spotlight cone and two coloured beams crossing on the downbeats
+    cone(g, SX, -160, 70, 640, 1250, '#ffd9a8', 0.24 * fl);
+    const sw = Math.sin(b * Math.PI / 4);
+    beam(g, -150, -120, 0.75 + 0.28 * sw, '#ff2a4a', 0.16); beam(g, W + 150, -120, Math.PI - 0.75 - 0.28 * sw, '#ffb040', 0.14);
+    const fr = framing('na_cos', 'wide', 0.45, { h: 1000 });
+    figure(g, 'na_cos', fr, { shadow: false, glow: '#ff9a50', glowA: 0.3, rim: '#ffc890', rimA: 0.85, rimSide: 1 }); face(g, 'na_cos', fr);
+    dust(g, t, 60, 17, [SX - 520, -100, 1040, 1250], 0.55 * fl, '#ffe8c8');
+    embers(g, t, 26, 41, { a: 0.6, speed: 70, rect: [-300, -300, W + 600, H + 600] });
   },
-  cam: [[133.62, { y: 600, z: 1.16 }, 'o'], [141.36, { y: 540, z: 1.0 }]], hh: 0.7, pulse: 1.2,
+  // from the whole tablao, slowly into her face, ready to whip into the roll call (never below the art's edge)
+  cam: [[133.62, { x: 860, y: 555, z: 1.0 }, 'io'], [139.4, { x: 740, y: 470, z: 1.45, r: -0.02 }, 'io'], [141.36, { x: 690, y: 445, z: 1.9, r: -0.03 }]], hh: 0.6, pulse: 1.0,
 };
+// a cone of light from (x, y) downwards: top half-width w0, bottom half-width w1 at length L
+function cone(g, x, y, w0, w1, L, color, a) {
+  g.save(); g.globalCompositeOperation = 'screen'; const gr = g.createLinearGradient(0, y, 0, y + L);
+  gr.addColorStop(0, rgba(color, a * 1.4)); gr.addColorStop(0.6, rgba(color, a * 0.6)); gr.addColorStop(1, rgba(color, 0));
+  g.fillStyle = gr; g.beginPath(); g.moveTo(x - w0, y); g.lineTo(x + w0, y); g.lineTo(x + w1, y + L); g.lineTo(x - w1, y + L); g.closePath(); g.fill();
+  glow(g, x, y + 40, 260, color, a * 2); g.restore();
+}
+// a stage beam from (x, y) along angle an
+function beam(g, x, y, an, color, a) {
+  g.save(); g.globalCompositeOperation = 'screen'; g.translate(x, y); g.rotate(an); const L = 2600, gr = g.createLinearGradient(0, 0, L, 0);
+  gr.addColorStop(0, rgba(color, a * 1.6)); gr.addColorStop(1, rgba(color, 0)); g.fillStyle = gr;
+  g.beginPath(); g.moveTo(0, -30); g.lineTo(L, -260); g.lineTo(L, 260); g.lineTo(0, 30); g.closePath(); g.fill(); g.restore();
+}
 const NDISH = { yo: 'iron_466304', na: 'dish_471762', shi: 'dish_468516', to: 'iron_466304', ri: 'dish_471762' };
 const rollCall = (who, size, k = 1) => ({
-  plate(g, t) {
+  plate(g, t, s) {
     const m = MEM[who], fr = framing(COS[who], size, 0.66, { k });
     fillBig(g, '#06030a'); radialW(g, fr.x, 520, 1300, [[0, rgba(m.deep, 1)], [0.6, rgba(m.deep, 0.4)], [1, 'rgba(0,0,0,0)']]);
-    neonStroke(g, m.ink, 3, q => { for (let j = -2; j < 9; j++) horseshoe(q, 120 + j * 290, H + 60, 220, 820); }, 0.75 + 0.25 * pulse(t));
-    neon(g, NDISH[who], fr.x, fr.y, fr.fh * 2.6, m.ink, { a: 0.75, rot: t * 0.06 });
+    // the arches ignite from the middle outwards, each with a few blinks
+    for (let j = -2; j < 9; j++) { const x = 120 + j * 290; neonStroke(g, m.ink, 3, q => horseshoe(q, x, H + 60, 220, 820), ignite(t, s.a + 0.04 + Math.abs(x - fr.x) / 2600, 70 + j)); }
+    neon(g, NDISH[who], fr.x, fr.y, fr.fh * 2.6, m.ink, { a: 0.75 * ignite(t, s.a + 0.15, 90), rot: t * 0.06 });
     figure(g, COS[who], fr, { rim: m.light, rimSide: -1 }); face(g, COS[who], fr);
+    lightFront(g, lerp(-300, 2400, E.inOutSine(inv(s.a + 0.05, s.a + 0.75, t))), Math.sin(Math.PI * inv(s.a + 0.05, s.a + 0.75, t)), m.light);
   },
   over(g, t, s) {
     const m = MEM[who], p = E.outExpo(clamp((t - s.a - 0.1) / 0.6));
-    g.save(); g.globalAlpha = 0.3 * p; g.font = font(F.anton, 420, 400); g.textBaseline = 'middle'; g.textAlign = 'center'; g.strokeStyle = m.light; g.lineWidth = 3; g.strokeText(m.name, 640 - (1 - p) * 200 + (t - s.a) * 12, 560); g.restore();
+    g.save(); g.globalAlpha = 0.3 * p; g.font = font(F.anton, 420, 400); g.textBaseline = 'middle'; g.textAlign = 'center'; g.strokeStyle = m.light; g.lineWidth = 3; g.strokeText(m.name, 640 - (1 - p) * 320 + (t - s.a) * 22, 560); g.restore();
     label(g, m.name, 150 - (1 - p) * 80, 780, { fam: F.anton, size: 110, color: IV, track: 0.06, alpha: p });
     g.save(); g.globalAlpha = p; g.fillStyle = m.ink; g.fillRect(156, 812, 260 * p, 6); g.restore();
     label(g, `${m.jp}　CV.${m.cv}`, 156, 870, { size: 28, weight: 700, color: IV, track: 0.12, alpha: smooth(s.a + 0.35, s.a + 0.9, t) });
   },
   cam: [[0, { x: 1010, z: 1.08 }, 'l'], [1, { x: 930, z: 1.0 }]], hh: 0.6, pulse: 1.0,
 });
+// five pendants drop in on the beat and swing; on the build they gather into a turning ring round the light, which takes over
+const JDROP = k => 160.72 + 0.25 + k * T.beat * 2;
 const jewels = {
   plate(g, t, s) {
-    const p = inv(s.a, 166.53, t);
-    kaleW(g, t, 'tile_187933', { tint: '#4a0610', tintA: 0.5, spin: 0.03 + 0.1 * p });
-    lightRays(g, 960, 540, 1700, t * 0.06, 30, '#ffd08a', 0.15 + 0.5 * smooth(163.5, 166.3, t));
-    const xs = ORDER.map((w, k) => 960 + (k - 2) * 340), y = k => 540 + Math.abs(k - 2) * 26;
-    const chain = smooth(s.a, s.a + 1.2, t);
-    g.save(); g.strokeStyle = GOLD; g.globalAlpha = 0.8 * chain; g.lineWidth = 2; g.setLineDash([2, 8]); g.beginPath(); g.moveTo(-400, 470); xs.forEach((x, k) => g.lineTo(x, y(k) - 150)); g.lineTo(W + 400, 470); g.stroke(); g.restore();
-    ORDER.forEach((w, k) => { const a = smooth(s.a + 0.3 + k * T.bar * 0.5, s.a + 0.7 + k * T.bar * 0.5, t); if (a <= 0) return;
-      const sc = 1 + 0.25 * (1 - E.outExpo(clamp((t - s.a - 0.3 - k * T.bar * 0.5) / 0.5)));
-      g.save(); g.globalAlpha = a; g.translate(xs[k], y(k)); g.scale(sc, sc); g.translate(-xs[k], -y(k));
-      glow(g, xs[k], y(k), 230, MEM[w].ink, 0.45 + 0.3 * pulse(t));
-      withMask(g, circlePath(xs[k], y(k), 142), h => cover(h, IMG.cover, [xs[k] - 142, y(k) - 142, 284, 284], 4.2, CF.cover[w][0], CF.cover[w][1]));
-      rings(g, xs[k], y(k), [146], GOLD, 4, 1); rings(g, xs[k], y(k), [156], MEM[w].ink, 3, 0.9); g.restore(); });
+    const p = inv(s.a, 166.53, t), conv = E.inCubic(inv(164.9, 166.45, t));
+    fillBig(g, '#2a0408'); const tx = M('textile_222561'); if (tx) cover(g, tx, [-500, -400, W + 1000, H + 800], 1.0); washW(g, '#1a0206', 0.45, 'multiply');
+    lightRays(g, 960, 540, 1800, t * (0.06 + 0.25 * conv), 30, '#ffd08a', 0.18 + 0.55 * smooth(163.5, 166.3, t));
+    glow(g, 960, 540, 500 + 700 * conv, '#ffcf8a', 0.25 + 0.6 * conv);
+    ORDER.forEach((w, k) => {
+      const td = JDROP(k), u = t - td; if (u < -0.05) return;
+      const drop = E.outBack(clamp(u / 0.5)), sw = 0.3 * Math.exp(-2.2 * Math.max(0, u)) * Math.sin(Math.max(0, u) * 7.5);
+      const bx = 960 + (k - 2) * 340, by = 540 + Math.abs(k - 2) * 26, ra = (k / 5) * TAU - Math.PI / 2 + conv * 1.6, rx = 960 + Math.cos(ra) * 290, ry = 540 + Math.sin(ra) * 290;
+      const x = lerp(bx, rx, conv), y = lerp(by, ry, conv) - (1 - drop) * 900;
+      g.save(); g.translate(x, y - 330); g.rotate(sw * (1 - conv)); g.translate(-x, -(y - 330));
+      g.strokeStyle = GOLD; g.globalAlpha = 0.7 * (1 - conv); g.lineWidth = 2; g.beginPath(); g.moveTo(x, y - 1000); g.lineTo(x, y - 156); g.stroke(); g.globalAlpha = 1;
+      const sc = 1 + 0.15 * pulse(t, 2, 6) - 0.3 * conv;
+      g.translate(x, y); g.scale(sc, sc); g.translate(-x, -y);
+      glow(g, x, y, 230, MEM[w].ink, 0.45 + 0.3 * pulse(t));
+      withMask(g, circlePath(x, y, 142), h => cover(h, IMG.cover, [x - 142, y - 142, 284, 284], 4.2, CF.cover[w][0], CF.cover[w][1]));
+      rings(g, x, y, [146], GOLD, 4, 1); rings(g, x, y, [156], MEM[w].ink, 3, 0.9); g.restore(); });
     embers(g, t, Math.round(24 + 50 * p), 77, { a: 0.85, speed: 90 + 80 * p, rect: [-300, -300, W + 600, H + 600] });
     washW(g, '#fff3e0', Math.pow(smooth(165.4, 166.53, t), 2) * 0.9, 'screen');
   },
@@ -996,16 +1064,17 @@ export function build6() {
   S(102.62, riamuBells, 'iris', { x: 520, y: 420 });
   S(106.25, silence, 'bloom', { tint: '#d0c0ff' });
   S(112.33, morningStar, 'flash', { color: '#f4eaff' });
-  S(115.4, moonSet, 'iris', { x: 1660, y: 140 });
-  S(119.45, watchDial, 'iris', { x: 1320, y: 460 });
-  S(123.2, split3, 'panels');
+  S(115.4, moonSet, 'whip', { dir: [0, 1] });
+  S(119.45, watchDial, 'zoom', { x: 960, y: 540, color: '#fff2dc' });
+  S(123.2, split3, 'invert');
   S(125.35, split4, 'whip', { dir: [1, 0] });
   S(127.55, bubbles, 'bloom', { tint: '#ffd0e0' });
   S(130.55, guitarMacro, 'zoom', { x: 960, y: 540 });
   S(133.62, danceWall, 'invert');
   const RC = [['yo', 'bust', 1.3], ['na', 'bust', 1.3], ['shi', 'knee', 1.25], ['to', 'bust', 1.45], ['ri', 'bust', 1.3]];
   const RT = [['fan', {}], ['whip', { dir: [1, 0] }], ['fan', { from: 0, dirn: -1 }], ['whip', { dir: [-1, 0] }], ['fan', {}]];
-  RC.forEach(([w, sz, k], j) => { const a = barT(73 + 2 * j), b = barT(75 + 2 * j); S(a, { ...rollCall(w, sz, k), cam: [[a, { x: 1010, z: 1.08 }, 'l'], [b, { x: 930, z: 1.0 }]] }, RT[j][0], RT[j][1]); });
+  RC.forEach(([w, sz, k], j) => { const a = barT(73 + 2 * j), b = barT(75 + 2 * j); const d = j % 2 ? -1 : 1; // each entrance punches in with a roll, then drifts on (alternating sides)
+    S(a, { ...rollCall(w, sz, k), cam: [[a, { x: 1060, z: 1.2, r: 0.035 * d }, 'ox'], [a + 0.7, { x: 1010, z: 1.06, r: 0.006 * d }, 'l'], [b, { x: 930, z: 1.0, r: -0.008 * d }]] }, RT[j][0], RT[j][1]); });
   S(barT(83), jewels, 'zoom', { x: 960, y: 540 });
   S(166.53, nagiDawn, 'flash', { color: '#fff4e0' });
   S(174.35, dawnJewel, 'flare', { dir: 1, y: 470 });
