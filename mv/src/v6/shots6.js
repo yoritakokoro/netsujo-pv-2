@@ -401,8 +401,6 @@ function echo(g, t, i, x, y, rot = 0) {
   g.restore();
 }
 const low = (g, t, i, side, y = 950, o = {}) => L(g, t, i, { x: side === 'R' ? 1780 : 140, y, align: side === 'R' ? 'end' : 'start', size: 68, kana: 0.64, drift: [side === 'R' ? -18 : 18, 0], ...o });
-// the rotation of a kaleidoscope advancing on each beat (a quick step, then a hold)
-function beatStep(t) { const b = beatF(t), k = Math.floor(b); return k + E.outCubic(clamp((b - k) * 3)); }
 // under water: drifting patches of light and rising bubbles
 function caustics(g, t, cx, seed) { for (let k = 0; k < 6; k++) glow(g, cx - 700 + ((k * 260 + t * 90) % 1400), 200 + 700 * hash(k, seed + 81) + Math.sin(t * 1.3 + k) * 60, 260 + 120 * hash(k, seed + 82), '#b8d8ff', 0.3); }
 function rising(g, t, cx, seed) {
@@ -415,7 +413,7 @@ function rising(g, t, cx, seed) {
 function colourSplit(g, t, L0, R0, tR, o = {}) {
   const side = (who, key, flip, xFace, kale, dy = 0) => h => {
     const m = MEM[who], fr0 = framing(key, o.size || 'bust', xFace, { k: o.k ?? 1.25 }), fr = { ...fr0, y: fr0.y + dy }, dir = flip ? -1 : 1;
-    kaleW(h, t, kale, { tint: m.deep, tintA: 0.4, spin: (o.step ? 0.01 : 0.03) * dir, rot0: o.step ? beatStep(t) * 0.2 * dir : 0, cx: xFace * W, R: 1500 });
+    kaleW(h, t, kale, { tint: m.deep, tintA: 0.4, spin: 0.03 * dir, cx: xFace * W, R: 1500 });
     if (o.warm) washW(h, '#ffb080', 0.18, 'soft-light');
     if (o.sea) { washW(h, '#3a5ad0', 0.6, 'color'); washW(h, '#203070', 0.2, 'multiply'); caustics(h, t, xFace * W, flip ? 5 : 1); }
     figure(h, key, fr, { flip: !!flip, rim: m.light, rimSide: flip ? -1 : 1, grade: o.grade, gradeA: o.gradeA, gradeOp: o.gradeOp }); face(h, key, fr);
@@ -683,7 +681,7 @@ const embrace = {
 };
 
 /* ================================================================ ESPECIAL */
-const ESP = [[191.3, 'card_yo', CF.cardYo.yo, 'yo'], [198.7, 'card_na', CF.cardNa.na, 'na'], [202.2, 'cover', CF.cover.shi, 'shi']];
+const ESP = [[191.3, 'card_yo', CF.cardYo.yo, 'yo'], [198.7, 'card_na', CF.cardNa.na, 'na'], [202.2, 'cover', [0.375, 0.15], 'shi']];
 const especial = {
   plate(g, t) {
     let cur = ESP[0], prev = null; for (const e of ESP) if (t >= e[0]) { prev = cur === e ? prev : cur; cur = e; }
@@ -693,8 +691,8 @@ const especial = {
     g.save(); g.font = font(F.anton, 300, 400); g.textBaseline = 'middle'; g.fillStyle = rgba('#f2d9a6', 0.85); g.translate(110, 560); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('ESPECIAL', 0, 0); g.restore();
     const fx = 1110, fy = 120, fw = 620, fh = 820;
     g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 40; g.fillStyle = '#f6efe0'; g.fillRect(fx - 26, fy - 26, fw + 52, fh + 110); g.restore();
-    if (prev && a < 1) cover(g, IMG[prev[1]], [fx, fy, fw, fh], prev[1] === 'cover' ? 2.4 : 2.1, prev[2][0], prev[2][1]);
-    g.save(); g.beginPath(); g.rect(fx + (prev ? (1 - a) * fw : 0), fy, fw, fh); g.clip(); cover(g, IMG[img], [fx, fy, fw, fh], img === 'cover' ? 2.4 : 2.1, f[0], f[1]); g.restore();
+    if (prev && a < 1) cover(g, IMG[prev[1]], [fx, fy, fw, fh], prev[1] === 'cover' ? 4.0 : 2.1, prev[2][0], prev[2][1]);
+    g.save(); g.beginPath(); g.rect(fx + (prev ? (1 - a) * fw : 0), fy, fw, fh); g.clip(); cover(g, IMG[img], [fx, fy, fw, fh], img === 'cover' ? 4.0 : 2.1, f[0], f[1]); g.restore();
     addFace(g, fx + fw / 2, fy + fh * 0.42, 360);
     label(g, m.name, fx + fw, fy + fh + 48, { fam: F.anton, size: 32, color: '#2a1414', track: 0.2, align: 'right' }); g.fillStyle = m.ink; g.fillRect(fx, fy + fh + 34, 90, 8);
     earrings(g, M('jewel_206840'), fx - 60, fy + 120, 240, t, 1);
@@ -712,7 +710,7 @@ const especial = {
 /* ================================================================ FINAL CHORUS (dawn)
    The climax: the camera never settles. Momentum is carried across the cuts (rightward whips, a downward
    whip for 溺れたい), every hook lands on a camera punch, and the beat is shown by local light (rings
-   thrown out of the medallion, a chase of light along the arches, kaleidoscopes stepping on the beat),
+   thrown out of the medallion, a chase of light along the arches),
    never by shaking the whole frame. */
 // petals thrown out from (cx, cy) at t0: fast, decelerating, then drifting down
 function burst(g, t, t0, cx, cy, n, seed, o = {}) {
@@ -783,9 +781,9 @@ const bloom = {
     [219.42, { z: 1.13, r: -0.022 }, 'ox'], [219.8, { z: 1.24, r: -0.03 }, 'i'], [220.0, { z: 1.27, r: -0.034 }]], hh: 0.6, pulse: 1.4,
 };
 // このまま／このまま: the two halves drift against each other; あなたと／溺れたい: closer, under water, sinking
-const split5a = { plate(g, t, s) { colourSplit(g, t, { who: 'to', key: 'to_cos', kale: 'tile_187927' }, { who: 'ri', key: 'ri_cos', kale: 'tile_187929' }, T.lines[58].chars[5], { warm: true, step: true, shift: [-(t - s.a) * 18, (t - s.a) * 18] }); },
+const split5a = { plate(g, t, s) { colourSplit(g, t, { who: 'to', key: 'to_cos', kale: 'tile_187927' }, { who: 'ri', key: 'ri_cos', kale: 'tile_187929' }, T.lines[58].chars[5], { warm: true, shift: [-(t - s.a) * 18, (t - s.a) * 18] }); },
   over(g, t) { splitText(g, t, 58); }, cam: [[220.0, { x: 900, z: 1.1 }, 'ox'], [220.6, { x: 960, z: 1.02 }, 'l'], [222.1, { x: 990, z: 1.07 }]], hh: 0.6, pulse: 1.3 };
-const split5b = { plate(g, t, s) { colourSplit(g, t, { who: 'to', key: 'to_cos', kale: 'tile_187929' }, { who: 'ri', key: 'ri_cos', kale: 'tile_187927' }, T.lines[59].chars[5], { size: 'face', k: 1.2, step: true, sea: true, grade: '#9ab4ff', gradeA: 0.25, gradeOp: 'soft-light', shift: [-(t - s.a) * 14, -(t - s.a) * 22] }); },
+const split5b = { plate(g, t, s) { colourSplit(g, t, { who: 'to', key: 'to_cos', kale: 'tile_187929' }, { who: 'ri', key: 'ri_cos', kale: 'tile_187927' }, T.lines[59].chars[5], { size: 'face', k: 1.2, sea: true, grade: '#9ab4ff', gradeA: 0.25, gradeOp: 'soft-light', shift: [-(t - s.a) * 14, -(t - s.a) * 22] }); },
   over(g, t) { L(g, t, 59, { to: 4, x: 140, y: 960, size: 76, kana: 0.7 }); L(g, t, 59, { from: 5, x: 1780, y: 960, align: 'end', size: 76, kana: 0.7 }); }, cam: [[222.1, { y: 520, z: 1.0 }, 'l'], [224.1, { y: 640, z: 1.1 }]], hh: 0.6, pulse: 1.3 };
 const nagiKiss = {
   plate(g, t, s) { fillBig(g, '#2a1020'); cover(g, IMG.card_na, [-300, -200, W + 600, H + 400], 1.7, CF.cardNa.na[0] + 0.02, CF.cardNa.na[1] - 0.06); radialW(g, 960, 540, 1300, [[0, 'rgba(0,0,0,0)'], [1, 'rgba(30,6,8,0.5)']]);
@@ -802,9 +800,9 @@ const nagiKiss = {
 const STRIP = ['to', 'ri', 'yo', 'na', 'shi'], STRIP_T = [229.82, 229.94, 230.92, 231.04, 231.16];
 const duoGroups = {
   plate(g, t) {
-    const k = E.outExpo(clamp((t - (T.lines[61].chars[5] - 0.15)) / 0.45)), st = beatStep(t);
+    const k = E.outExpo(clamp((t - (T.lines[61].chars[5] - 0.15)) / 0.45));
     fillBig(g, '#1a0508');
-    const panel = (keys, x0, w0, dir) => h => { kaleido(h, M('tile_187927'), { n: 10, rot: st * 0.18 * dir, R: 1200, cx: x0 + w0 / 2, cy: 540 }); washW(h, '#3a0610', 0.45, 'multiply');
+    const panel = (keys, x0, w0, dir) => h => { kaleido(h, M('tile_187927'), { n: 10, rot: t * 0.05 * dir, R: 1200, cx: x0 + w0 / 2, cy: 540 }); washW(h, '#3a0610', 0.45, 'multiply');
       keys.forEach((key, j) => { const fr = framing(key, 'bust', (x0 + w0 * (j + 0.5) / keys.length) / W, { k: 0.85 }); figure(h, key, fr, { shadow: false, rim: IV, rimA: 0.4 }); face(h, key, fr); }); };
     withMask(g, rectPath(-600, -400, W * 0.42 + 600, H + 800, 80), panel(['to_cos', 'ri_cos'], 0, W * 0.42, 1));
     if (k > 0) { const x0 = W * 0.42 + (1 - k) * W * 0.65; withMask(g, rectPath(x0, -400, W + 800, H + 800, 80), panel(['yo_cos', 'na_cos', 'shi_cos'], W * 0.42, W * 0.58, -1));
@@ -814,7 +812,7 @@ const duoGroups = {
       const x0 = j * pw, m = MEM[w], dy = -(1 - u) * (H + 600);
       g.save(); g.translate(0, dy);
       withMask(g, rectPath(x0 - 1, -400, pw + 2, H + 800, sk), h => {
-        fillBig(h, m.deep); kaleido(h, M('tile_187927'), { n: 8, rot: st * 0.22 * (j % 2 ? -1 : 1) + j, R: 760, cx: x0 + pw / 2, cy: 480 }); washW(h, m.deep, 0.55, 'multiply');
+        fillBig(h, m.deep); kaleido(h, M('tile_187927'), { n: 8, rot: t * 0.06 * (j % 2 ? -1 : 1) + j, R: 760, cx: x0 + pw / 2, cy: 480 }); washW(h, m.deep, 0.55, 'multiply');
         const fr0 = framing(COS[w], 'face', (x0 + pw / 2) / W, { k: 0.64, y: 480 }), fr = { ...fr0, x: fr0.x + ARCH_DX[w] * fr0.fh };
         figure(h, COS[w], fr, { rim: m.light, shadow: false }); face(h, COS[w], fr);
         const gr = h.createLinearGradient(0, 760, 0, 1100); gr.addColorStop(0, 'rgba(8,2,3,0)'); gr.addColorStop(1, 'rgba(8,2,3,0.8)'); h.fillStyle = gr; h.fillRect(x0 - 200, 760, pw + 400, 800);
@@ -831,9 +829,10 @@ const candleOut = {
   plate(g, t) {
     const out = smooth(233.3, 233.75, t);
     gradBig(g, [[0, '#2a2038'], [1, '#4a3048']]); g.save(); g.globalAlpha = 0.3 * (1 - out * 0.5); cover(g, IMG.cover, [-400, -300, W + 800, H + 600], 1.2, 0.5, 0.36); g.restore(); washW(g, '#2a2040', 0.35, 'multiply');
-    obj(g, IMG.obj_fi_candle, 960, 820, 520, { filter: `brightness(${1 - out * 0.45})` }); glow(g, 958, 640, 300, '#ffb060', 0.8 * (1 - out));
-    if (out > 0) { g.save(); g.translate(962, 640); g.scale(0.45, 1); const fl = g.createRadialGradient(0, 0, 0, 0, 0, 120); fl.addColorStop(0, `rgba(40,30,44,${out})`); fl.addColorStop(0.6, `rgba(40,30,44,${0.85 * out})`); fl.addColorStop(1, 'rgba(40,30,44,0)'); g.globalCompositeOperation = 'multiply'; g.fillStyle = fl; g.fillRect(-140, -140, 280, 280); g.restore(); }
-    const u = t - 233.45; if (u > 0) { g.save(); g.globalCompositeOperation = 'screen'; for (let i = 0; i < 60; i++) { const age = u - i * 0.05; if (age <= 0 || age > 3) continue; const y = 650 - age * 150, x = 958 + noise1(age * 0.9 + i * 0.1, 7) * age * 60, r = 6 + age * 30; g.globalAlpha = 0.18 * (1 - age / 3); g.drawImage(softDot('#e8e0f0', 64), x - r, y - r, r * 2, r * 2); } g.restore(); }
+    const FY = 822; // the wick
+    obj(g, IMG.obj_fi_candle, 960, 960, 400, { filter: `brightness(${1 - out * 0.45})` }); glow(g, 958, FY, 260, '#ffb060', 0.8 * (1 - out));
+    if (out > 0) { g.save(); g.translate(962, FY); g.scale(0.45, 1); const fl = g.createRadialGradient(0, 0, 0, 0, 0, 120); fl.addColorStop(0, `rgba(40,30,44,${out})`); fl.addColorStop(0.6, `rgba(40,30,44,${0.85 * out})`); fl.addColorStop(1, 'rgba(40,30,44,0)'); g.globalCompositeOperation = 'multiply'; g.fillStyle = fl; g.fillRect(-140, -140, 280, 280); g.restore(); }
+    const u = t - 233.45; if (u > 0) { g.save(); g.globalCompositeOperation = 'screen'; for (let i = 0; i < 60; i++) { const age = u - i * 0.05; if (age <= 0 || age > 3) continue; const y = FY + 10 - age * 150, x = 958 + noise1(age * 0.9 + i * 0.1, 7) * age * 60, r = 6 + age * 30; g.globalAlpha = 0.18 * (1 - age / 3); g.drawImage(softDot('#e8e0f0', 64), x - r, y - r, r * 2, r * 2); } g.restore(); }
     washW(g, '#c8b8e8', out * 0.25, 'screen');
   },
   over(g, t) { L(g, t, 63, { x: 960, y: 520, align: 'center', size: 76, kana: 0.62, fill: '#f8f0ff', glow: 'rgba(220,190,255,0.6)', exit: 235.1 }); },
@@ -851,7 +850,7 @@ const finalPale = {
 
 /* ================================================================ OUTRO
    The music plays on to 263s: the wall of polaroids is a tracking shot that ends in a reveal, and the end
-   card keeps breathing (chibis hop, rays turn, a sheen crosses the title) until an iris closes on the last note. */
+   card keeps breathing (the chibis sway and bow, rays turn, a sheen crosses the title) until an iris closes on the last note. */
 const PRIV = { yo: 'yo_swim', na: 'na_casual', shi: 'shi_swim', to: 'to_white', ri: 'ri_resort' };
 const credits = {
   plate(g, t, s) {
@@ -880,10 +879,15 @@ const endCard = {
     const lit = smooth(250.2, 251.4, t) * (1 - 0.7 * brk);
     lightRays(g, 960, 740, 1500, t * 0.035, 24, '#ffcf8a', (0.16 + 0.08 * pulse(t, 4, 3)) * lit); glow(g, 960, 700, 520, '#ffb060', (0.3 + 0.1 * pulse(t, 4, 3)) * lit);
     fanOpen(g, M('fan_170045'), 960, 760, 520, E.inOutCubic(inv(250.0, 251.4, t)), { a: 0.9 });
-    const bp = beatF(t), live = smooth(251.7, 252.2, t) * (1 - brk);
+    // a curtain call, not a jumping game: the five sway together with the music (one swing every two beats, a wave
+    // running along the row), hold still in the break, then take a bow together on the last bar
+    const bp = beatF(t), live = smooth(251.7, 252.6, t) * (1 - brk);
     ORDER.forEach((w, k) => { const img = IMG['c_' + w + '_plain'], q = pop(t, 250.6 + k * 0.2); if (!img || !q.a) return;
-      const jump = 46 * Math.sin(Math.PI * clamp((t - (259.9 + k * 0.09)) / 0.5)); // everyone jumps back in on the last phrase
-      place(g, img, 560 + k * 200, 840 - hop(bp, k * 0.5, 14) * live - jump, 250 * q.s, { a: q.a, rot: q.r + Math.sin((bp + k) * Math.PI / 2) * 0.05 * live }); });
+      const sway = Math.sin((bp - k * 0.35) * Math.PI / 2) * 0.075 * live;
+      const tb = 261.37 + Math.abs(k - 2) * 0.06, bow = E.inOutCubic(clamp((t - tb) / 0.35)) * (1 - E.inOutCubic(clamp((t - tb - 0.75) / 0.45)));
+      const h = 250 * q.s, fx = 560 + k * 200, fy = 840 + 125;
+      g.save(); g.translate(fx, fy); g.rotate(sway + q.r); g.scale(1 + 0.03 * bow, 1 - 0.13 * bow);
+      place(g, img, 0, -h / 2 + 10 * bow, h, { a: q.a }); g.restore(); });
     petals(g, t, 12, 83, { a: 0.8, speed: 55, wind: 30, rect: [-300, -300, W + 600, H + 600] });
     embers(g, t, 26, 85, { a: 0.6, speed: 50, rect: [-300, -300, W + 600, H + 600] });
   },
