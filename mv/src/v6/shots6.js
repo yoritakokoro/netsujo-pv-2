@@ -277,10 +277,15 @@ const fans5 = {
 };
 
 /* ================================================================ CHORUS 1 */
-function medallion(g, t, cx, cy, R, dish, f = [0.47, 0.36], z = 1.35) {
-  halo(g, M(dish), cx, cy, R * 1.55, t, 1, 0.05);
-  withMask(g, circlePath(cx, cy, R), h => cover(h, IMG.cover, [cx - R, cy - R, R * 2, R * 2], z, f[0], f[1]));
-  rings(g, cx, cy, [R + 6], GOLD, 3, 0.95);
+// the cover on a lustre dish. Riamu stands almost in the cover's top-right corner, so no circle can hold all five
+// faces: the window is a rounded square, cropped so every face sits fully inside it
+const COVER_ALL = { z: 1.3, f: [0.515, 0.415] };
+function medallion(g, t, cx, cy, R, dish) {
+  halo(g, M(dish), cx, cy, R * 1.65, t, 1, 0.05);
+  const r = R * 0.94, rr = r * 0.14, plate = (q, d) => { q.beginPath(); q.roundRect(cx - r - d, cy - r - d, 2 * (r + d), 2 * (r + d), rr + d); };
+  g.save(); g.shadowColor = 'rgba(20,6,4,0.55)'; g.shadowBlur = 30; g.shadowOffsetY = 10; g.fillStyle = '#2a1408'; plate(g, 12); g.fill(); g.restore();
+  g.save(); plate(g, 0); g.clip(); cover(g, IMG.cover, [cx - r, cy - r, r * 2, r * 2], COVER_ALL.z, COVER_ALL.f[0], COVER_ALL.f[1]); g.restore();
+  g.save(); g.strokeStyle = GOLD; g.lineWidth = 3; plate(g, 2); g.stroke(); g.globalAlpha = 0.8; g.lineWidth = 1.5; plate(g, 10); g.stroke(); g.restore();
 }
 const chorus1 = {
   plate(g, t) {
@@ -890,7 +895,7 @@ const bloom = {
   plate(g, t, s) {
     fillBig(g, '#f2dccf'); const p = IMG.paper_peach; if (p) g.drawImage(p, -500, -400, W + 1000, H + 800); const rb = M('rose_337713'); if (rb) cover(g, rb, [-500, -400, W + 1000, H + 800], 1.0, 0.5, 0.5, 0.5);
     lightRays(g, 960, 540, 1700, -t * 0.08, 24, '#fff4e0', 0.3 + 0.2 * pulse(t, 1, 6));
-    const f = fly(t, s.a + 0.05, [0, 1], 900, 0.2); if (f.a) { g.save(); g.translate(f.dx, f.dy); piece(g, 960, 540, 620, 620, { img: IMG.cover, z: 1.25, fx: 0.48, fy: 0.38, rot: -0.03 + f.r, seed: 77 }); g.restore(); }
+    const f = fly(t, s.a + 0.05, [0, 1], 900, 0.2); if (f.a) { g.save(); g.translate(f.dx, f.dy); piece(g, 960, 540, 620, 620, { img: IMG.cover, z: 1.28, fx: 0.515, fy: 0.42, rot: -0.03 + f.r, seed: 77 }); g.restore(); }
     const roses = [IMG.obj_d_rose, IMG.obj_fi_r3, IMG.obj_fi_r7];
     BLOOMS.forEach((tb, j) => { for (let i = 0; i < 10; i++) { const q = E.outBack(clamp((t - tb - i * 0.025) / 0.45)); if (q <= 0) continue;
       const a = (i / 10) * TAU + j * 0.33 + 0.2, r = (470 + j * 170) * (0.55 + 0.45 * E.outExpo(clamp((t - tb) / 0.8)));
