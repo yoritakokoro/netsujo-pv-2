@@ -681,7 +681,7 @@ const embrace = {
 };
 
 /* ================================================================ ESPECIAL */
-const ESP = [[191.3, 'card_yo', CF.cardYo.yo, 'yo'], [198.7, 'card_na', CF.cardNa.na, 'na'], [202.2, 'cover', [0.375, 0.15], 'shi']];
+const ESP = [[191.3, 'card_yo', CF.cardYo.yo, 'yo'], [198.7, 'card_na', CF.cardNa.na, 'na'], [202.2, 'cover', [0.375, 0.228], 'shi']];
 const especial = {
   plate(g, t) {
     let cur = ESP[0], prev = null; for (const e of ESP) if (t >= e[0]) { prev = cur === e ? prev : cur; cur = e; }
