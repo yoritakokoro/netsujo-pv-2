@@ -687,6 +687,8 @@ const rollCall = (who, size, k = 1) => ({
 });
 // five pendants drop in on the beat and swing; on the build they gather into a turning ring round the light, which takes over
 const JDROP = k => 160.72 + 0.25 + k * T.beat * 2;
+// each member's face on the cover (measured), set a little above the centre of her medallion
+const COVER_FACE = { na: [0.21, 0.375], shi: [0.385, 0.235], yo: [0.605, 0.32], ri: [0.815, 0.28], to: [0.5, 0.545] };
 const jewels = {
   plate(g, t, s) {
     const p = inv(s.a, 166.53, t), conv = E.inCubic(inv(164.9, 166.45, t));
@@ -703,7 +705,7 @@ const jewels = {
       const sc = 1 + 0.15 * pulse(t, 2, 6) - 0.3 * conv;
       g.translate(x, y); g.scale(sc, sc); g.translate(-x, -y);
       glow(g, x, y, 230, MEM[w].ink, 0.45 + 0.3 * pulse(t));
-      withMask(g, circlePath(x, y, 142), h => cover(h, IMG.cover, [x - 142, y - 142, 284, 284], 4.2, CF.cover[w][0], CF.cover[w][1]));
+      withMask(g, circlePath(x, y, 142), h => cover(h, IMG.cover, [x - 142, y - 142, 284, 284], 4.2, COVER_FACE[w][0], COVER_FACE[w][1]));
       rings(g, x, y, [146], GOLD, 4, 1); rings(g, x, y, [156], MEM[w].ink, 3, 0.9); g.restore(); });
     embers(g, t, Math.round(24 + 50 * p), 77, { a: 0.85, speed: 90 + 80 * p, rect: [-300, -300, W + 600, H + 600] });
     washW(g, '#fff3e0', Math.pow(smooth(165.4, 166.53, t), 2) * 0.9, 'screen');
