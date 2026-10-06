@@ -9,6 +9,7 @@ import { MEM, ORDER, GOLD, IV, FACE, framing, figure, lerpFr, CF, kaleido, fanOp
   neon, neonStroke, horseshoe, scallops, mono, laceBorder } from '../kit4.js';
 import { energy, pulse } from './core6.js';
 import { sing, slam, addFace } from './type6.js';
+import { dawnSky, sunElev, starBurst, godRays, dust, lensFlare, relit, lightFront } from './dawn6.js';
 
 const M = k => IMG['m_' + k];
 const Ls = i => T.lines[i].start;
@@ -637,47 +638,101 @@ const jewels = {
   cam: [[160.71, { z: 1.0 }, 'iq'], [166.53, { z: 1.3 }]], hh: 0.6, pulse: 1.4,
 };
 
-/* ================================================================ BRIDGE (dawn) */
-function dawnSkyW(g, t, p = 0, sx = 960) {
-  const c = (a, b) => { const q = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)], x = q(a), y = q(b); return `rgb(${lerp(x[0], y[0], p) | 0},${lerp(x[1], y[1], p) | 0},${lerp(x[2], y[2], p) | 0})`; };
-  gradBig(g, [[0, c('#4a3a7a', '#7a5a9a')], [0.45, c('#e08a8a', '#f4a88a')], [0.62, c('#ffd0a0', '#ffe2b8')], [0.63, '#f2b89a'], [1, '#5a3048']], -200, 1280);
-  const sy = lerp(700, 600, p); glow(g, sx, sy, 1000, '#fff0d0', 0.7); g.fillStyle = '#fffaf0'; g.beginPath(); g.arc(sx, sy, 80, 0, TAU); g.fill();
-  g.save(); g.globalCompositeOperation = 'screen'; for (let k = 0; k < 44; k++) { const y = 690 + Math.pow(k / 44, 1.6) * 600, w = 30 + k * 22; g.globalAlpha = 0.25 * (0.6 + 0.4 * Math.sin(t * 1.5 + k)); g.fillStyle = '#fff2d8'; g.fillRect(sx - w / 2 + Math.sin(t * 0.7 + k) * 14, y, w, 2 + k * 0.08); } g.restore();
-}
+/* ================================================================ BRIDGE (dawn) — one real sunrise through the whole bridge
+   (sky, sun, rays, glitter and flares from dawn6.js). Nagi starts as a back-lit silhouette in the blue hour; the sun
+   breaks the horizon on 朝日が and clears it on 照らした, and its light sweeps across her. The cuts are carried by the
+   sun itself: a flare sweeping the frame, a zoom through a glint. */
+const NAGI_FR = lerpFr(framing('na_cos', 'knee', 0.68), framing('na_cos', 'bust', 0.67), 0.6);
+const sunUp = () => T.lines[40].chars[3]; // 照
 const nagiDawn = {
-  plate(g, t) { dawnSkyW(g, t, inv(166.5, 191, t), 560); const fr = lerpFr(framing('na_cos', 'knee', 0.68), framing('na_cos', 'bust', 0.67), 0.6);
-    figure(g, 'na_cos', fr, { rim: '#fff0c8', rimA: 0.75, rimSide: -1, glow: '#ffd8a0', glowA: 0.28, grade: '#ffb080', gradeA: 0.18, gradeOp: 'soft-light' }); face(g, 'na_cos', fr); },
-  over(g, t) { low(g, t, 40, 'L', 860, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)' }); low(g, t, 41, 'L', 955, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)' }); },
-  cam: [[166.53, { y: 680, z: 1.1 }, 'io'], [174.35, { y: 520, z: 1.0 }]], hh: 0.5, pulse: 0.9,
+  plate(g, t, s, c) {
+    const SUNUP = sunUp(), sky = dawnSky(g, t, c, { sx: 600, burst: SUNUP }), fr = NAGI_FR;
+    // the art is a card cut-out: a dark, rim-lit silhouette first, then the lit figure where the light front has passed
+    figure(g, 'na_cos', fr, { shadow: false, grade: '#1e1c46', gradeA: 0.8, gradeOp: 'multiply', rim: '#ffc89a', rimA: 0.5 + 0.5 * sky.vis, rimSide: -1 });
+    const front = lerp(600, 2400, E.inOutCubic(inv(SUNUP - 0.3, SUNUP + 0.9, t)));
+    relit(g, b => figure(b, 'na_cos', fr, { shadow: false, rim: '#fff0c8', rimA: 0.9, rimSide: -1, glow: '#ffd8a0', glowA: 0.14, grade: '#ff9a60', gradeA: 0.26, gradeOp: 'soft-light' }), front, 340);
+    lightFront(g, front, Math.sin(Math.PI * inv(SUNUP - 0.3, SUNUP + 0.9, t)));
+    face(g, 'na_cos', fr);
+    dust(g, t, 46, 7, [300, -100, 1800, 1200], 0.25 + 0.55 * sky.vis);
+    lensFlare(g, sky.sun[0], sky.sun[1], 0.75 * sky.vis);
+  },
+  over(g, t) { const st = { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)', shadow: 'rgba(20,6,20,0.7)' }; low(g, t, 40, 'L', 860, st); low(g, t, 41, 'L', 955, st); },
+  // wide on the horizon, crane up with the sun, then a dolly in to her profile for ふたりの横顔を (never below the art's edge)
+  cam: [[166.53, { x: 1010, y: 545, z: 1.02 }, 'io'], [168.3, { x: 1000, y: 520, z: 1.05 }, 'io'], [170.1, { x: 1060, y: 470, z: 1.12, r: 0 }, 'io3'], [173.95, { x: 1230, y: 390, z: 1.6, r: -0.03 }]], hh: 0.5, pulse: 0.9,
 };
+// ああ あなたのカフスを: a macro on a brooch with the sun right behind it — the light breaks round its edges, its stones flash on the beat
+const JFACET = [[-58, -54], [65, 110], [-20, 60], [30, -80], [-80, 100], [10, 200], [70, -20]];
 const dawnJewel = {
-  plate(g, t) { dawnSkyW(g, t, inv(166.5, 191, t), 1320); obj(g, M('jewel_206840'), 1320, 500, 560, { rot: 0.06, shadowA: 0.3 });
-    sparkle(g, 1262, 446, 1.4 + 0.3 * Math.sin(t * 2.4) + 0.4 * pulse(t), 0.9, '#fffaf0'); sparkle(g, 1385, 610, 0.9 + 0.2 * Math.sin(t * 3.1 + 1), 0.8, '#fffaf0'); },
-  over(g, t) { const st = { fill: '#fffaf2', glow: 'rgba(255,170,120,0.6)', shadow: 'rgba(90,30,40,0.45)' };
-    L(g, t, 42, { ...st, to: 2, x: 200, y: 420, size: 120, kana: 0.62, drift: [16, 0] }); L(g, t, 42, { ...st, from: 3, x: 200, y: 590, size: 150, kana: 0.72, drift: [16, 0], accent: { from: 4, to: 7, fill: '#fff4d8', glow: 'rgba(255,190,90,0.8)' } }); },
-  cam: [[174.35, { x: 1210, y: 520, z: 1.0 }, 'io'], [178.5, { x: 1260, y: 510, z: 1.14 }]], hh: 0.5, pulse: 0.9,
+  plate(g, t, s, c) {
+    const sky = dawnSky(g, t, c, { sx: 1350, elev: 245 + (t - s.a) * 10, k: 1 });
+    const foc = E.outCubic(inv(s.a - 0.1, s.a + 1.0, t));
+    blurInto(g, lerp(16, 0, foc), b => obj(b, M('jewel_206840'), 1320, 500, 560, { rot: 0.06, shadow: false }));
+    const bp = beatF(t), k = Math.floor(bp), fr = bp - k;
+    JFACET.forEach(([dx, dy], j) => { const on = ((k % JFACET.length) + JFACET.length) % JFACET.length === j ? Math.exp(-fr * 3.2) : 0;
+      sparkle(g, 1320 + dx, 500 + dy, 0.5 + 1.6 * on + 0.15 * Math.sin(t * 3 + j), (0.35 + 0.65 * on) * foc, '#fffaf0'); });
+    starBurst(g, sky.sunW[0], sky.sunW[1], t, 0.55, 0.9);
+    prism(g, t, 1320, 500, 0.8 * foc);
+    dust(g, t, 34, 9, [300, 0, 1800, 1080], 0.7);
+    lensFlare(g, sky.sun[0], sky.sun[1], 0.9);
+  },
+  over(g, t) { const st = { fill: '#4a1626', glow: 'rgba(255,246,236,0.85)', glowBlur: 18, shadow: null, hot: '#b01e3c' };
+    L(g, t, 42, { ...st, to: 2, x: 200, y: 420, size: 120, kana: 0.62, drift: [16, 0] }); L(g, t, 42, { ...st, from: 3, x: 200, y: 590, size: 150, kana: 0.72, drift: [16, 0], accent: { from: 4, to: 7, fill: '#8a1a1a', glow: 'rgba(255,236,200,0.9)' } }); },
+  cam: [[174.35, { x: 1180, y: 520, z: 1.0, r: 0.03 }, 'io'], [178.5, { x: 1290, y: 500, z: 1.3, r: -0.01 }]], hh: 0.5, pulse: 0.9,
 };
+// small spectral dots thrown by the stones, drifting
+function prism(g, t, cx, cy, a) {
+  if (a <= 0.01) return; const C = ['#ff9a9a', '#ffd88a', '#a8ff9a', '#8ad8ff', '#c8a0ff'];
+  g.save(); g.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 22; i++) { const an = hash(i, 61) * TAU + t * 0.08 * (hash(i, 62) - 0.5), r = 260 + hash(i, 63) * 900, x = cx + Math.cos(an) * r * 1.4, y = cy + Math.sin(an) * r * 0.7, s = 6 + hash(i, 64) * 16;
+    g.globalAlpha = a * 0.35 * (0.5 + 0.5 * Math.sin(t * (1 + hash(i, 65) * 2) + i)); g.drawImage(softDot(C[i % 5], 32), x - s, y - s, s * 2, s * 2); }
+  g.restore();
+}
+// 握りしめたまま: the hands in a slanting beam of morning light
 const hands = {
-  plate(g, t) { fillBig(g, '#3a1a20'); cover(g, IMG.card_yo, [-300, -200, W + 600, H + 400], 2.5, CF.cardYo.hands[0], CF.cardYo.hands[1]); washW(g, '#ffb080', 0.25, 'soft-light'); washW(g, '#fff0e0', 0.12, 'screen');
-    sparkle(g, 900, 640, 1.3 + 0.3 * Math.sin(t * 3) + 0.4 * pulse(t), 0.9); },
+  plate(g, t, s, c) { fillBig(g, '#3a1a20'); cover(g, IMG.card_yo, [-300, -200, W + 600, H + 400], 2.5, CF.cardYo.hands[0], CF.cardYo.hands[1]); washW(g, '#ffb080', 0.25, 'soft-light'); washW(g, '#fff0e0', 0.1, 'screen');
+    const sw = noise1(t * 0.7, 71) * 0.06, bx = 1350 + (t - s.a) * 40;
+    g.save(); g.globalCompositeOperation = 'screen'; g.translate(bx, -300); g.rotate(0.62 + sw); const bg = g.createLinearGradient(-260, 0, 260, 0);
+    bg.addColorStop(0, 'rgba(255,214,160,0)'); bg.addColorStop(0.5, `rgba(255,236,200,${0.55 + 0.08 * noise1(t * 3, 72)})`); bg.addColorStop(1, 'rgba(255,214,160,0)'); g.fillStyle = bg; g.fillRect(-260, 0, 520, 2600); g.restore();
+    sparkle(g, 900, 640, 1.3 + 0.3 * Math.sin(t * 3) + 0.4 * pulse(t), 0.9);
+    dust(g, t, 40, 11, [300, -100, 1600, 1300], 0.8);
+    lensFlare(g, 1840 - (t - s.a) * 30, 70, 0.7, { streak: 900 }); },
   over(g, t) { low(g, t, 43, 'R', 955, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)' }); },
-  cam: [[178.5, { z: 1.0, x: 980 }, 'l'], [180.85, { z: 1.12, x: 940 }]], hh: 0.5, pulse: 0.9,
+  cam: [[178.5, { z: 1.02, x: 1000, r: 0.015 }, 'io'], [180.85, { z: 1.16, x: 930, r: -0.01 }]], hh: 0.5, pulse: 0.9,
 };
+// そっと 不安に揺れてる私を: morning mist with the low sun behind it — shafts of light through the fog, Tomoe back-lit
 const mist = {
-  plate(g, t) { gradBig(g, [[0, '#cbb8e0'], [0.6, '#f0d0d8'], [1, '#f8e0d0']]); for (let k = 0; k < 8; k++) glow(g, ((k * 400 + t * 30) % 3200) - 640, 600 + Math.sin(k) * 220, 520, '#ffffff', 0.25);
-    const fr = lerpFr(framing('to_white', 'knee', 0.46), framing('to_white', 'bust', 0.45), 0.5); figure(g, 'to_white', fr, { rim: '#ffffff', glow: '#ffffff', glowA: 0.35 }); face(g, 'to_white', fr);
-    for (let k = 0; k < 5; k++) glow(g, ((k * 640 - t * 46) % 3200 + 3200) % 3200 - 640, 900, 620, '#ffffff', 0.3); },
+  plate(g, t, s, c) {
+    gradBig(g, [[0, '#d8c0e0'], [0.55, '#f6d6d0'], [1, '#fbe6d2']]);
+    const SX = 330, SY = 190; glow(g, SX, SY, 1300, '#fff2d8', 0.55); glow(g, SX, SY, 380, '#ffffff', 0.8); starBurst(g, SX, SY, t, 0.45, 0.8);
+    godRays(g, SX, SY, 2800, 0.25 + t * 0.006, 16, '#fff6e6', 0.4);
+    for (let k = 0; k < 8; k++) glow(g, ((k * 400 + t * 30) % 3200) - 640, 600 + Math.sin(k) * 220, 520, '#ffffff', 0.25);
+    const fr = lerpFr(framing('to_white', 'knee', 0.46), framing('to_white', 'bust', 0.45), 0.5);
+    figure(g, 'to_white', fr, { shadow: false, rim: '#fffaf0', rimA: 0.95, rimSide: -1, glow: '#ffffff', glowA: 0.45, grade: '#ffd8b8', gradeA: 0.18, gradeOp: 'soft-light' }); face(g, 'to_white', fr);
+    for (let k = 0; k < 5; k++) glow(g, ((k * 640 - t * 46) % 3200 + 3200) % 3200 - 640, 900, 620, '#ffffff', 0.3);
+    dust(g, t, 60, 13, [-200, -100, 2300, 1300], 0.85, '#fffaf0');
+    lensFlare(g, W / 2 + (SX - c.x) * c.z, H / 2 + (SY - c.y) * c.z, 0.6);
+  },
   over(g, t) { const st = { fill: '#4a2a4a', glow: 'rgba(255,255,255,0.8)', glowBlur: 16, shadow: null, hot: '#c060a0', size: 80, kana: 0.6, vertical: true };
     L(g, t, 44, { ...st, to: 3, x: 1730, y: 170, drift: [0, 12] }); L(g, t, 44, { ...st, from: 4, x: 1600, y: 260, drift: [0, 12] }); },
-  cam: [[180.85, { x: 860, z: 1.04 }, 'l'], [185.8, { x: 1030, z: 1.0 }]], hh: 0.5, pulse: 0.9,
+  // a slow drift with a slight, uneasy sway (揺れてる)
+  cam: [[180.85, { x: 860, z: 1.04, r: 0.012 }, 'io'], [183.3, { x: 950, z: 1.08, r: -0.008 }, 'io'], [185.8, { x: 1030, z: 1.12, r: 0.008 }]], hh: 0.6, pulse: 0.9,
 };
+// 誤魔化さないで／抱きしめて: the sun is up behind her; on 抱きしめて the light closes round her like an embrace
 const embrace = {
-  plate(g, t) { dawnSkyW(g, t, inv(166.5, 191, t)); const hug = smooth(Ls(46) - 0.2, Ls(46) + 1.0, t);
+  plate(g, t, s, c) {
+    const sky = dawnSky(g, t, c, { sx: 730, elev: 440 + (t - s.a) * 6, k: 0.35 }), hug = smooth(Ls(46) - 0.2, Ls(46) + 1.0, t);
     const fr = lerpFr(framing('shi_swim', 'bust', 0.5), framing('shi_swim', 'face', 0.5), 0.45);
-    figure(g, 'shi_swim', fr, { glow: '#ffd0a0', glowA: 0.3 + hug * 0.5, rim: '#ffe0c0' }); face(g, 'shi_swim', fr);
-    rings(g, 960, 520, [lerp(900, 430, hug), lerp(940, 460, hug)], '#fff0d8', 2, hug * 0.8); glow(g, 960, 520, 600 + hug * 300, '#fff4e0', hug * 0.5); },
-  over(g, t) { low(g, t, 45, 'L', 860, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.55)' }); low(g, t, 46, 'L', 955, { fill: '#fffaf2', glow: 'rgba(255,170,120,0.6)', size: 80 }); },
-  cam: [[185.8, { z: 1.0 }, 'io'], [191.3, { z: 1.13 }]], hh: 0.5, pulse: 0.9,
+    figure(g, 'shi_swim', fr, { shadow: false, glow: '#ffd0a0', glowA: 0.3 + hug * 0.5, rim: '#fff0d0', rimA: 0.9, grade: '#ffb080', gradeA: 0.18, gradeOp: 'soft-light' }); face(g, 'shi_swim', fr);
+    rings(g, 960, 520, [lerp(900, 430, hug), lerp(940, 460, hug)], '#fff0d8', 2, hug * 0.8); glow(g, 960, 520, 600 + hug * 500, '#fff4e0', hug * 0.55);
+    // motes of light drawn in towards her
+    g.save(); g.globalCompositeOperation = 'lighter'; const d = softDot('#fff2d8', 32);
+    for (let i = 0; i < 70; i++) { const an = hash(i, 81) * TAU + t * (0.25 + 0.5 * hug) * (i % 2 ? 1 : -1), r = (380 + hash(i, 82) * 900) * (1 - 0.55 * hug) + 30 * Math.sin(t * 2 + i), sz = 2 + hash(i, 83) * 5;
+      g.globalAlpha = 0.25 + 0.55 * hug * (0.5 + 0.5 * Math.sin(t * 3 + i)); g.drawImage(d, 960 + Math.cos(an) * r * 1.4 - sz, 520 + Math.sin(an) * r * 0.9 - sz, sz * 2, sz * 2); }
+    g.restore();
+    lensFlare(g, sky.sun[0], sky.sun[1], 0.6 + 0.3 * hug, { streakA: 0.25, veil: 0.6 });
+  },
+  over(g, t) { const st = { fill: '#fffaf2', glow: 'rgba(255,170,120,0.6)', shadow: 'rgba(60,20,30,0.55)' }; low(g, t, 45, 'L', 860, st); low(g, t, 46, 'L', 955, { ...st, size: 80 }); },
+  cam: [[185.8, { y: 520, z: 1.0 }, 'io'], [188.3, { y: 480, z: 1.12 }, 'io'], [191.3, { y: 470, z: 1.2 }]], hh: 0.5, pulse: 0.9,
 };
 
 /* ================================================================ ESPECIAL */
@@ -953,10 +1008,10 @@ export function build6() {
   RC.forEach(([w, sz, k], j) => { const a = barT(73 + 2 * j), b = barT(75 + 2 * j); S(a, { ...rollCall(w, sz, k), cam: [[a, { x: 1010, z: 1.08 }, 'l'], [b, { x: 930, z: 1.0 }]] }, RT[j][0], RT[j][1]); });
   S(barT(83), jewels, 'zoom', { x: 960, y: 540 });
   S(166.53, nagiDawn, 'flash', { color: '#fff4e0' });
-  S(174.35, dawnJewel, 'bloom', { tint: '#ffe0c0' });
-  S(178.5, hands, 'zoom', { x: 900, y: 640 });
+  S(174.35, dawnJewel, 'flare', { dir: 1, y: 470 });
+  S(178.5, hands, 'zoom', { x: 1000, y: 540, color: '#fff2e0' });
   S(180.85, mist, 'bloom', { tint: '#ffffff', color: '#ffffff' });
-  S(185.8, embrace, 'iris', { x: 960, y: 520 });
+  S(185.8, embrace, 'flare', { dir: -1, y: 380 });
   S(191.3, especial, 'invert');
   S(209.11, amanecer, 'flash', { color: '#fff0d8' });
   S(212.35, dawnArches, 'whip', { dir: [1, 0] });

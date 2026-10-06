@@ -120,6 +120,7 @@ export const TR = {
   panels: { pre: 0, post: 0.5 },
   silk: { pre: 0.3, post: 0.35 },
   dip: { pre: 0.35, post: 0.45 },
+  flare: { pre: 0.26, post: 0.38 },
 };
 export function trMod(tr, side, u) {
   const o = tr.o || {};
@@ -129,6 +130,7 @@ export function trMod(tr, side, u) {
       return { dx: d[0] * W * m, dy: d[1] * H * m }; }
     case 'invert': return side === 'C' ? { z: 1 + 0.08 * (1 - E.outExpo(u)) } : {};
     case 'flash': return side === 'P' ? { z: 1 + 0.06 * E.inCubic(u) } : { z: 1 + 0.05 * (1 - E.outCubic(u)) };
+    case 'flare': { const d = o.dir ?? 1; return side === 'P' ? { dx: d * 90 * E.inCubic(u) } : { dx: -d * 110 * (1 - E.outCubic(u)) }; }
     default: return {};
   }
 }
@@ -206,6 +208,19 @@ export function trComposite(tr, g, P, C, p, t) {
       g.save(); g.translate(x, 0); g.rotate(-0.12); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 60;
       g.beginPath(); g.moveTo(-W * 0.8, -400); for (let y = -400; y <= H + 400; y += 40) g.lineTo(W * 0.42 + Math.sin(y * 0.006 + p * 5) * 70, y); g.lineTo(-W * 0.8, H + 400); g.closePath();
       g.clip(); if (im) g.drawImage(im, -W * 0.9, -500, W * 1.5, H + 1000); g.fillStyle = 'rgba(120,0,16,0.45)'; g.fillRect(-W, -500, W * 2, H + 1000); g.restore();
+      break; }
+    case 'flare': {
+      // a sun flare sweeps across the frame; the next shot is revealed behind its bright front
+      const d = o.dir ?? 1, e = E.inOutSine(p), xf = d > 0 ? lerp(-0.3 * W, 1.3 * W, e) : lerp(1.3 * W, -0.3 * W, e), y0 = o.y ?? H * 0.42, pk = Math.sin(Math.PI * p);
+      g.drawImage(P, 0, 0);
+      g.save(); g.beginPath(); if (d > 0) g.rect(0, 0, Math.max(0, xf), H); else g.rect(Math.min(W, xf), 0, W, H); g.clip(); g.drawImage(C, 0, 0); g.restore();
+      g.globalCompositeOperation = 'screen';
+      const bg = g.createLinearGradient(xf - 520, 0, xf + 520, 0); bg.addColorStop(0, 'rgba(255,200,150,0)'); bg.addColorStop(0.5, `rgba(255,246,228,${0.95 * pk})`); bg.addColorStop(1, 'rgba(255,200,150,0)');
+      g.fillStyle = bg; g.fillRect(xf - 520, 0, 1040, H);
+      const sg = g.createLinearGradient(0, 0, W, 0); sg.addColorStop(0, 'rgba(255,190,140,0)'); sg.addColorStop(clamp(xf / W, 0.02, 0.98), `rgba(255,240,215,${0.9 * pk})`); sg.addColorStop(1, 'rgba(255,190,140,0)');
+      g.fillStyle = sg; g.fillRect(0, y0 - 3, W, 6); g.globalAlpha = 0.4; g.fillRect(0, y0 - 40, W, 80); g.globalAlpha = 1;
+      g.globalCompositeOperation = 'source-over';
+      bloomPass(g, before ? P : C, 0.6 * pk, o.tint ?? '#ffd8b0', 10); expose(g, 0.35 * Math.pow(pk, 2), o.color ?? '#fff2e0');
       break; }
     default: g.drawImage(before ? P : C, 0, 0);
   }

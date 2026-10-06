@@ -51,7 +51,7 @@ export function runShots(out, t, shots) {
   if (!tr || tr.type === 'cut') { out.drawImage(renderShot(cur, t, 'cur'), 0, 0); out.restore(); return cur; }
   const d = TR[tr.type], cutU = d.pre / Math.max(0.001, d.pre + d.post), before = p < cutU;
   const uP = cutU > 0 ? clamp(p / cutU) : 1, uC = cutU < 1 ? clamp((p - cutU) / (1 - cutU)) : 1;
-  const overlap = ['bloom', 'fan', 'ruffle', 'iris', 'panels', 'silk'].includes(tr.type);
+  const overlap = ['bloom', 'fan', 'ruffle', 'iris', 'panels', 'silk', 'flare'].includes(tr.type);
   const Pc = (overlap || before) ? renderShot(P, t, 'P', trMod(tr, 'P', uP)) : null;
   const Cc = (overlap || !before) ? renderShot(C, t, 'C', trMod(tr, 'C', uC)) : null;
   trComposite(tr, out, Pc, Cc, clamp(p), t);
