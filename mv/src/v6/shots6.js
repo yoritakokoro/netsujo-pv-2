@@ -72,6 +72,9 @@ function litLevel(t, w) {
 }
 // the face anchors of the costume arts sit off the visual centre of some faces: centre each face in its arch
 const ARCH_DX = { yo: 0.1, na: 0.13, shi: 0.25, to: 0, ri: -0.34 };
+// ...and their eyes onto one level line (measured on the rendered arches: Yoshino sat high, Shin and Tomoe low)
+const ARCH_DY = { yo: 46, na: -45, shi: -130, to: -102, ri: -35 };
+const archFr = (w, xc) => { const f = framing(COS[w], 'face', xc / W, { k: 0.64, y: 480 }); return { ...f, x: f.x + ARCH_DX[w] * f.fh, y: f.y + ARCH_DY[w] }; };
 function archWall(g, t, o = {}) {
   fillBig(g, o.base || '#0c0405'); tiles(g, M('tile_187938'), 220, o.tileA ?? 0.17);
   radialW(g, 960, 600, 1300, [[0, o.glowC || 'rgba(130,16,30,0.35)'], [1, 'rgba(0,0,0,0)']]);
@@ -82,7 +85,7 @@ function archWall(g, t, o = {}) {
       kaleido(h, M(o.kale || 'tile_187924'), { n: 8, rot: t * 0.05 + k, R: 620, cx: x, cy: 560, zoom: 1 });
       h.save(); h.globalCompositeOperation = 'multiply'; h.globalAlpha = 0.55; h.fillStyle = MEM[w].deep; h.fillRect(x - 200, 150, 400, 900); h.restore();
       if (o.warm) { h.save(); h.globalCompositeOperation = 'soft-light'; h.globalAlpha = o.warm; h.fillStyle = '#ffb070'; h.fillRect(x - 200, 150, 400, 900); h.restore(); }
-      const fr0 = framing(COS[w], 'face', (k + 0.5) / 5, { k: 0.64, y: 480 }), fr = { ...fr0, x: fr0.x + ARCH_DX[w] * fr0.fh };
+      const fr = archFr(w, (k + 0.5) * W / 5);
       figure(h, COS[w], fr, { rim: MEM[w].light, shadow: false });
       if (l > 0.3) face(h, COS[w], fr);
       if (l < 1) { h.fillStyle = `rgba(8,2,4,${0.9 * (1 - l)})`; h.fillRect(x - 200, 150, 400, 900); }
@@ -943,7 +946,7 @@ const duoGroups = {
       g.save(); g.translate(0, dy);
       withMask(g, rectPath(x0 - 1, -400, pw + 2, H + 800, sk), h => {
         fillBig(h, m.deep); kaleido(h, M('tile_187927'), { n: 8, rot: t * 0.06 * (j % 2 ? -1 : 1) + j, R: 760, cx: x0 + pw / 2, cy: 480 }); washW(h, m.deep, 0.55, 'multiply');
-        const fr0 = framing(COS[w], 'face', (x0 + pw / 2) / W, { k: 0.64, y: 480 }), fr = { ...fr0, x: fr0.x + ARCH_DX[w] * fr0.fh };
+        const fr = archFr(w, x0 + pw / 2);
         figure(h, COS[w], fr, { rim: m.light, shadow: false }); face(h, COS[w], fr);
         const gr = h.createLinearGradient(0, 760, 0, 1100); gr.addColorStop(0, 'rgba(8,2,3,0)'); gr.addColorStop(1, 'rgba(8,2,3,0.8)'); h.fillStyle = gr; h.fillRect(x0 - 200, 760, pw + 400, 800);
       });
